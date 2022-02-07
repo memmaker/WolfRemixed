@@ -1,0 +1,823 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/$(Platform)
+/intermediateDir:obj/$(Platform)
+/platform:DesktopGL
+/config:
+/profile:Reach
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+/reference:..\..\..\..\.nuget\packages\monogame.extended.content.pipeline\3.8.0\tools\MonoGame.Extended.Content.Pipeline.dll
+
+#---------------------------------- Content ---------------------------------#
+
+#begin BitmapFonts/console.bmp
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BitmapFonts/console.bmp
+
+#begin BitmapFonts/ConsoleFontTexture.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BitmapFonts/ConsoleFontTexture.png
+
+#begin cat.tga
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cat.tga
+
+#begin Enemies/BlakeStone/bs_guard_sheet.png
+/copy:Enemies/BlakeStone/bs_guard_sheet.png
+
+#begin Enemies/BlakeStone/cabinetguy_sheet.png
+/copy:Enemies/BlakeStone/cabinetguy_sheet.png
+
+#begin Enemies/BlakeStone/eggguy_sheet.png
+/copy:Enemies/BlakeStone/eggguy_sheet.png
+
+#begin Enemies/BlakeStone/glassguy_sheet.png
+/copy:Enemies/BlakeStone/glassguy_sheet.png
+
+#begin Enemies/BlakeStone/scientist_sheet.png
+/copy:Enemies/BlakeStone/scientist_sheet.png
+
+#begin Enemies/BlakeStone/statueguy_sheet.png
+/copy:Enemies/BlakeStone/statueguy_sheet.png
+
+#begin Enemies/BlakeStone/tableguy_sheet.png
+/copy:Enemies/BlakeStone/tableguy_sheet.png
+
+#begin Enemies/Catacomb/bat_sheet.png
+/copy:Enemies/Catacomb/bat_sheet.png
+
+#begin Enemies/Catacomb/bluemonster.png
+/copy:Enemies/Catacomb/bluemonster.png
+
+#begin Enemies/Catacomb/silvermonster.png
+/copy:Enemies/Catacomb/silvermonster.png
+
+#begin Enemies/Catacomb/zombie_sheet.png
+/copy:Enemies/Catacomb/zombie_sheet.png
+
+#begin Enemies/Doom/doommarine_sheet.png
+/copy:Enemies/Doom/doommarine_sheet.png
+
+#begin Enemies/Wolf/mguard_sheet.png
+/copy:Enemies/Wolf/mguard_sheet.png
+
+#begin Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Font.spritefont
+
+#begin Fonts/DefaultFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/DefaultFont.spritefont
+
+#begin Fonts/WolfFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/WolfFont.spritefont
+
+#begin Fonts/WolfFontSmall.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/WolfFontSmall.spritefont
+
+#begin Hud/Doom/marinerfaces.png
+/copy:Hud/Doom/marinerfaces.png
+
+#begin Icons/arrow.png
+/copy:Icons/arrow.png
+
+#begin Icons/meta_sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Icons/meta_sheet.png
+
+#begin Maps/enemies_tilesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Maps/enemies_tilesheet.png
+
+#begin Maps/map1.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Maps/map1.tmx
+
+#begin Maps/wolfenemies_sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Maps/wolfenemies_sheet.png
+
+#begin Maps/wolfitems_sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Maps/wolfitems_sheet.png
+
+#begin Maps/wolfwalls_sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Maps/wolfwalls_sheet.png
+
+#begin Menu/loading_bs_widescreen.png
+/copy:Menu/loading_bs_widescreen.png
+
+#begin Menu/loading_id_widescreen.png
+/copy:Menu/loading_id_widescreen.png
+
+#begin Menu/loading_wolf_widescreen.png
+/copy:Menu/loading_wolf_widescreen.png
+
+#begin Menu/options_widescreen.png
+/copy:Menu/options_widescreen.png
+
+#begin Menu/titlescreen.png
+/copy:Menu/titlescreen.png
+
+#begin Menu/titlescreen_widescreen.png
+/copy:Menu/titlescreen_widescreen.png
+
+#begin Music/Wolfenstein/wolfintro.mp3
+/copy:Music/Wolfenstein/wolfintro.mp3
+
+#begin Music/Wolfenstein/wolfmenu.mp3
+/copy:Music/Wolfenstein/wolfmenu.mp3
+
+#begin Music/Wolfenstein/wolfplay01.mp3
+/copy:Music/Wolfenstein/wolfplay01.mp3
+
+#begin Music/Wolfenstein/wolfplay02.mp3
+/copy:Music/Wolfenstein/wolfplay02.mp3
+
+#begin Music/Wolfenstein/wolfplay03.mp3
+/copy:Music/Wolfenstein/wolfplay03.mp3
+
+#begin SoundEffects/Narrator/doublekill.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Narrator/doublekill.wav
+
+#begin SoundEffects/Narrator/monsterkill.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Narrator/monsterkill.wav
+
+#begin SoundEffects/Narrator/multikill.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Narrator/multikill.wav
+
+#begin SoundEffects/Narrator/triplekill.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Narrator/triplekill.wav
+
+#begin SoundEffects/Narrator/ultrakill.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Narrator/ultrakill.wav
+
+#begin SoundEffects/Rott/bulletRicochet1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Rott/bulletRicochet1.wav
+
+#begin SoundEffects/Rott/bulletRicochet2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Rott/bulletRicochet2.wav
+
+#begin SoundEffects/Rott/bulletRicochet3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Rott/bulletRicochet3.wav
+
+#begin SoundEffects/Rott/pistol1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Rott/pistol1.wav
+
+#begin SoundEffects/Rott/pistol2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Rott/pistol2.wav
+
+#begin SoundEffects/Wolfenstein/achtung.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/achtung.wav
+
+#begin SoundEffects/Wolfenstein/alarm.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/alarm.wav
+
+#begin SoundEffects/Wolfenstein/alarmSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/alarmSound.wav
+
+#begin SoundEffects/Wolfenstein/closedoor.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/closedoor.wav
+
+#begin SoundEffects/Wolfenstein/Enemy Pain.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/Enemy Pain.wav
+
+#begin SoundEffects/Wolfenstein/Gatling Gun.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/Gatling Gun.wav
+
+#begin SoundEffects/Wolfenstein/gunshot1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/gunshot1.wav
+
+#begin SoundEffects/Wolfenstein/gunshot2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/gunshot2.wav
+
+#begin SoundEffects/Wolfenstein/gunshot3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/gunshot3.wav
+
+#begin SoundEffects/Wolfenstein/Knife.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/Knife.wav
+
+#begin SoundEffects/Wolfenstein/Machine Gun.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/Machine Gun.wav
+
+#begin SoundEffects/Wolfenstein/meinLeben.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/meinLeben.wav
+
+#begin SoundEffects/Wolfenstein/opendoor.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/opendoor.wav
+
+#begin SoundEffects/Wolfenstein/Player Dies.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/Player Dies.wav
+
+#begin SoundEffects/Wolfenstein/Player Pain 1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/Player Pain 1.wav
+
+#begin SoundEffects/Wolfenstein/Player Pain 2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/Player Pain 2.wav
+
+#begin SoundEffects/Wolfenstein/rifleSound2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/rifleSound2.wav
+
+#begin SoundEffects/Wolfenstein/rifleSound3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/rifleSound3.wav
+
+#begin SoundEffects/Wolfenstein/werda.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Wolfenstein/werda.wav
+
+#begin Specials/Zelda/fire.png
+/copy:Specials/Zelda/fire.png
+
+#begin Specials/Zelda/hunt_killed.png
+/copy:Specials/Zelda/hunt_killed.png
+
+#begin Specials/Zelda/oldman.png
+/copy:Specials/Zelda/oldman.png
+
+#begin Specials/Zelda/stonewall.png
+/copy:Specials/Zelda/stonewall.png
+
+#begin Sprites/Misc/barnfence.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Misc/barnfence.png
+
+#begin Sprites/Wolf/ammo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Wolf/ammo.png
+
+#begin Sprites/Wolf/bones.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Wolf/bones.png
+
+#begin Sprites/Wolf/food.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Wolf/food.png
+
+#begin Sprites/Wolf/greenlight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Wolf/greenlight.png
+
+#begin Textures/BlakeStone/brick0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/brick0.png
+
+#begin Textures/BlakeStone/brick1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/brick1.png
+
+#begin Textures/BlakeStone/greybrick0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/greybrick0.png
+
+#begin Textures/BlakeStone/greybrick1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/greybrick1.png
+
+#begin Textures/BlakeStone/tech_wall01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/tech_wall01.png
+
+#begin Textures/BlakeStone/tech_wall02.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/tech_wall02.png
+
+#begin Textures/BlakeStone/tech_wall03.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/tech_wall03.png
+
+#begin Textures/BlakeStone/tech_wall04.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/tech_wall04.png
+
+#begin Textures/BlakeStone/tech_wall05.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/tech_wall05.png
+
+#begin Textures/BlakeStone/tech_wall06.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/tech_wall06.png
+
+#begin Textures/BlakeStone/tech_wall07.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/tech_wall07.png
+
+#begin Textures/BlakeStone/tech_wall08.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/tech_wall08.png
+
+#begin Textures/BlakeStone/tech_wall09.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/BlakeStone/tech_wall09.png
+
+#begin Textures/Wolf/bluestone1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/bluestone1.png
+
+#begin Textures/Wolf/bluestone2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/bluestone2.png
+
+#begin Textures/Wolf/celldoor.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/celldoor.png
+
+#begin Textures/Wolf/celldoorskeleton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/celldoorskeleton.png
+
+#begin Textures/Wolf/door.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/door.png
+
+#begin Textures/Wolf/doorside.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/doorside.png
+
+#begin Textures/Wolf/Elevator1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/Elevator1.png
+
+#begin Textures/Wolf/Elevator2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/Elevator2.png
+
+#begin Textures/Wolf/Elevator3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/Elevator3.png
+
+#begin Textures/Wolf/greystone1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/greystone1.png
+
+#begin Textures/Wolf/greystone2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/greystone2.png
+
+#begin Textures/Wolf/wood.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Wolf/wood.png
+
+#begin Weapons/BlakeStone/smallgun_sheet.png
+/copy:Weapons/BlakeStone/smallgun_sheet.png
+
+#begin Weapons/Catacomb/hand.png
+/copy:Weapons/Catacomb/hand.png
+
+#begin Weapons/Catacomb/hand_ring.png
+/copy:Weapons/Catacomb/hand_ring.png
+
+#begin Weapons/crosshairwhite.png
+/copy:Weapons/crosshairwhite.png
+
+#begin Weapons/Doom/doomshotgun_sheet.png
+/copy:Weapons/Doom/doomshotgun_sheet.png
+
+#begin Weapons/Doom/punch_sheet.png
+/copy:Weapons/Doom/punch_sheet.png
+
+#begin Weapons/Duke/dukeshotgun.png
+/copy:Weapons/Duke/dukeshotgun.png
+
+#begin Weapons/Projectiles/blueball_sheet.png
+/copy:Weapons/Projectiles/blueball_sheet.png
+
+#begin Weapons/Projectiles/bubble_sheet.png
+/copy:Weapons/Projectiles/bubble_sheet.png
+
+#begin Weapons/Projectiles/bulletHits.png
+/copy:Weapons/Projectiles/bulletHits.png
+
+#begin Weapons/Projectiles/energyball_sheet.png
+/copy:Weapons/Projectiles/energyball_sheet.png
+
+#begin Weapons/Projectiles/fireball_sheet.png
+/copy:Weapons/Projectiles/fireball_sheet.png
+
+#begin Weapons/Projectiles/grenade_sheet.png
+/copy:Weapons/Projectiles/grenade_sheet.png
+
+#begin Weapons/Projectiles/spit_sheet.png
+/copy:Weapons/Projectiles/spit_sheet.png
+
+#begin Weapons/Rott/pistol_sheet.png
+/copy:Weapons/Rott/pistol_sheet.png
+
+#begin Weapons/Wolf/assault_sheet.png
+/copy:Weapons/Wolf/assault_sheet.png
+
+#begin Weapons/Wolf/gatling_sheet.png
+/copy:Weapons/Wolf/gatling_sheet.png
+
+#begin Weapons/Wolf/knife_sheet.png
+/copy:Weapons/Wolf/knife_sheet.png
+

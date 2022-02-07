@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "90Degrees.Main", "90Degrees.Main\90Degrees.Main.csproj", "{ADC2B5D8-392E-4B82-8239-63A1640C17EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MP3Player", "90Degrees.MP3Player\MP3Player.csproj", "{F67F7F8D-C044-472B-B4CB-D4378B5B6364}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Artemis", "Artemis_XNA_INDEPENDENT\Artemis.csproj", "{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADC2B5D8-392E-4B82-8239-63A1640C17EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADC2B5D8-392E-4B82-8239-63A1640C17EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADC2B5D8-392E-4B82-8239-63A1640C17EA}.Debug|x86.ActiveCfg = Debug|x86
+		{ADC2B5D8-392E-4B82-8239-63A1640C17EA}.Debug|x86.Build.0 = Debug|x86
+		{ADC2B5D8-392E-4B82-8239-63A1640C17EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADC2B5D8-392E-4B82-8239-63A1640C17EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADC2B5D8-392E-4B82-8239-63A1640C17EA}.Release|x86.ActiveCfg = Release|x86
+		{ADC2B5D8-392E-4B82-8239-63A1640C17EA}.Release|x86.Build.0 = Release|x86
+		{F67F7F8D-C044-472B-B4CB-D4378B5B6364}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{F67F7F8D-C044-472B-B4CB-D4378B5B6364}.Debug|Any CPU.Build.0 = Debug|x86
+		{F67F7F8D-C044-472B-B4CB-D4378B5B6364}.Debug|x86.ActiveCfg = Debug|x86
+		{F67F7F8D-C044-472B-B4CB-D4378B5B6364}.Debug|x86.Build.0 = Debug|x86
+		{F67F7F8D-C044-472B-B4CB-D4378B5B6364}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{F67F7F8D-C044-472B-B4CB-D4378B5B6364}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{F67F7F8D-C044-472B-B4CB-D4378B5B6364}.Release|x86.ActiveCfg = Release|x86
+		{F67F7F8D-C044-472B-B4CB-D4378B5B6364}.Release|x86.Build.0 = Release|x86
+		{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}.Debug|x86.ActiveCfg = Debug|x86
+		{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}.Debug|x86.Build.0 = Debug|x86
+		{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}.Release|x86.ActiveCfg = Release|x86
+		{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {094B9CFC-947E-43F8-83FA-0E5BEC5E9F0F}
+	EndGlobalSection
+EndGlobal

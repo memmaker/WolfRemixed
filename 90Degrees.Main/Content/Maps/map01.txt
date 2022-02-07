@@ -1,0 +1,72 @@
+﻿[Main]
+Shading = true
+ShadingCutoff = 8
+ShadingDivisor = 18
+ColorCeiling = 2,19,48
+ColorFloor = 128,128,128
+PlayerLook = -1,0
+
+[Textures]
+Tex1 = Textures/Wolf/bluestone1.png
+Tex2 = Textures/Wolf/bluestone2.png
+Tex3 = Textures/Wolf/wood.png
+Tex4 = Textures/Wolf/celldoor.png
+Tex5 = Textures/Wolf/celldoorskeleton.png
+Tex6 = Textures/Wolf/greystone1.png
+Tex7 = Textures/Wolf/greystone2.png
+Tex8 = Textures/Wolf/Elevator3.png
+Tex9 = Textures/Wolf/Elevator1.png
+Tex10 = Specials/Zelda/stonewall.png
+Tex11 = Textures/BlakeStone/tech_wall01.png
+
+[MapData]
+    3336333
+33333  )  33333
+3  a e a e a  322222222222
+3  >   D   <  3    ,     2388
+3  "       "  #    "        9
+3  >   B   <  3    C     2388
+3  e       a  3222a  e2222
+33333     33333  22  22
+    222=222       2  2
+     2   2        2  2
+     2   2        2 d2
+222222 " 22       2 c2
+2 ( §b   d2       2 b2
+2 % 22   22       2^a2
+222222   2        6666
+     2   2
+2222222=2222222
+2    2   2    2
+2% ! # " #   %2
+2    2   2    2
+2    2   2    200000000
+222222   2222220    - 0000000
+2    2   o    20      0   Ü 0
+2% + #       *§   / z §  üÄ 0
+2    2   2    20      0   Ö 0
+222222   2222220    - 0000000
+2             200000000
+2  d   "  f   2
+2  c      g   2
+225225224224222
+
+# * = Player Spawn Position
+# " = Green Ceiling Lights
+# + = Ammo Pickup
+# ! = Food Pickup
+# % = Bones
+# = = Horizontal Door
+# # = Vertical Door
+# § = Fake/Secret Wall
+# /(){[]} = Weapons, 1. / 2. ( 3. )
+# - = Zelda Fire
+# z = Zelda old man
+######################
+# lower case: standing
+# upper case: patrolling
+# patrol commands: up = "^", down = ",", left = "<", right = ">"
+# NESW - orientation
+# abcd = actor 1
+# efgh = actor 2
+# ...
