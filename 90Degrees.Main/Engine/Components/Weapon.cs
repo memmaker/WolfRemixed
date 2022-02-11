@@ -5,6 +5,7 @@ using System.Text;
 using Artemis;
 using Artemis.Interface;
 using Microsoft.Xna.Framework;
+using raycaster;
 
 namespace Twengine.Components
 {
@@ -62,7 +63,7 @@ namespace Twengine.Components
 
         public ProjectileCreationFunctionType ProjectileCreationFunction { get; set; }
 
-        public string FireSoundCue { get; set; }
+        public SoundCue FireSoundCue { get; set; }
 
         /// <summary>
         /// In Pixels. This is the X Offset coordinate relative to the middle of the screen where hits can occur. 0 means perfect accuracy.

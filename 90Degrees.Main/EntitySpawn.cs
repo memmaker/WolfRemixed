@@ -54,28 +54,6 @@ namespace raycaster
             }
 
         }
-
-
-
-        private static int GetActorIndexFromChar(char letter)
-        {
-            int actorIndexFromChar = Char.IsLower(letter) ? letter - 97 : letter - 65;
-            return (int)Math.Floor(actorIndexFromChar / 4.0f);
-            // offset is now ranging from 0-25
-        }
-
-        private static bool IsActorPatrolling(char letter)
-        {
-            return Char.IsUpper(letter);
-        }
-
-
-        private static Direction GetDirectionFromChar(char letter)
-        {
-            int offset = Char.IsLower(letter) ? letter - 97 : letter - 65; // zero based offset..
-            return (Direction)(offset % 4);
-        }
-
         #region Entity Definitions
 
         public static Entity CreateDoor(Point position, Orientation orientation, SpriteSheet sheet, int wallIndex)
@@ -91,11 +69,11 @@ namespace raycaster
             Door doorComponent = new Door(spawnPos, orientation, 5);
             doorComponent.BeginOpen += delegate
                                            {
-                                               ComponentTwengine.AudioManager.PlaySound("OpenDoor");
+                                               ComponentTwengine.AudioManager.PlayEffect((int)SoundCue.OpenDoor);
                                            };
             doorComponent.BeginClose += delegate
                                             {
-                                                ComponentTwengine.AudioManager.PlaySound("CloseDoor");
+                                                ComponentTwengine.AudioManager.PlayEffect((int)SoundCue.CloseDoor);
                                             };
             e.AddComponent(doorComponent);
 
@@ -110,7 +88,6 @@ namespace raycaster
             SpriteSheet guard = AssetManager.Default.LoadSpriteSheet("Enemies/Doom/doommarine_sheet.png", 128, 128);
             Entity e = sWorld.CreateEntity();
             e.Group = "Enemy";
-//             e.CollisionGroup = 3; // TODO: Check what to do with this
             //Collider collider = new Collider(0.5f);
             //e.AddComponent(collider);
             e.AddComponent(new Transform(position, rotation) { CollideWithMap = true });
@@ -165,7 +142,7 @@ namespace raycaster
             SpriteSheet oldman = AssetManager.Default.LoadSpriteSheet("Specials/Zelda/oldman.png", 64, 64);
             Entity e = sWorld.CreateEntity();
             e.Group = "Enemy";
-            e.AddComponent(new Collider(0.3f) { CollisionGroup = 3 });
+            e.AddComponent(new Collider(0.3f));
             e.AddComponent(new Transform(position, 0f) { CollideWithMap = true });
             e.AddComponent(new RaycastSprite(oldman, 0));
             e.AddComponent(new Physics(1f) { Mass = 0.8f });
@@ -184,7 +161,10 @@ namespace raycaster
         {
             Entity e = sWorld.CreateEntity();
             e.Group = isObstructing ? "Obstacle" : "Deco";
-//             e.CollisionGroup = 4; // TODO: Check what to do with this
+            if (isObstructing)
+            {
+                e.AddComponent(new Collider(0.2f));
+            }
             e.AddComponent(new Transform(position, 0f));
             e.AddComponent(new RaycastSprite(sheet, frames[0]));
             SpriteAnimator spriteAnimator = new SpriteAnimator();
@@ -202,7 +182,6 @@ namespace raycaster
             SpriteSheet fireballText = AssetManager.Default.LoadSpriteSheet("Weapons/Projectiles/fireball_sheet.png", 64, 64);
             Entity e = sWorld.CreateEntity();
             e.Group = "Projectile";
-//      //        e.CollisionGroup = 5; // TODO: Check what to do with this // TODO: Check what to do with this
             e.AddComponent(new Transform(position, TwenMath.DirectionVectorToRotation(direction)) { CollideWithMap = true, CollideWithEntityMap = true});
             e.AddComponent(new RaycastSprite(fireballText, 0));
             Physics physics = new Physics(15){IntendedMovementDirection = direction};
@@ -247,7 +226,6 @@ namespace raycaster
             SpriteSheet bulletSheet = AssetManager.Default.LoadSpriteSheet("Weapons/Projectiles/bulletHits.png", 64, 64);
             Entity e = sWorld.CreateEntity();
             e.Group = "Deco";
-//             e.CollisionGroup = 5; // TODO: Check what to do with this
             e.AddComponent(new Transform(position, 0) { CollideWithMap = false, CollideWithEntityMap = false });
             e.AddComponent(new RaycastSprite(bulletSheet, 0));
 
@@ -304,7 +282,7 @@ namespace raycaster
             SpriteSheet guard = AssetManager.Default.LoadSpriteSheet("Enemies/BlakeStone/scientist_sheet.png", 64, 64);
             Entity e = sWorld.CreateEntity();
             e.Group = "Enemy";
-            Collider collider = new Collider(0.2f) { CollisionGroup = 3 };
+            Collider collider = new Collider(0.2f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(position, rotation) { CollideWithMap = true, CollideWithEntityMap = true});
             e.AddComponent(new RaycastSprite(guard, 0));
@@ -444,18 +422,13 @@ namespace raycaster
             e.Refresh();// always call Refresh() when adding/removing components!
             return e;
         }
-
-        private static void AddAlternateStateAnimationToEntity(Entity entity, List<int> frames)
-        {
-            SpriteAnimator spriteAnimator = entity.GetComponent<SpriteAnimator>();
-            spriteAnimator.AddAnimation("AlternateState", frames, 6, true);
-        }
+        
 
         private static Entity CreateHiddenMonster(Vector2 spawnPos, SpriteSheet sheet, bool leaveRemains)
         {
             Entity e = sWorld.CreateEntity();
             e.Group = "Enemy";
-            Collider collider = new Collider(0.2f) { CollisionGroup = 3};
+            Collider collider = new Collider(0.2f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(spawnPos, 0f) { CollideWithMap = true, CollideWithEntityMap = true });
             e.AddComponent(new RaycastSprite(sheet, 0));
@@ -514,7 +487,7 @@ namespace raycaster
             SpriteSheet guard = AssetManager.Default.LoadSpriteSheet(spriteSheet, 64, 64);
             Entity e = sWorld.CreateEntity();
             e.Group = "Enemy";
-            Collider collider = new Collider(0.2f) { CollisionGroup = 3};
+            Collider collider = new Collider(0.2f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(position, rotation) { CollideWithMap = true, CollideWithEntityMap = true});
             e.AddComponent(new RaycastSprite(guard, 0));
@@ -544,7 +517,7 @@ namespace raycaster
             ActorStateMachine actorStateMachine = new ActorStateMachine(sTilemap);
             healthPoints.Dying += actorStateMachine.ActorDying;
             metaBehavior.AddBehavior(actorStateMachine);
-            Stand standState = new Stand() {DetectPlayerSoundCues = new List<string>() { "Achtung", "Alarm", "WerDa"}};
+            Stand standState = new Stand() {DetectPlayerSoundCues = new List<SoundCue>() { SoundCue.Achtung, SoundCue.Alarm, SoundCue.WerDa } };
             Path pathState = new Path();
             if (isActorPatrolling)
             {
@@ -559,9 +532,9 @@ namespace raycaster
 
             actorStateMachine.AddState(new Chase());
             actorStateMachine.AddState(new PrepareFire());
-            actorStateMachine.AddState(new Fire() { FireSoundCues = new List<string>() { "Gunshot01", "Gunshot02", "Gunshot03" } });
-            actorStateMachine.AddState(new Die() { DyingSoundCues = new List<string>() {"MeinLeben"}, SpawnAfterDeathFunction = pos => CreateAmmoPickup(pos) });
-            actorStateMachine.AddState(new Pain(){ PainSoundCues = new List<string>(){"EnemyPain"}});
+            actorStateMachine.AddState(new Fire() { FireSoundCues = new List<SoundCue>() { SoundCue.Gunshot01, SoundCue.Gunshot02, SoundCue.Gunshot03 } });
+            actorStateMachine.AddState(new Die() { DyingSoundCues = new List<SoundCue>() {SoundCue.MeinLeben}, SpawnAfterDeathFunction = pos => CreateAmmoPickup(pos) });
+            actorStateMachine.AddState(new Pain(){ PainSoundCues = new List<SoundCue>(){SoundCue.EnemyPain}});
             e.AddComponent(metaBehavior);
             healthPoints.ReceivedDamage += actorStateMachine.ActorHit;
             e.Refresh();// always call Refresh() when adding/removing components!
@@ -575,7 +548,7 @@ namespace raycaster
             SpriteSheet bat = AssetManager.Default.LoadSpriteSheet("Enemies/Catacomb/bat_sheet.png", 64, 64);
             Entity e = sWorld.CreateEntity();
             e.Group = "Enemy";
-            Collider collider = new Collider(0.2f) { CollisionGroup = 3 };
+            Collider collider = new Collider(0.2f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(position, 0f) { CollideWithMap = true, CollideWithEntityMap = true, MaxSpeed = 14 });
             e.AddComponent(new RaycastSprite(bat, 0));
@@ -621,7 +594,7 @@ namespace raycaster
             SpriteSheet guard = AssetManager.Default.LoadSpriteSheet("Enemies/Catacomb/bluemonster.png", 64, 64);
             Entity e = sWorld.CreateEntity();
             e.Group = "Enemy";
-            Collider collider = new Collider(0.2f) { CollisionGroup = 3 };
+            Collider collider = new Collider(0.2f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(position, 0f) { CollideWithMap = true, CollideWithEntityMap = true, MaxSpeed = 8 });
             e.AddComponent(new RaycastSprite(guard, 0));
@@ -668,7 +641,7 @@ namespace raycaster
             SpriteSheet guard = AssetManager.Default.LoadSpriteSheet("Enemies/Catacomb/zombie_sheet.png", 64, 64);
             Entity e = sWorld.CreateEntity();
             e.Group = "Enemy";
-            Collider collider = new Collider(0.2f) { CollisionGroup = 3 };
+            Collider collider = new Collider(0.2f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(position, 0f) { CollideWithMap = true, CollideWithEntityMap = true, MaxSpeed = 4});
             e.AddComponent(new RaycastSprite(guard, 0));
@@ -932,7 +905,7 @@ namespace raycaster
             int ypos = (int)(screenDimension.Y - ((frameHeight / 2f) * scale) - statusbarHeight);
             e.AddComponent(new Transform(xpos, ypos, 0f));
             e.AddComponent(new Sprite(pistol, 0) { Scale = scale, Origin = new Vector2(32, 32) });
-            e.AddComponent(new Weapon("German Assault Rifle", 5, 15, 30, 99) { PenetrationCount = 1, Range = 40, IsAutomatic = true, FireSoundCue = "MachineGun", Accuracy = 12 });
+            e.AddComponent(new Weapon("German Assault Rifle", 5, 15, 30, 99) { PenetrationCount = 1, Range = 40, IsAutomatic = true, FireSoundCue = SoundCue.MachineGun, Accuracy = 12 });
             SpriteAnimator spriteAnimator = new SpriteAnimator();
             Animation animation = spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             animation.Loop = true;
@@ -959,7 +932,7 @@ namespace raycaster
             int ypos = (int)(screenDimension.Y - ((frameHeight / 2f) * scale) - statusbarHeight);
             e.AddComponent(new Transform(xpos, ypos, 0f));
             e.AddComponent(new Sprite(pistol, 0) { Scale = scale, Origin = new Vector2(32, 32) });
-            e.AddComponent(new Weapon("GATLING!", 5, 15, 30, 99) { PenetrationCount = 2, Range = 40, IsAutomatic = true, FireSoundCue = "GatlingGun", Accuracy = 20 });
+            e.AddComponent(new Weapon("GATLING!", 5, 15, 30, 99) { PenetrationCount = 2, Range = 40, IsAutomatic = true, FireSoundCue = SoundCue.GatlingGun, Accuracy = 20 });
             SpriteAnimator spriteAnimator = new SpriteAnimator();
             Animation animation = spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             animation.Loop = true;
@@ -988,7 +961,7 @@ namespace raycaster
             e.AddComponent(new Transform(xpos, ypos, 0f));
             
             e.AddComponent(new Sprite(pistol, 0) { Scale = scale, Origin = new Vector2(frameWidth/2, frameHeight/2)});
-            e.AddComponent(new Weapon("S.S. Knife", 4, 24, -1, -1) { PenetrationCount = 1, Range = 1.5f, NeedsAmmo = false, FireSoundCue = "Knife", Accuracy = 0, IsSilent = true});
+            e.AddComponent(new Weapon("S.S. Knife", 4, 24, -1, -1) { PenetrationCount = 1, Range = 1.5f, NeedsAmmo = false, FireSoundCue = SoundCue.Knife, Accuracy = 0, IsSilent = true});
             SpriteAnimator spriteAnimator = new SpriteAnimator();
             Animation animation = spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             animation.Loop = true;
@@ -1006,7 +979,7 @@ namespace raycaster
         {
             Entity e = sWorld.CreateEntity();
             e.Group = "Pickup";
-            Collider collider = new Collider(0.4f) { CollisionGroup = 4 };
+            Collider collider = new Collider(0.4f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(spawnPos, 0f));
             e.AddComponent(new RaycastSprite(spriteTextures, tileIndex));
@@ -1037,7 +1010,7 @@ namespace raycaster
             int ypos = (int)(screenDimension.Y - ((frameHeight / 2f) * scale) - statusbarHeight);
             e.AddComponent(new Transform(xpos, ypos, 0f));
             e.AddComponent(new Sprite(pistol, 0) { Scale = scale, Origin = new Vector2(64,64)});
-            e.AddComponent(new Weapon("H.U.N.T. Pistol", 5, 15, 30, 60) { PenetrationCount = 1, Range = 50, NeedsAmmo = true, FireSoundCue = "Pistol1", Accuracy = 5});
+            e.AddComponent(new Weapon("H.U.N.T. Pistol", 5, 15, 30, 60) { PenetrationCount = 1, Range = 50, NeedsAmmo = true, FireSoundCue = SoundCue.Pistol1, Accuracy = 5});
             SpriteAnimator spriteAnimator = new SpriteAnimator();
             Animation animation = spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             animation.Loop = true;
@@ -1119,7 +1092,7 @@ namespace raycaster
         {
             Entity e = sWorld.CreateEntity();
             e.Group = "Pickup";
-            Collider collider = new Collider(0.3f) { CollisionGroup = 4 };
+            Collider collider = new Collider(0.3f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(spawnPos, 0f));
             e.AddComponent(new RaycastSprite(sTilemap.SpriteTextures, tileIndex));
@@ -1145,7 +1118,7 @@ namespace raycaster
             EventHandler<PickupEventArgs> pickupCallback = (o, args) => RaycastGame.HealPlayer(args.AmountPickedUp);
             Entity e = sWorld.CreateEntity();
             e.Group = "Pickup";
-            Collider collider = new Collider(0.3f) { CollisionGroup = 4 };
+            Collider collider = new Collider(0.3f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(spawnPos, 0f));
             e.AddComponent(new RaycastSprite(sheet, tileIndex));
@@ -1174,7 +1147,7 @@ namespace raycaster
         {
             Entity e = sWorld.CreateEntity();
             e.Group = "Pickup";
-            Collider collider = new Collider(1f) { CollisionGroup = 4 };
+            Collider collider = new Collider(1f);
             e.AddComponent(collider);
             e.AddComponent(new Transform(position, 0f));
             e.AddComponent(new RaycastSprite(sTilemap.SpriteTextures, 4));

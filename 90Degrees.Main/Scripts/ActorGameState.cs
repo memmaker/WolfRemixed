@@ -83,7 +83,7 @@ namespace raycaster.Scripts
             ResetAnimation(this, new EventArgs());
         }
 
-        public void Begin(EntityWorld world, Entity self, Tilemap map)
+        public void Begin(Entity self, Tilemap map)
         {
             
             if (!mFirstTimeInitDone)

@@ -21,14 +21,16 @@ namespace raycaster.States
         {
             get { return ActorState.Stand; }
         }
-        public List<string> DetectPlayerSoundCues { get; set; }
+        public List<SoundCue> DetectPlayerSoundCues { get; set; }
         public override void Update()
         {
             base.Update();
             if ((AttackOnSight && CanDetectPlayer()) || EnemyWasWounded())
             {
                 if (DetectPlayerSoundCues != null)
-                    ComponentTwengine.AudioManager.PlayRandomSound(DetectPlayerSoundCues);
+                    ComponentTwengine.AudioManager.PlayRandomEffect(DetectPlayerSoundCues.ConvertAll((cue) =>
+                    {
+                        return (int) cue;}));
 
                 if (PlayerIsInRange(mTransform.Position, mEnemy.FiringRange))
                 {

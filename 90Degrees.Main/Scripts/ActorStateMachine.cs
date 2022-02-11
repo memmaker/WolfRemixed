@@ -52,7 +52,7 @@ namespace raycaster.Scripts
         {
             AddState(state);
             mCurrentState = state;
-            mCurrentState.Begin(mWorld, mSelf, mTilemap);
+            mCurrentState.Begin(mSelf, mTilemap);
         }
 
         public void AddState(ActorGameState state)
@@ -82,7 +82,7 @@ namespace raycaster.Scripts
 
         private void BeginState()
         {
-            mCurrentState.Begin(mWorld, mSelf, mTilemap);
+            mCurrentState.Begin(mSelf, mTilemap);
             mSpriteAnimator.CurrentAnimation = mCurrentState.AnimationName;
             mSpriteAnimator.ResetAndPlay();
         }

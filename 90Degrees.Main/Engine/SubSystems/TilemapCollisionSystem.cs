@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Artemis;
 using Artemis.System;
 using Microsoft.Xna.Framework;
@@ -24,6 +25,8 @@ namespace Twengine.SubSystems
         private Raycaster mRaycaster;
         private Tilemap mTileMap;
         private HashSet<Point> mSecretWalls;
+        private List<Entity>[,] mMapData;
+
         public TilemapCollisionSystem(Tilemap map, Raycaster raycaster)
             : base()
         {
@@ -31,6 +34,12 @@ namespace Twengine.SubSystems
             mRaycaster = raycaster;
             mRelativeNeighbors = new List<Point>() { new Point(-1, 0), new Point(1, 0), new Point(0, -1), new Point(0, 1), new Point(1, -1), new Point(-1, 1), new Point(-1, -1), new Point(1, 1) };
             mNeighborTiles = new List<Rectangle>(8);
+        }
+
+        protected override void Begin()
+        {
+            base.Begin();
+            mMapData = mTileMap.Entities;
         }
 
         public void ChangeMap(Tilemap tilemap)
@@ -62,6 +71,8 @@ namespace Twengine.SubSystems
             if (!transform.CollideWithMap) return;
 
             transform.Position = CollideWithMap(collider, transform.Position);
+            transform.Position = CollideWithEntitiesOnMap(collider, transform.Position, e, transform);
+
             if (e.Group == "Player")
             {
                 mRaycaster.SyncRaycasterCamToPlayer(transform);
@@ -73,6 +84,7 @@ namespace Twengine.SubSystems
                     mSecretWalls.Remove(playerCell);
                 }
             }
+            
         }
 
         public Vector2 CollideWithMap(Collider collider, Vector2 position)
@@ -155,10 +167,88 @@ namespace Twengine.SubSystems
                     continue;
 
                 char metaData = mTileMap.GetCellMetaDataByPosition(neighborTile.X, neighborTile.Y);
-                if (mTileMap.GetCellDataByPosition(new Point(neighborTile.X, neighborTile.Y)) > 0 && metaData != 's')  // is a wall and no secret wall
+                if (mTileMap.GetCellDataByPosition(new Point(neighborTile.X, neighborTile.Y)) > 0 &&
+                    metaData != 's') // is a wall and no secret wall
+                {
+                    
                     mNeighborTiles.Add(neighborTile);
+                }
+                else if (metaData == 'd' && mTileMap.Entities[neighborTile.Y, neighborTile.X].Count > 0)
+                {
+                    // is a door
+                    var entities = mTileMap.Entities[neighborTile.Y, neighborTile.X];
+                    var door = entities.Find(e => e.IsActive && e.IsEnabled && e.HasComponent<Door>())?.GetComponent<Door>();
+                    if (door is {IsOpen: false})
+                    {
+                        mNeighborTiles.Add(neighborTile);
+                    }
+                }
             }
             return mNeighborTiles;
         }
+
+        public Vector2 CollideWithEntitiesOnMap(Collider collider, Vector2 position, Entity entity, Transform transform)
+        {
+            Vector2 newPos = position;
+
+            List<Entity> possibleBlockingEntities = GetBlockingEntities(position, entity);
+
+            foreach (Entity possibleBlockingEntity in possibleBlockingEntities)
+            {
+                if ((possibleBlockingEntity.Group == "Pickup" || entity.Group == "Pickup") && ((possibleBlockingEntity.Group != "Pickup" && entity.Group != "Pickup"))) continue; // dont collide pickups with anything other than the player
+                // if (entity.Group == "Enemy" &&  && possibleBlockingEntity.Group == "Enemy") continue; // dont collide enemy with pickups
+
+                Transform otherTransform = possibleBlockingEntity.GetComponent<Transform>();
+                Collider otherCollider = possibleBlockingEntity.GetComponent<Collider>();
+
+                float distance = Vector2.Distance(position, otherTransform.Position);
+                if (distance < collider.Radius + otherCollider.Radius)
+                {
+                    // collision
+                    if (entity.Group == "Player" && possibleBlockingEntity.Group != "Pickup") // never push back the player while colliding with pickups
+                    {
+
+                        Vector2 outwardsDir = position - otherTransform.Position;
+                        float length = (collider.Radius + otherCollider.Radius) - distance;
+                        outwardsDir.Normalize();
+                        outwardsDir *= length;
+
+                        newPos = position + outwardsDir;
+                    }
+                    else if (entity.Group == "Enemy")
+                    {
+                        newPos = transform.OldPosition;
+                    }
+
+                    collider.OnCollisionWithEntity(possibleBlockingEntity);
+                    otherCollider.OnCollisionWithEntity(entity);
+                }
+            }
+
+            return newPos;
+        }
+
+        private List<Entity> GetBlockingEntities(Vector2 position, Entity entity)
+        {
+            List<Entity> blockingEntities = new List<Entity>();
+            Rectangle startTile = new Rectangle((int)Math.Floor(position.X), (int)Math.Floor(position.Y), 1, 1);
+
+            foreach (Point neighborPos in mRelativeNeighbors.Append(new Point(0, 0)))
+            {
+                Rectangle neighborTile = new Rectangle(startTile.X + neighborPos.X, startTile.Y + neighborPos.Y, 1, 1);
+                if (neighborTile.X > mMapWidth - 1 || neighborTile.X < 0 || neighborTile.Y > mMapHeight - 1 || neighborTile.Y < 0)
+                    continue;
+
+
+                foreach (Entity other in mMapData[neighborTile.Y, neighborTile.X])
+                {
+                    if (other == entity || !other.HasComponent<Collider>()) continue;
+                    //if (other.Group == "Enemy" || other.Group == "Player" || other.Group == "Door" || other.Group == "Obstacle" || other.Group == "Hazard" || other.Group == "Pickup")// || other.Group == "Projectile"
+                    blockingEntities.Add(other);
+                }
+            }
+            return blockingEntities;
+        }
+        
     }
 }

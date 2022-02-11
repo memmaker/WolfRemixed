@@ -17,13 +17,11 @@ namespace Twengine.SubSystems
         private SpriteBatch mSpriteBatch;
         private Transform mTransform;
         private Sprite mSprite;
-        private MapManager mMapManager;
 
-        public SpriteRenderSystem(SpriteBatch spriteBatch, MapManager mapManager)
+        public SpriteRenderSystem(SpriteBatch spriteBatch)
             : base()
         {
             mSpriteBatch = spriteBatch;
-            mMapManager = mapManager;
             
         }
        

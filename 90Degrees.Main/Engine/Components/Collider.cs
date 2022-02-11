@@ -16,12 +16,10 @@ namespace Twengine.Components
         public event EventHandler<CollisionEventArgs> CollidedWithEntity;
         public event EventHandler<EventArgs> CollidedWithWall;
         private float mRadius;
-        public int CollisionGroup { get; set; }
 
         public Collider(float radius)
         {
             mRadius = radius;
-            OccupiedGridCells = new List<CellIndex>();
             CollisionShape = Shape.Circle;
         }
 
@@ -33,7 +31,6 @@ namespace Twengine.Components
 
         public bool IsTrigger { get; set; }
 
-        public List<CellIndex> OccupiedGridCells { get; set; }
 
         public Shape CollisionShape { get; set; }
 

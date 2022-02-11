@@ -34,7 +34,6 @@ namespace Twengine
         protected static GameStateManager mGameStateManager;
         public static AudioPlayer AudioManager { get; set; }
         protected static GameGui sGui;
-        private bool mDrawTileMap;
         private MouseState mLastmouseState;
         protected bool mRunUpdateInEngine;
 
@@ -45,7 +44,6 @@ namespace Twengine
             sWorld = new EntityWorld();
             Content.RootDirectory = "Content";
             mXTileEnabled = useXtile;
-            mDrawTileMap = false;
             mTics = 0;
             sGui = new GameGui();
             mLastmouseState = Mouse.GetState();
@@ -74,7 +72,7 @@ namespace Twengine
             
             AssetManager.Default.Init(Content, GraphicsDevice);
             
-            if (mXTileEnabled) mMapManager = new MapManager(sWorld, Content, GraphicsDevice);
+            if (mXTileEnabled) mMapManager = new MapManager(Content);
 
             SpriteFont spriteFont = Content.Load<SpriteFont>("Fonts/DefaultFont");
             DebugDrawer.Init(mSpriteBatch, spriteFont);

@@ -19,7 +19,7 @@ namespace raycaster.States
         public Fire()
         {
             mIsShooting = false;
-            FireSoundCues = new List<string>();
+            FireSoundCues = new List<SoundCue>();
         }
         public override void Update()
         {
@@ -54,7 +54,7 @@ namespace raycaster.States
         private void StartFire()
         {
             if (FireSoundCues != null)
-                ComponentTwengine.AudioManager.PlayRandomSound(FireSoundCues);
+                ComponentTwengine.AudioManager.PlayRandomEffect(FireSoundCues.ConvertAll((cue) => { return (int)cue; }));
             mIsShooting = true;
             OnResetAnimation();
         }
@@ -69,7 +69,7 @@ namespace raycaster.States
             }
             else
             {
-                RaycastGame.AudioManager.PlayRandomSound(FireSoundCues);
+                RaycastGame.AudioManager.PlayRandomEffect(FireSoundCues.ConvertAll((cue) => { return (int)cue; }));
             }
         }
 
@@ -79,7 +79,7 @@ namespace raycaster.States
             DealDamage();
         }
 
-        public List<string> FireSoundCues { get; set; }
+        public List<SoundCue> FireSoundCues { get; set; }
 
         public override void BeginState()
         {

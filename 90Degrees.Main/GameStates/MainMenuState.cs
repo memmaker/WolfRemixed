@@ -65,19 +65,19 @@ namespace raycaster.GameStates
                 button.SelectionColor = new Color(103, 84, 15);
             }
             GameGui.RootWidget.AddChild(mMenu);
-            ComponentTwengine.AudioManager.PlaySound("MenuMusic", true);
+            ComponentTwengine.AudioManager.PlaySound((int) SoundCue.MenuMusic, true);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            ComponentTwengine.AudioManager.PlaySound("MenuMusic", true);
+            ComponentTwengine.AudioManager.PlaySound((int) SoundCue.MenuMusic, true);
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            ComponentTwengine.AudioManager.StopSound("MenuMusic");
+            ComponentTwengine.AudioManager.StopSound((int) SoundCue.MenuMusic);
         }
         protected override void OnLeaving()
         {
@@ -86,7 +86,7 @@ namespace raycaster.GameStates
             //mMainScreen.Desktop.Children.Remove(mMenu);
             //mGui.RootWidget.RemoveChild(mMenu);
             mMenu.Destroy();
-            ComponentTwengine.AudioManager.StopSound("MenuMusic");
+            ComponentTwengine.AudioManager.StopSound((int)SoundCue.MenuMusic);
         }
 
         protected override void KeyPressed(Keys key)

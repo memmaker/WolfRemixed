@@ -16,7 +16,6 @@ namespace Twengine.SubSystems.Raycast
     {
         private SpriteBatch mSpriteBatch;
         private GraphicsDevice mGraphicsDevice;
-        private SpriteFont mHudFont;
         private AssetManager mContent;
         private int mScreenWidth;
         private int mScreenHeight;
@@ -63,7 +62,6 @@ namespace Twengine.SubSystems.Raycast
             mDrawLoS = false;
             mSpriteBatch = spriteBatch;
             mGraphicsDevice = spriteBatch.GraphicsDevice;
-            mHudFont = hudFont;
             mContent = content;
             mScreenWidth = screenWidth;
             mScreenHeight = screenHeight;

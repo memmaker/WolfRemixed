@@ -72,10 +72,12 @@ namespace raycaster.GameStates
         {
             base.OnEntered();
             float menuWidth = GameGui.Viewport.Width * 0.4f;
-            mMenu = new MenuWindowWidget(new List<string>() { "Resolution", "Fullscreen", "Apply", "Back" }, (int) menuWidth, (int) (menuWidth - (2*20)));
-            mMenu.Bounds = new UniRectangle(0, 0, new UniScalar(1, 0), new UniScalar(1, 0));
-            mMenu.Background = AssetManager.Default.LoadTexture("Menu/options_widescreen.png");
-            mMenu.DrawLabelBackground = true;
+            mMenu = new MenuWindowWidget(new List<string>() { "Resolution", "Fullscreen", "Apply", "Back" }, (int)menuWidth, (int)(menuWidth - (2 * 20)))
+            {
+                Bounds = new UniRectangle(0, 0, new UniScalar(1, 0), new UniScalar(1, 0)),
+                Background = AssetManager.Default.LoadTexture("Menu/options_widescreen.png"),
+                DrawLabelBackground = true
+            };
             foreach (ButtonWidget button in mMenu.Buttons.Values)
             {
                 button.LabelColor = new Color(55, 55, 55);

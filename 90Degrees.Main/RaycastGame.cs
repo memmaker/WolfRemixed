@@ -22,6 +22,8 @@ using System.Configuration;
 using XNAHelper;
 using Artemis.Manager;
 using Artemis.Utils;
+using Microsoft.Xna.Framework.Audio;
+using MP3Player;
 
 namespace raycaster
 {
@@ -35,7 +37,6 @@ namespace raycaster
 
         private static RaycastMapRenderer mMapRenderer;
         private static TilemapCollisionSystem mTilemapCollisionSystem;
-        private static TilemapEntityCollisionSystem mTilemapEntityCollisionSystem;
 
         private static Tilemap mTilemap;
         
@@ -53,7 +54,6 @@ namespace raycaster
         private SpriteFont mMessageFont;
 
         private static FPSControlSystem mFpsControlSystem;
-        protected static CollisionSystem mCollisionSystem;
         private static SpriteAnimator mHudFaceAnimator;
         private SpriteFont mLongTextFont;
 
@@ -80,7 +80,7 @@ namespace raycaster
             int width, height;
             if (Config.AppSettings.Settings.Count == 0)
             {
-                mMouseSensitivity = 0.08f;
+                mMouseSensitivity = 0.50f;
                 mFullscreen = false;
                 mLowResRaytracing = false;
                 width = 640;
@@ -219,7 +219,7 @@ namespace raycaster
             fpsWeaponSystem.PlayerWeaponFired += args =>
                                                      {
                                                          if (CurrentWeapon.FireSoundCue != null)
-                                                             AudioManager.PlaySound(CurrentWeapon.FireSoundCue);
+                                                             AudioManager.PlayEffect((int)CurrentWeapon.FireSoundCue);
                                                          if (!CurrentWeapon.IsSilent)
                                                             AlertNonHiddenEnemiesNearPosition(mPlayerTransform.Position);
                                                      };
@@ -228,17 +228,14 @@ namespace raycaster
             mSystemManager.SetSystem(fpsWeaponSystem,  GameLoopType.Update);
 
             mSystemManager.SetSystem(new FpsWeaponAnimationSystem(),  GameLoopType.Update);
-
-            mTilemapEntityCollisionSystem = new TilemapEntityCollisionSystem(mRaycaster, mTilemap);
-            mSystemManager.SetSystem(mTilemapEntityCollisionSystem, GameLoopType.Update);
-
+            
             mTilemapCollisionSystem = new TilemapCollisionSystem(mTilemap, mRaycaster);
             mTilemapCollisionSystem.PlayerFoundSecret += PlayerFoundSecret;
             mSystemManager.SetSystem(mTilemapCollisionSystem, GameLoopType.Update);
 
             mSystemManager.SetSystem(new MessageRenderSystem(mSpriteBatch, mMessageFont),  GameLoopType.Draw);
 
-            mSystemManager.SetSystem(new SpriteRenderSystem(mSpriteBatch, null), GameLoopType.Draw);  // default 2d sprite rendering
+            mSystemManager.SetSystem(new SpriteRenderSystem(mSpriteBatch), GameLoopType.Draw);  // default 2d sprite rendering
 
             EntitySpawn.Init(sWorld, mTilemap);
 
@@ -293,19 +290,25 @@ namespace raycaster
                     switch (tileIndex)
                     {
                         case 0: // ROTT Pistol
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "hmm, a H.U.N.T. Pistol..", 2, EntitySpawn.CreateRottPistol);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "hmm, a H.U.N.T. Pistol..", 3, EntitySpawn.CreateRottPistol);
                             break;
                         case 1: // Wolf Assault Rifle
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Time to mow down some Nazis..", 3, EntitySpawn.CreateWolfRifle);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Time to mow down some Nazis..", 5, EntitySpawn.CreateWolfRifle);
                             break;
                         case 2: // Wolf Gatling Gun
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "More lead, more death!", 4, EntitySpawn.CreateWolfGatling);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "More lead, more death!",6, EntitySpawn.CreateWolfGatling);
                             break;
                         case 3: // Pistol
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Blake won't need this..", 5, EntitySpawn.CreateBlakeStoneAutoChargePistol);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Blake won't need this..", 4, EntitySpawn.CreateBlakeStoneAutoChargePistol);
                             break;
                         case 113: // necronomicon
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Klaatu Verata Nektu", 6, EntitySpawn.CreateMagicHand);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Klaatu Verata ..Nektu?! ",9, EntitySpawn.CreateMagicHand);
+                            break;
+                        case 114: // duke shotgun
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Come, get some!", 7, EntitySpawn.CreateDukeShotgun);
+                            break;
+                        case 115: // doom shotgun
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Got a Boomstick!", 8, EntitySpawn.CreateDoomShotgun);
                             break;
                         case 4: // ammo
                             EntitySpawn.CreateAmmoPickup(spawnPos);
@@ -442,7 +445,7 @@ namespace raycaster
         {
             if (mEnergyReactorsAlive.Count == 0)
             {
-                AudioManager.PlaySound("AlarmSound");
+                AudioManager.PlayEffect((int) SoundCue.AlarmSound);
                 foreach (Entity energyBarrier in mEnergyBarriers)
                 {
                     energyBarrier.Group = "Deco";
@@ -675,61 +678,58 @@ namespace raycaster
         {
             mHudFont = Content.Load<SpriteFont>("Fonts/WolfFont");
             mMessageFont = Content.Load<SpriteFont>("Fonts/WolfFontSmall");
-            mLongTextFont = mMessageFont;
-            // TODO: FIX // mLongTextFont = Content.Load<SpriteFont>("BitmapFonts/ConsoleFontTexture");
+            mLongTextFont =  Content.Load<SpriteFont>("Fonts/LongTextFont");
             mLongTextFont.Spacing = 2;
             sGui.LoadContent(Content, GraphicsDevice, mHudFont, mLongTextFont);
 
-            AudioManager.LoadSound("Music/Wolfenstein/wolfmenu.mp3","MenuMusic",true);
-            AudioManager.LoadSound("Music/Wolfenstein/wolfintro.mp3", "IntroMusic", true);
+            AudioManager.LoadSound("Music/Wolfenstein/wolfmenu.mp3", (int) SoundCue.MenuMusic, true);
+            AudioManager.LoadSound("Music/Wolfenstein/wolfintro.mp3", (int) SoundCue.IntroMusic, true);
             
-            AudioManager.LoadSound("Music/Wolfenstein/wolfplay01.mp3", "GamePlayMusic01", true);
-            AudioManager.LoadSound("Music/Wolfenstein/wolfplay02.mp3", "GamePlayMusic02", true);
-            AudioManager.LoadSound("Music/Wolfenstein/wolfplay03.mp3", "GamePlayMusic03", true);
+            AudioManager.LoadSound("Music/Wolfenstein/wolfplay01.mp3", (int) SoundCue.GamePlayMusic01, true);
+            AudioManager.LoadSound("Music/Wolfenstein/wolfplay02.mp3", (int) SoundCue.GamePlayMusic02, true);
+            AudioManager.LoadSound("Music/Wolfenstein/wolfplay03.mp3", (int) SoundCue.GamePlayMusic03, true);
 
-            // TODO: FIX
-            /*
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/gunshot1.wav", "Gunshot01", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/gunshot2.wav", "Gunshot02", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/gunshot3.wav", "Gunshot03", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot1.wav"), (int) SoundCue.Gunshot01);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot2.wav"), (int) SoundCue.Gunshot02);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot3.wav"), (int) SoundCue.Gunshot03);
 
-            AudioManager.LoadSound("SoundEffects/Rott/pistol1.wav", "Pistol1", false);
-            AudioManager.LoadSound("SoundEffects/Rott/pistol2.wav", "Pistol2", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol1.wav"), (int) SoundCue.Pistol1);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol2.wav"), (int) SoundCue.Pistol2);
 
-            AudioManager.LoadSound("SoundEffects/Rott/bulletRicochet1.wav", "Ricochet1", false);
-            AudioManager.LoadSound("SoundEffects/Rott/bulletRicochet2.wav", "Ricochet2", false);
-            AudioManager.LoadSound("SoundEffects/Rott/bulletRicochet3.wav", "Ricochet3", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet1.wav"), (int) SoundCue.Ricochet1);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet2.wav"), (int) SoundCue.Ricochet2);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet3.wav"), (int) SoundCue.Ricochet3);
 
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/achtung.wav", "Achtung", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/alarm.wav", "Alarm", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/werda.wav", "WerDa", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/achtung.wav"), (int) SoundCue.Achtung);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarm.wav"), (int) SoundCue.Alarm);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/werda.wav"), (int) SoundCue.WerDa);
 
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/opendoor.wav", "CloseDoor", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/closedoor.wav", "OpenDoor", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/opendoor.wav"), (int) SoundCue.CloseDoor);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/closedoor.wav"), (int) SoundCue.OpenDoor);
 
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/meinLeben.wav", "MeinLeben", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/alarmSound.wav", "AlarmSound", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/meinLeben.wav"), (int) SoundCue.MeinLeben);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarmSound.wav"), (int) SoundCue.AlarmSound);
             
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/rifleSound2.wav", "Rifle1", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/rifleSound3.wav", "Rifle2", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound2.wav"), (int) SoundCue.Rifle1);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound3.wav"), (int) SoundCue.Rifle2);
 
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/Machine Gun.wav", "MachineGun", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/Gatling Gun.wav", "GatlingGun", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/Knife.wav", "Knife", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Machine Gun.wav"), (int) SoundCue.MachineGun);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Gatling Gun.wav"), (int) SoundCue.GatlingGun);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Knife.wav"), (int) SoundCue.Knife);
 
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/Enemy Pain.wav", "EnemyPain", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/Player Dies.wav", "PlayerDies", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/Player Pain 1.wav", "PlayerPain1", false);
-            AudioManager.LoadSound("SoundEffects/Wolfenstein/Player Pain 2.wav", "PlayerPain2", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Enemy Pain.wav"), (int) SoundCue.EnemyPain);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Dies.wav"), (int) SoundCue.PlayerDies);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 1.wav"), (int) SoundCue.PlayerPain1);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 2.wav"), (int) SoundCue.PlayerPain2);
             
 
-            AudioManager.LoadSound("SoundEffects/Narrator/doublekill.wav", "DoubleKill", false);
-            AudioManager.LoadSound("SoundEffects/Narrator/triplekill.wav", "TripleKill", false);
-            AudioManager.LoadSound("SoundEffects/Narrator/multikill.wav", "MultiKill", false);
-            AudioManager.LoadSound("SoundEffects/Narrator/ultrakill.wav", "UltraKill", false);
-            AudioManager.LoadSound("SoundEffects/Narrator/monsterkill.wav", "MonsterKill", false);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/doublekill.wav"), (int) SoundCue.DoubleKill);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/triplekill.wav"), (int) SoundCue.TripleKill);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/multikill.wav"), (int) SoundCue.MultiKill);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/ultrakill.wav"), (int) SoundCue.UltraKill);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/monsterkill.wav"), (int) SoundCue.MonsterKill);
 
-            */
+            
         }
 
         public static void CreatePlayer(Vector2 pos, Vector2 playerViewDirection)
@@ -743,7 +743,7 @@ namespace raycaster
                 Debug.Print("Strange..!");
             }
             Player.Tag = "LocalPlayer";
-            Player.AddComponent(new Collider(0.2f) { CollisionGroup = 0});
+            Player.AddComponent(new Collider(0.2f));
             Player.AddComponent(new FPSControl() { MoveBackward = Keys.S, MoveForward = Keys.W, MoveLeft = Keys.A, MoveRight = Keys.D, ToggleMap = Keys.M, MapZoomIn = Keys.OemPlus, MapZoomOut = Keys.OemMinus });
             mPlayerTransform = new Transform(pos, TwenMath.DirectionVectorToRotation(playerViewDirection)) { CollideWithMap = true,CollideWithEntityMap = true, MaxSpeed = 4 };
             mPlayerTransform.BeginInvisibility += new EventHandler<EventArgs>(BeginInvisibility);
@@ -769,9 +769,9 @@ namespace raycaster
                                                        (o, args) => AnimateFaceIdleAnimation());
             mHudFaceAnimator = hudFace.GetComponent<SpriteAnimator>();
 
-            //GiveWeaponToPlayer(1, EntitySpawn.CreateWolfKnife);
-            //GiveWeaponToPlayer(1, EntitySpawn.CreateDoomPunch);
-            GiveAllWeponsToPlayer();
+            GiveWeaponToPlayer(2, EntitySpawn.CreateWolfKnife);
+            GiveWeaponToPlayer(1, EntitySpawn.CreateDoomPunch);
+            //GiveAllWeponsToPlayer();
             Debug.Print("Spawned 2 Entities (HudFace & StartWeapon)");
 
             /*
@@ -985,14 +985,14 @@ namespace raycaster
             {
                 AnimatePainOnHudFace(e.Damage);
             }
-            AudioManager.PlayRandomSound(new List<string>(){"PlayerPain1","PlayerPain2"});
+            AudioManager.PlayRandomEffect(new List<int>(){(int)SoundCue.PlayerPain1,  (int)SoundCue.PlayerPain2 });
             //mHudFaceAnimator.FinishedPlaying += new EventHandler<EventArgs>(mHudFaceAnimator_FinishedPlaying);
             
         }
 
         private static void PlayerDied(object sender, EventArgs e)
         {
-            AudioManager.PlaySound("PlayerDies");
+            AudioManager.PlayEffect((int) SoundCue.PlayerDies);
             ShowYouDiedStory(Respawn);
         }
 
@@ -1100,23 +1100,23 @@ namespace raycaster
         {
             if (MultiKillCounter >= 6)
             {
-                AudioManager.PlaySound("MonsterKill");
+                AudioManager.PlayEffect((int) SoundCue.MonsterKill);
             }
             else if (MultiKillCounter == 5)
             {
-                AudioManager.PlaySound("UltraKill");
+                AudioManager.PlayEffect((int)SoundCue.UltraKill);
             }
             else if (MultiKillCounter == 4)
             {
-                AudioManager.PlaySound("MultiKill");
+                AudioManager.PlayEffect((int)SoundCue.MultiKill);
             }
             else if (MultiKillCounter == 3)
             {
-                AudioManager.PlaySound("TripleKill");
+                AudioManager.PlayEffect((int)SoundCue.TripleKill);
             }
             else if (MultiKillCounter == 2)
             {
-                AudioManager.PlaySound("DoubleKill");
+                AudioManager.PlayEffect((int)SoundCue.DoubleKill);
             }
             MultiKillCounter = 0;
         }
@@ -1167,9 +1167,11 @@ namespace raycaster
 
         private static void ResetKeys()
         {
-            PlayerKeys = new Dictionary<string, bool>();
-            PlayerKeys["Silver"] = false;
-            PlayerKeys["Gold"] = false;
+            PlayerKeys = new Dictionary<string, bool>
+            {
+                ["Silver"] = false,
+                ["Gold"] = false
+            };
         }
 
         public void SpawnInZombieArea()
@@ -1246,7 +1248,6 @@ namespace raycaster
             mMapRenderer.DrawMap = false;
             sRaycastRenderSystem.ChangeMap(mTilemap);
             mTilemapCollisionSystem.ChangeMap(mTilemap);
-            mTilemapEntityCollisionSystem.ChangeMap(mTilemap);
             EntitySpawn.ChangeMap(mTilemap);
             SpawnThings();
             
@@ -1441,8 +1442,8 @@ namespace raycaster
         {
             if (PlayerHealthPoints != null)
             {
-                string hpString = "HP: " + PlayerHealthPoints.Health;
-                int offsetLeft = 120;
+                string hpString = PlayerHealthPoints.Health.ToString();
+                int offsetLeft = 75;
                 Vector2 hpStringSize = mHudFont.MeasureString(hpString);
                 Vector2 hpPos = new Vector2(offsetLeft, sScreenHeight);
                 Vector2 shadowOffset = new Vector2(-1, -2);
@@ -1455,10 +1456,10 @@ namespace raycaster
                 {
                     if (CurrentWeapon.NeedsAmmo)
                     {
-                        string ammoString = "Ammo: " + PlayerAmmo;
+                        string ammoString = PlayerAmmo.ToString();
 
                         Vector2 ammoStringSize = mHudFont.MeasureString(ammoString);
-                        Vector2 ammoPos = new Vector2(offsetLeft + hpStringSize.X + 50, sScreenHeight);
+                        Vector2 ammoPos = new Vector2(sScreenWidth - ammoStringSize.X - 10, sScreenHeight);
                         mSpriteBatch.DrawString(mHudFont, ammoString, ammoPos + shadowOffset, Color.Black, 0f,
                                                 new Vector2(0, ammoStringSize.Y), 1f, SpriteEffects.None, 0.5f);
                         Color ammoColor = PlayerAmmo == 0 ? Color.Red : Color.White;

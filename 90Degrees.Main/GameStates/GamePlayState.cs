@@ -52,7 +52,7 @@ namespace raycaster.GameStates
             Debug.Print("Entering GamePlayState");
             RaycastGame.ShowLoadingScreen();
             
-            ComponentTwengine.AudioManager.StartPlaylist(new List<string>() { "GamePlayMusic01", "GamePlayMusic02", "GamePlayMusic03" });
+            ComponentTwengine.AudioManager.StartPlaylist(new List<int>() { (int)SoundCue.GamePlayMusic01, (int)SoundCue.GamePlayMusic02, (int)SoundCue.GamePlayMusic03 });
 
             Spawn();          
         }
@@ -75,7 +75,7 @@ namespace raycaster.GameStates
         }
         public override void Update(GameTime gameTime)
         {
-            mWorld.Update();
+            mWorld.Update(gameTime.ElapsedGameTime.Ticks);
             //mWorld.LoopStart();
             //mWorld.Delta = ;
             //DebugDrawer.DrawString("spawnFinished: " + mSpawnFinished);

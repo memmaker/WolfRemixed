@@ -4,35 +4,14 @@ using System;
 
 namespace Engine.GameStates
 {
-    public abstract class GameState : IGameState
+    public abstract class GameState : IGameState, IUpdateable
     {
         private bool paused;
 
         protected bool Paused => paused;
 
-        bool Enabled => true;
+        bool IUpdateable.Enabled => true;
 
-        int UpdateOrder => 0;
-
-        event EventHandler<EventArgs> EnabledChanged
-        {
-            add
-            {
-            }
-            remove
-            {
-            }
-        }
-
-        event EventHandler<EventArgs> UpdateOrderChanged
-        {
-            add
-            {
-            }
-            remove
-            {
-            }
-        }
 
         public void Pause()
         {

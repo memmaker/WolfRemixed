@@ -159,7 +159,7 @@ namespace XNAHelper
 
                 for (int i = index - 1; i >= 0; --i)
                 {
-                    nextPosition.X = nextPosition.X + longXPositionBuffer[i];
+                    nextPosition.X += longXPositionBuffer[i];
                     spriteBatch.DrawString(spriteFont, longCharBuffer[i], position, color, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, layerDepth);
                     position = nextPosition;
                 }

@@ -103,6 +103,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/DefaultFont.spritefont
 
+#begin Fonts/LongTextFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/LongTextFont.spritefont
+
 #begin Fonts/WolfFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -176,6 +183,18 @@
 /processorParam:TextureFormat=Color
 /build:Maps/wolfitems_sheet.png
 
+#begin Maps/wolfitems_sheet_ext.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Maps/wolfitems_sheet_ext.png
+
 #begin Maps/wolfwalls_sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -222,178 +241,91 @@
 /copy:Music/Wolfenstein/wolfplay03.mp3
 
 #begin SoundEffects/Narrator/doublekill.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Narrator/doublekill.wav
+/copy:SoundEffects/Narrator/doublekill.wav
 
 #begin SoundEffects/Narrator/monsterkill.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Narrator/monsterkill.wav
+/copy:SoundEffects/Narrator/monsterkill.wav
 
 #begin SoundEffects/Narrator/multikill.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Narrator/multikill.wav
+/copy:SoundEffects/Narrator/multikill.wav
 
 #begin SoundEffects/Narrator/triplekill.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Narrator/triplekill.wav
+/copy:SoundEffects/Narrator/triplekill.wav
 
 #begin SoundEffects/Narrator/ultrakill.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Narrator/ultrakill.wav
+/copy:SoundEffects/Narrator/ultrakill.wav
 
 #begin SoundEffects/Rott/bulletRicochet1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Rott/bulletRicochet1.wav
+/copy:SoundEffects/Rott/bulletRicochet1.wav
 
 #begin SoundEffects/Rott/bulletRicochet2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Rott/bulletRicochet2.wav
+/copy:SoundEffects/Rott/bulletRicochet2.wav
 
 #begin SoundEffects/Rott/bulletRicochet3.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Rott/bulletRicochet3.wav
+/copy:SoundEffects/Rott/bulletRicochet3.wav
 
 #begin SoundEffects/Rott/pistol1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Rott/pistol1.wav
+/copy:SoundEffects/Rott/pistol1.wav
 
 #begin SoundEffects/Rott/pistol2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Rott/pistol2.wav
+/copy:SoundEffects/Rott/pistol2.wav
 
 #begin SoundEffects/Wolfenstein/achtung.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/achtung.wav
+/copy:SoundEffects/Wolfenstein/achtung.wav
 
 #begin SoundEffects/Wolfenstein/alarm.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/alarm.wav
+/copy:SoundEffects/Wolfenstein/alarm.wav
 
 #begin SoundEffects/Wolfenstein/alarmSound.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/alarmSound.wav
+/copy:SoundEffects/Wolfenstein/alarmSound.wav
 
 #begin SoundEffects/Wolfenstein/closedoor.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/closedoor.wav
+/copy:SoundEffects/Wolfenstein/closedoor.wav
 
 #begin SoundEffects/Wolfenstein/Enemy Pain.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/Enemy Pain.wav
+/copy:SoundEffects/Wolfenstein/Enemy Pain.wav
 
 #begin SoundEffects/Wolfenstein/Gatling Gun.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/Gatling Gun.wav
+/copy:SoundEffects/Wolfenstein/Gatling Gun.wav
 
 #begin SoundEffects/Wolfenstein/gunshot1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/gunshot1.wav
+/copy:SoundEffects/Wolfenstein/gunshot1.wav
 
 #begin SoundEffects/Wolfenstein/gunshot2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/gunshot2.wav
+/copy:SoundEffects/Wolfenstein/gunshot2.wav
 
 #begin SoundEffects/Wolfenstein/gunshot3.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/gunshot3.wav
+/copy:SoundEffects/Wolfenstein/gunshot3.wav
 
 #begin SoundEffects/Wolfenstein/Knife.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/Knife.wav
+/copy:SoundEffects/Wolfenstein/Knife.wav
 
 #begin SoundEffects/Wolfenstein/Machine Gun.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/Machine Gun.wav
+/copy:SoundEffects/Wolfenstein/Machine Gun.wav
 
 #begin SoundEffects/Wolfenstein/meinLeben.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/meinLeben.wav
+/copy:SoundEffects/Wolfenstein/meinLeben.wav
 
 #begin SoundEffects/Wolfenstein/opendoor.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/opendoor.wav
+/copy:SoundEffects/Wolfenstein/opendoor.wav
 
 #begin SoundEffects/Wolfenstein/Player Dies.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/Player Dies.wav
+/copy:SoundEffects/Wolfenstein/Player Dies.wav
 
 #begin SoundEffects/Wolfenstein/Player Pain 1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/Player Pain 1.wav
+/copy:SoundEffects/Wolfenstein/Player Pain 1.wav
 
 #begin SoundEffects/Wolfenstein/Player Pain 2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/Player Pain 2.wav
+/copy:SoundEffects/Wolfenstein/Player Pain 2.wav
 
 #begin SoundEffects/Wolfenstein/rifleSound2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/rifleSound2.wav
+/copy:SoundEffects/Wolfenstein/rifleSound2.wav
 
 #begin SoundEffects/Wolfenstein/rifleSound3.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/rifleSound3.wav
+/copy:SoundEffects/Wolfenstein/rifleSound3.wav
 
 #begin SoundEffects/Wolfenstein/werda.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffects/Wolfenstein/werda.wav
+/copy:SoundEffects/Wolfenstein/werda.wav
 
 #begin Specials/Zelda/fire.png
 /copy:Specials/Zelda/fire.png

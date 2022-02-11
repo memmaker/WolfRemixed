@@ -20,7 +20,7 @@ namespace raycaster.States
         }
         public Pain()
         {
-            PainSoundCues = new List<string>();
+            PainSoundCues = new List<SoundCue>();
         }
         public override void FinishedAnimating()
         {
@@ -29,10 +29,10 @@ namespace raycaster.States
         public override void BeginState()
         {
             NextActorState = ActorState.Pain;
-            ComponentTwengine.AudioManager.PlayRandomSound(PainSoundCues);
+            ComponentTwengine.AudioManager.PlayRandomEffect(PainSoundCues.ConvertAll<int>((cue) => { return (int)cue; }));
         }
 
-        public List<string> PainSoundCues { get; set; }
+        public List<SoundCue> PainSoundCues { get; set; }
 
 
     }

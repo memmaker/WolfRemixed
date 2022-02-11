@@ -73,11 +73,6 @@ namespace TurnBasedCombat.GameStates
             ButtonUnmarked(button);
         }
 
-        private void OnAppendedStringChanged(ButtonWidget button)
-        {
-            if (ButtonAppendedStringChanged == null) return;
-            ButtonAppendedStringChanged(button);
-        }
         private void OnCounterChange(ButtonWidget button, bool increased)
         {
             if (increased)

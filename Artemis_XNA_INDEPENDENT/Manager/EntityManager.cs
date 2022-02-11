@@ -136,7 +136,7 @@ namespace Artemis.Manager
         /// <returns>New entity.</returns>
         public Entity Create(long? uniqueid = null)
         {
-            long id = uniqueid.HasValue ? uniqueid.Value : BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0);
+            long id = uniqueid ?? BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0);
 
             Entity result = this.removedAndAvailable.RemoveLast();
             if (result == null)
@@ -165,7 +165,7 @@ namespace Artemis.Manager
 #endif
             if (this.AddedEntityEvent != null)
             {
-                this.AddedEntityEvent(result);
+                AddedEntityEvent(result);
             }
 
             return result;
@@ -466,8 +466,7 @@ namespace Artemis.Manager
         /// <param name="component">The component.</param>
         private void EntityManagerRemovedComponentEvent(Entity entity, IComponent component)
         {
-            ComponentPoolable componentPoolable = component as ComponentPoolable;
-            if (componentPoolable != null)
+            if (component is ComponentPoolable componentPoolable)
             {
                 if (componentPoolable.PoolId < 0)
                 {

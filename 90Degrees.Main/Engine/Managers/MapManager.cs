@@ -25,7 +25,7 @@ namespace Twengine.Managers
         private ContentManager mContentManager;
         private Dictionary<string,Texture2D> mTextures;
 
-        public MapManager(EntityWorld world, ContentManager content, GraphicsDevice graphics)
+        public MapManager(ContentManager content)
         {
             mContentManager = content;
             mTextures = new Dictionary<string, Texture2D>();
@@ -43,7 +43,7 @@ namespace Twengine.Managers
                 { "Maps\\wolfenemies_sheet_0", "Enemies"},
                 { "Icons\\meta_sheet_0", "MetaSheet"},
                 { "Maps\\wolfwalls_sheet_0", "WallTextures"},
-                { "Maps\\wolfitems_sheet_0", "WolfItems"},
+                { "Maps\\wolfitems_sheet_ext_0", "WolfItems"},
             };
             mMap = mContentManager.Load<TiledMap>(map);
             foreach (TiledMapTileset tileSheet in mMap.Tilesets)

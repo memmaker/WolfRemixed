@@ -7,7 +7,9 @@ namespace Twengine.Helper
     {
         private ExecutionFunctionType mFunction;
         private double delay;
+        private double currentTimer;
         private bool repeat;
+        private bool done = false;
 
         public delegate void ExecutionFunctionType();
 
@@ -16,7 +18,7 @@ namespace Twengine.Helper
             mFunction = function;
             this.delay = delay;
             this.repeat = repeat;
-            
+            this.currentTimer = delay;
         }
 
         void Execute()
@@ -25,23 +27,38 @@ namespace Twengine.Helper
         }
         internal void Stop()
         {
-            // TODO: Implement this timer
+            done = true;
         }
 
         internal bool IsDone()
         {
-            // TODO: Implement this timer
-            return false;
+            return done;
         }
 
         internal void Update(double delta)
         {
-            // TODO: Implement this timer
+            if (!done)
+            {
+                currentTimer -= delta;
+                if (currentTimer <= 0)
+                {
+                    Execute();
+                    if (repeat)
+                    {
+                        currentTimer = delay;
+                    }
+                    else
+                    {
+                        done = true;
+                    }
+                }
+            }
         }
 
         internal void Reset()
         {
-            // TODO: Implement this timer
+            currentTimer = delay;
+            done = false;
         }
     }
 }

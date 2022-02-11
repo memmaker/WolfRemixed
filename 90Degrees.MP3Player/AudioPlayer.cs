@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using FMOD;
-
+using Microsoft.Xna.Framework.Audio;
 
 namespace MP3Player
 {
+    
     public class AudioPlayer : IDisposable
     {
         private FMOD.System mSystem = null;
-        private Dictionary<string, Sound> mLoadedSounds;
-        private Dictionary<string, Channel> mSoundsOnChannels;
+        private Dictionary<int, Sound> mLoadedSounds;
+        private Dictionary<int, SoundEffect> mLoadedSoundEffects = new Dictionary<int, SoundEffect>();
+        private Dictionary<int, Channel> mSoundsOnChannels;
         private string mContentPrefix;
         private Random mRandom;
         private CHANNEL_CALLBACK mCallback;
         private Channel mMusicChannel;
-        private List<string> mMusicPlayList;
+        private List<int> mMusicPlayList;
         private int mCurrentMusicIndex;
         private int mMaxChannels;
         private bool mIsShuttingDown;
@@ -23,12 +26,12 @@ namespace MP3Player
         public AudioPlayer()
         {
             mContentPrefix = "Content/";
-            mMaxChannels = 32;
+            mMaxChannels = 2;
             InitFMOD();
             mRandom = new Random(DateTime.Now.Millisecond);
-            mLoadedSounds = new Dictionary<string, Sound>();
-            mSoundsOnChannels = new Dictionary<string, Channel>();
-            mMusicPlayList = new List<string>();
+            mLoadedSounds = new Dictionary<int, Sound>();
+            mSoundsOnChannels = new Dictionary<int, Channel>();
+            mMusicPlayList = new List<int>();
             mCurrentMusicIndex = -1;
             mCallback = MusicChannelCallback;
             mIsShuttingDown = false;
@@ -52,13 +55,16 @@ namespace MP3Player
         }
 
         
-        public void UnloadSound(string cue)
+        public void UnloadSound(int cue)
         {
             StopAndUnloadSound(mLoadedSounds[cue]);
             mLoadedSounds.Remove(cue);
         }
-
-        public void LoadSound(string filename, string cue, bool isStream)
+        public void AddEffect(SoundEffect audioStream, int cue)
+        {
+            mLoadedSoundEffects.Add(cue, audioStream);
+        }
+        public void LoadSound(string filename, int cue, bool isStream)
         {
             MODE flags;
             if (isStream)
@@ -71,13 +77,19 @@ namespace MP3Player
             ERRCHECK(result);
             mLoadedSounds.Add(cue, sound);
         }
-        public void PlayRandomSound(List<string> cues)
+        public void PlayRandomSound(List<int> cues)
         {
             if (cues.Count <= 0) return;
             PlaySound(cues[mRandom.Next(0, cues.Count)]);
         }
 
-        public void StartPlaylist(List<string> playList)
+        public void PlayRandomEffect(List<int> cues)
+        {
+            if (cues.Count <= 0) return;
+            PlayEffect(cues[mRandom.Next(0, cues.Count)]);
+        }
+
+        public void StartPlaylist(List<int> playList)
         {
             if (playList.Count <= 0) return;
 
@@ -86,6 +98,14 @@ namespace MP3Player
             mMusicChannel = PlaySound(mMusicPlayList[mCurrentMusicIndex]);
             mMusicChannel.setCallback(mCallback);
 
+        }
+
+        public void PlayEffect(int cue)
+        {
+            if (mLoadedSoundEffects.ContainsKey(cue))
+            {
+                mLoadedSoundEffects[cue].Play();
+            }
         }
 
         public void StopPlaylist()
@@ -99,7 +119,7 @@ namespace MP3Player
             }
         }
 
-        public Channel PlaySound(string cue, bool looping = false)
+        public Channel PlaySound(int cue, bool looping = false)
         {
             Channel channel = null;
             if (mLoadedSounds.ContainsKey(cue))
@@ -134,7 +154,7 @@ namespace MP3Player
             return RESULT.OK;
         }
 
-        public void StopSound(string cue)
+        public void StopSound(int cue)
         {
             if (mSoundsOnChannels.ContainsKey(cue))
             {

@@ -29,6 +29,8 @@ namespace Twengine.SubSystems.Raycast
         public event EventHandler<EventArgs> ActivatedWeaponCheat;
         private KeyboardState mKeyboardState;
         private KeyboardState mLastKeyboardState;
+
+        private bool mKeyboardOnly = true;
         public float MouseSensitivity { get; private set; }
         private MouseState mMouseState;
         private int mScreenWidth;
@@ -95,8 +97,6 @@ namespace Twengine.SubSystems.Raycast
             CheckForCheats(e);
 
             mRaycaster.SyncRaycasterCamToPlayer(transform);
-
-            
         }
 
         private void CheckChangeWeapon()
@@ -185,8 +185,6 @@ namespace Twengine.SubSystems.Raycast
                 mKeyBuffer.Clear();
         }
 
- 
-
         private string BuildString(List<Keys> keyBuffer)
         {
             StringBuilder sb = new StringBuilder();
@@ -198,7 +196,6 @@ namespace Twengine.SubSystems.Raycast
             }
             return sb.ToString();
         }
-
         private void CheckMap(FPSControl fpsControl)
         {
             if (mLastKeyboardState.IsKeyUp(fpsControl.ToggleMap) && mKeyboardState.IsKeyDown(fpsControl.ToggleMap))
@@ -277,23 +274,25 @@ namespace Twengine.SubSystems.Raycast
             {
                 movementDir -= transform.Forward;
             }
-            /* TODO ENable strafing again
-            if (mKeyboardState.IsKeyDown(fpsControl.MoveRight))
+
+            if (!mKeyboardOnly)
             {
-                Matrix rotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(90));
-                Vector2 rightVector = Vector2.Transform(transform.Forward, rotationMatrix);
-                movementDir += rightVector;
+                if (mKeyboardState.IsKeyDown(fpsControl.MoveRight))
+                {
+                    Matrix rotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(90));
+                    Vector2 rightVector = Vector2.Transform(transform.Forward, rotationMatrix);
+                    movementDir += rightVector;
+                }
+                else if (mKeyboardState.IsKeyDown(fpsControl.MoveLeft))
+                {
+                    Matrix rotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(-90));
+                    Vector2 leftVector = Vector2.Transform(transform.Forward, rotationMatrix);
+                    movementDir += leftVector;
+                }
             }
-            else if (mKeyboardState.IsKeyDown(fpsControl.MoveLeft))
-            {
-                Matrix rotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(-90));
-                Vector2 leftVector = Vector2.Transform(transform.Forward, rotationMatrix);
-                movementDir += leftVector;
-            }
-            */
+
             transform.OldPosition = transform.Position;
             transform.Position += movementDir * (transform.MaxSpeed * worldDelta);
-            //transform.Position += movementDir * 0.05f;
 
             if (transform.LastCellPosition != new Point((int)transform.Position.X, (int)transform.Position.Y))
                 OnPlayerMovedIntoTile();
@@ -302,22 +301,27 @@ namespace Twengine.SubSystems.Raycast
 
         private void Rotate(FPSControl fpsControl, Transform transform, float worldDelta)
         {
-            float amount = 0;
-            if (mKeyboardState.IsKeyDown(fpsControl.MoveRight))
+            float amount = 0.0f;
+            if (mKeyboardOnly)
             {
-                Matrix rotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(90));
-                Vector2 rightVector = Vector2.Transform(transform.Forward, rotationMatrix);
-                amount = -1.2f;
+                if (mKeyboardState.IsKeyDown(fpsControl.MoveRight))
+                {
+                    Matrix rotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(90));
+                    Vector2 rightVector = Vector2.Transform(transform.Forward, rotationMatrix);
+                    amount = -3.2f;
+                }
+                else if (mKeyboardState.IsKeyDown(fpsControl.MoveLeft))
+                {
+                    Matrix rotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(-90));
+                    Vector2 leftVector = Vector2.Transform(transform.Forward, rotationMatrix);
+                    amount = 3.2f;
+                }
             }
-            else if (mKeyboardState.IsKeyDown(fpsControl.MoveLeft))
+            else
             {
-                Matrix rotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(-90));
-                Vector2 leftVector = Vector2.Transform(transform.Forward, rotationMatrix);
-                amount = +1.2f;
+                amount = mScreenWidth / 2 - mMouseState.X;
             }
-            // TODO: fix this and add mouse look back in
-            //float amount = mScreenWidth / 2 - mMouseState.X;
-            float rotateSpeed = -(worldDelta * (amount));
+            float rotateSpeed = -(worldDelta * (amount * MouseSensitivity));
             transform.Rotation += rotateSpeed;
         }
 

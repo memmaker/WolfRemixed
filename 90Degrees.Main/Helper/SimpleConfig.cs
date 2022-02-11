@@ -17,44 +17,36 @@ namespace XNAHelper
 
         public void WriteToConfigFile()
         {
-            using (StreamWriter sw = new StreamWriter(mFilename))
+            using StreamWriter sw = new StreamWriter(mFilename);
+            foreach (KeyValuePair<string, object> keyValuePair in mConfig)
             {
-                foreach (KeyValuePair<string, object> keyValuePair in mConfig)
-                {
-                    sw.WriteLine(keyValuePair.Key + " = " + keyValuePair.Value);
-                }
+                sw.WriteLine(keyValuePair.Key + " = " + keyValuePair.Value);
             }
         }
 
         public void ReadFromConfigFile()
         {
-            using (StreamReader sr = new StreamReader(mFilename))
+            using StreamReader sr = new StreamReader(mFilename);
+            string line;
+            while ((line = sr.ReadLine()) != null)
             {
-                string line;
-                while ((line = sr.ReadLine()) != null)
+                if (line.Trim().StartsWith("#")) continue;
+
+                string[] split = line.Split('=');
+                string key = split[0].Trim();
+                string value = split[1].Trim();
+
+                if (int.TryParse(value, out int intValue))
                 {
-                    if (line.Trim().StartsWith("#")) continue;
-
-                    string[] split = line.Split('=');
-                    string key = split[0].Trim();
-                    string value = split[1].Trim();
-
-                    float floatValue;
-                    int intValue;
-                    
-                    
-                    if (int.TryParse(value, out intValue))
-                    {
-                        mConfig[key] = intValue;
-                    }
-                    else if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out floatValue))
-                    {
-                        mConfig[key] = floatValue;
-                    }
-                    else  // string
-                    {
-                        mConfig[key] = value;
-                    }
+                    mConfig[key] = intValue;
+                }
+                else if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float floatValue))
+                {
+                    mConfig[key] = floatValue;
+                }
+                else  // string
+                {
+                    mConfig[key] = value;
                 }
             }
 

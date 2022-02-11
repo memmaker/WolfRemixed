@@ -26,16 +26,16 @@ namespace raycaster.States
         public SpawnFunction SpawnAfterDeathFunction { get; set; }
         public Die()
         {
-            DyingSoundCues = new List<string>();
+            DyingSoundCues = new List<SoundCue>();
             SpawnProbability = 1;
             LeaveCorpse = true;
         }
         public override void BeginState()
         {
-            ComponentTwengine.AudioManager.PlayRandomSound(DyingSoundCues);
+            ComponentTwengine.AudioManager.PlayRandomEffect(DyingSoundCues.ConvertAll((cue) => { return (int) cue;}));
         }
 
-        public List<string> DyingSoundCues { get; set; }
+        public List<SoundCue> DyingSoundCues { get; set; }
 
         public bool LeaveCorpse { get; set; }
 
