@@ -16,7 +16,6 @@ namespace Twengine.Components
             Mass = 1f;
             Acceleration = Vector2.Zero;
             Velocity = Vector2.Zero;
-            VelocityIsIntendedDirection = true;
         }
 
         //public float Speed { get; set; }
@@ -26,7 +25,6 @@ namespace Twengine.Components
         public Vector2 Acceleration { get; set; }
         public Vector2 Velocity { get; set; }
         public Vector2 Force { get; set; }
-        public bool VelocityIsIntendedDirection { get; set; }
         private Vector2 mIntendedMovementDirection;
         public Vector2 IntendedMovementDirection
         {

@@ -20,19 +20,11 @@ namespace Twengine.SubSystems
         
             Vector2 pos = transform.Position;
 
-            if (physics.VelocityIsIntendedDirection)
-            {
-                TranslateMovementToVelocity(physics);
-                LinearVelocityIntegration(transform, physics);
-            }
-            else
-            {
-                //TranslateForceToAcceleration(physics);
-                //EulerIntegration(transform, physics);
-                //VerletIntegration(transform, physics);
-                LinearVelocityIntegration(transform, physics);
-            }
-
+            TranslateMovementToVelocity(physics);
+            LinearVelocityIntegration(transform, physics);
+            //TranslateForceToAcceleration(physics);
+            //EulerIntegration(transform, physics);
+            //VerletIntegration(transform, physics);
             transform.OldPosition = pos;
         }
 

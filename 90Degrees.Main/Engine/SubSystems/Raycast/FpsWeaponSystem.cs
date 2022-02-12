@@ -47,11 +47,6 @@ namespace Twengine.SubSystems.Raycast
         {
             mRaycaster = raycaster;
         }
-        protected override void Begin()
-        {
-            base.Begin();
-            
-        }
         public override void Process(Entity e, Weapon weapon, SpriteAnimator spriteAnimator, FpsWeaponAnimator fpsWeaponAnimator)
         {   
 
@@ -67,8 +62,10 @@ namespace Twengine.SubSystems.Raycast
 
             if (spriteAnimator.CurrentAnimation == "Fire")
             {
+                Debug.Print("Frame: " + spriteAnimator.CurrentFrameIndex);
                 if (fpsWeaponAnimator.HitOnFrame == spriteAnimator.CurrentFrameIndex && spriteAnimator.EnteredFrameThisTick)
                 {
+                    
                     OnPlayerFiredWeapon(e, weapon);
                     if (weapon.NeedsAmmo)
                     {
@@ -101,7 +98,7 @@ namespace Twengine.SubSystems.Raycast
 
         private void SpawnProjectile(Weapon weapon)
         {
-            weapon.ProjectileCreationFunction(mRaycaster.Camera.Position + (0.3f * mRaycaster.Camera.Direction), mRaycaster.Camera.Direction);
+            weapon.ProjectileCreationFunction(mRaycaster.Camera.Position + (0.45f * mRaycaster.Camera.Direction), mRaycaster.Camera.Direction);
         }
 
         private void CalculateHits(Weapon weapon)

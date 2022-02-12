@@ -15,11 +15,5 @@ namespace Twengine.Components.Meta
         public string Text { get; set; }
 
         public bool IsCentered { get; set; }
-
-        public Color Color { get; set; }
-
-        public bool IsMovingUp { get; set; }
-
-        public bool IsFadingOut { get; set; }
     }
 }

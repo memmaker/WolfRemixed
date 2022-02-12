@@ -195,7 +195,8 @@ namespace Twengine.SubSystems
 
             foreach (Entity possibleBlockingEntity in possibleBlockingEntities)
             {
-                if ((possibleBlockingEntity.Group == "Pickup" || entity.Group == "Pickup") && ((possibleBlockingEntity.Group != "Pickup" && entity.Group != "Pickup"))) continue; // dont collide pickups with anything other than the player
+                if ((possibleBlockingEntity.Group == "Pickup" || entity.Group == "Pickup") && ((possibleBlockingEntity.Group != "Player" && entity.Group != "Player"))) continue; // dont collide pickups with anything other than the player
+                if (entity.Group == "Projectile" && possibleBlockingEntity.Group == "Projectile") continue;
                 // if (entity.Group == "Enemy" &&  && possibleBlockingEntity.Group == "Enemy") continue; // dont collide enemy with pickups
 
                 Transform otherTransform = possibleBlockingEntity.GetComponent<Transform>();
@@ -205,7 +206,7 @@ namespace Twengine.SubSystems
                 if (distance < collider.Radius + otherCollider.Radius)
                 {
                     // collision
-                    if (entity.Group == "Player" && possibleBlockingEntity.Group != "Pickup") // never push back the player while colliding with pickups
+                    if ((entity.Group == "Player" || entity.Group == "Enemy") && possibleBlockingEntity.Group != "Pickup") // never push back the player while colliding with pickups
                     {
 
                         Vector2 outwardsDir = position - otherTransform.Position;
@@ -214,10 +215,6 @@ namespace Twengine.SubSystems
                         outwardsDir *= length;
 
                         newPos = position + outwardsDir;
-                    }
-                    else if (entity.Group == "Enemy")
-                    {
-                        newPos = transform.OldPosition;
                     }
 
                     collider.OnCollisionWithEntity(possibleBlockingEntity);

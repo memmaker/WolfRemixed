@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" infinite="0" nextlayerid="10" nextobjectid="22">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" infinite="0" nextlayerid="10" nextobjectid="23">
  <tileset firstgid="1" name="Enemies" tilewidth="64" tileheight="64" tilecount="42" columns="7">
   <image source="wolfenemies_sheet.png" width="448" height="384"/>
  </tileset>
@@ -22,126 +22,114 @@
    eJzt10kKgDAMAED/48Ht/39ToYIHW6UXu8xACUgihUhahwEAAAAAAKA9S4jrr7sAoDRTiEsyq19T5HnsPI3lf62nbrX1fw6xlP0AlOh+R+p1Xl7n25zMokVn7/WdGuV8t73O+JZ8/R97YtYBALwbj7Vl1qbqct8JQH92pVwE7w==
   </data>
  </layer>
- <objectgroup id="9" name="Objects" locked="1">
-  <object id="7" name="TileData" x="3328" y="1408" width="64" height="64">
+ <objectgroup id="9" name="Objects">
+  <object id="7" name="Message" x="3328" y="1408" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;The grave of a spoony bard!&quot;"/>
    </properties>
   </object>
-  <object id="8" name="TileData" x="3520" y="1408" width="64" height="64">
+  <object id="8" name="Message" x="3520" y="1408" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;Here lies Lester Moore,\nfour slugs from a forty-four.\nNo Les, no More.&quot;"/>
    </properties>
   </object>
-  <object id="9" name="TileData" x="3712" y="1408" width="64" height="64">
+  <object id="9" name="Message" x="3712" y="1408" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;OK...I gotta go now.&quot;\n - D. D."/>
    </properties>
   </object>
-  <object id="10" name="TileData" x="3328" y="1536" width="64" height="64">
+  <object id="10" name="Message" x="3328" y="1536" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;War. War never changes.&quot;"/>
    </properties>
   </object>
-  <object id="11" name="TileData" x="3520" y="1536" width="64" height="64">
+  <object id="11" name="Message" x="3520" y="1536" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;I never asked for this.&quot;"/>
    </properties>
   </object>
-  <object id="12" name="TileData" x="3712" y="1536" width="64" height="64">
+  <object id="12" name="Message" x="3712" y="1536" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;Here lies an atheist.\nAll dressed up and no place to go.&quot;"/>
    </properties>
   </object>
-  <object id="13" name="TileData" x="2496" y="2624" width="64" height="64">
+  <object id="13" name="Message" x="2496" y="2624" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;I AM ERROR&quot;"/>
    </properties>
   </object>
-  <object id="14" name="TileData" x="2752" y="2624" width="64" height="64">
+  <object id="14" name="Message" x="2752" y="2624" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;You know, sweetheart,\nif there's one thing I've learned,\nit's this: nobody knows what's gonna\nhappen at the end of the line,\nso you might as well enjoy the trip.&quot;\n - M. Calavera"/>
    </properties>
   </object>
-  <object id="15" name="TileData" x="2496" y="2816" width="64" height="64">
+  <object id="15" name="Message" x="2496" y="2816" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;And I say to thee,\nthis shall not come to pass!\nAiur shall not fall!\nExecutor, I stand ready!&quot;\n - Tassadar"/>
    </properties>
   </object>
-  <object id="16" name="TileData" x="2752" y="2816" width="64" height="64">
+  <object id="16" name="Message" x="2752" y="2816" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;Rambo, John. J.,\nhe fought the law and the law lost.&quot;"/>
    </properties>
   </object>
-  <object id="17" name="TileData" x="2496" y="3008" width="64" height="64">
+  <object id="17" name="Message" x="2496" y="3008" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;It's just a flesh wound.&quot;"/>
    </properties>
   </object>
-  <object id="18" name="TileData" x="2752" y="3008" width="64" height="64">
+  <object id="18" name="Message" x="2752" y="3008" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="&quot;Resting place of the Vault Dweller.\nWe owe you.&quot;"/>
    </properties>
   </object>
-  <object id="19" name="TileData" x="1920" y="3648" width="64" height="64">
+  <object id="19" name="Message" x="1920" y="3648" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="false"/>
     <property name="MessageText" value="You remember an old man,\nmember of the rebels. He kept\ntelling you to search every wall of\nprison for an exit."/>
    </properties>
   </object>
-  <object id="20" name="TileData" x="2816" y="3648" width="64" height="64">
+  <object id="20" name="Message" x="2816" y="3648" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
     <property name="MessageText" value="It's dangerous to go alone.\nTake this!"/>
    </properties>
   </object>
-  <object id="21" name="TileData" x="3392" y="3712" width="64" height="64">
+  <object id="21" name="Message" x="3264" y="3648" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="false"/>
     <property name="MessageText" value="You can make out four bodies in this room.\nThey look like some maniac ripped through\ntheir flesh with a whole arsenal of medieval\nweaponry.\nThere are some dog tags around their necks.\nThey read:\n\n\nTaradino Cassatt\nThi Barrett\nLorelei Ni\nIan Paul Freeley\n"/>
    </properties>
   </object>
-  <object id="4" name="TileData" x="1920" y="3648" width="64" height="64">
+  <object id="4" name="Message" x="1920" y="3648" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="false"/>
     <property name="MessageText" value="The guy in the opposite cell kept\non talking about the voice\nof an old man behind his wall."/>
    </properties>
   </object>
-  <object id="5" name="TileData" x="2816" y="3648" width="64" height="64">
-   <properties>
-    <property name="Centered" type="bool" value="true"/>
-    <property name="MessageText" value="It's dangerous to go alone.\nTake this!"/>
-   </properties>
-  </object>
-  <object id="6" name="TileData" x="3264" y="3648" width="64" height="64">
-   <properties>
-    <property name="Centered" type="bool" value="false"/>
-    <property name="MessageText" value="You can make out four bodies in this room.\nThey look like some maniac ripped through\ntheir flesh with a whole arsenal of medieval\nweaponry.\nThere are some dog tags around their necks.\nThey read:\n\n\nTaradino Cassatt\nThi Barrett\nLorelei Ni\nIan Paul Freeley\n"/>
-   </properties>
-  </object>
-  <object id="1" name="TileData" x="3776" y="1216" width="64" height="64">
+  <object id="1" name="Gold Key Door" x="3776" y="1216" width="64" height="64">
    <properties>
     <property name="NeedsKey" value="Gold"/>
    </properties>
   </object>
-  <object id="2" name="TileData" x="960" y="1856" width="64" height="64">
+  <object id="2" name="Secret Wall" x="960" y="1856" width="64" height="64">
    <properties>
     <property name="Destroyable" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="3" name="TileData" x="1024" y="1857" width="64" height="64">
+  <object id="3" name="Secret Wall" x="1024" y="1857" width="64" height="64">
    <properties>
     <property name="Destroyable" type="bool" value="true"/>
    </properties>
@@ -149,7 +137,7 @@
  </objectgroup>
  <layer id="5" name="Items" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJztm0tPxCAQgLv/P/GxuyarRq3vVzTxYPS0ejJG482L/gY1vtcYXW0jTXAC7bCUGcryJWQopTAszAAtmySRSCQSiUQi7pmvOZ8L9kAYV9oicNIVcoGwzpkRnplDpqlYROTpGehiy1QWZgnrw0DZ/yHymYUfISPl5D4v5VaCmU2LZ5dr08IPMP5Z9vXccyY3pv1/5EQLO1JuBYhZ5VaAiaUEv06LmIPZPxX2n6/1bfZ9Ayn+LsU/DMtZAdf5+FDpdWNYbmjI7b9C5Hc9L35J8W8pPoAZASr7h3tAk/6/1aRPKsr1Efh76Pyjqv26tpfh4/y/zq1AhIy65n+MD2wKKTL92q0arGD9YFPYyEKHsL4+YV2UqN6NQNvX+QLse+Kmj7UQCM3+TUgN05vAroMyD4XsA8lJL1F/L9J9z7Md1ypfF9JayIZzRdoluRZ8qNoP8dGv1r1PL+zhNAvHiPxvFdcuMZ33VLZ+IiSm/+sCrm07mnQM28h8F5r0MyFh+6cTHvsve/fGbX+q+jnHf4hQnh/hBtp9q2X2PMYeXNvMOI1/bv8TKvfE9TXh28aoHFTc30KUkZ+p61bmKuex5J6qv+8s66MA2r/tbxTxkzXH+SnZZ6z7oeJ+mY8IlcL3PSX+n78bJv/PV8v+T/Z98Ax2/twEso5nIcdtLAyluO/jYFR09v8q5AuVIh7SBrJY/5DZgWKvuQOuq96v2eyHinZSr/3L8O2/JJE/fgE7H3yz
+   eJztm1lLxDAQgLv/Hzx2V1gVtd4XCvsg+rT6JKL45ov+BhXvFfFqMYU4JO1k08yk2XwQpk1zTDaZSdJmkyQSiUQikUjEPfM1p3PBHgjjSlsETrpCLhDWOTNCnjlknIpFRJqegS62TGVhlrA+DJT9HyIfWfgRMlJO7vNSbiWY2bTIu1ybFn6A8c+yr+eeM7kx7f9DJ1rYkXIrQMwqtwJMLCX4dVrEHMz+qbD/fK1vs+8bStdv0vW7YTkr4D4fHyq9rg3LDQ25/ZeI9K7nxU/p+ku6HsKEAJX9wz2gSf/faOInFeX6CPw9dP5R1X5d28vwcf5f51YgQkZd8z/GBzaFFBl/5VYNVrB+sClsZKFDWN+AsC5KVO9GoO3rfAH2PXHTx1oIhGb/JqSG8U1g10GZB0IOgOSkl6i/F+m+59mOa5WvC2ktZMOZIu6CXAs+VO2H+OhX696nF/ZwkoUjRPrXinuXmM57Kls/FhLT/3UB17YdTTyGbWS6c038qZCw/dMJj/2XvXvjtj9V/ZzjP0Qoz49wA+2+1TLLj7EH1zYzTuOf2/+Eyh1xfU34tjEq/YrnW4gy8jN13cpU5TyUPFP1961lfRRA+7f9jSJ+suY4PSX7jHXfVzwv8xGhUvi+x8T/83ffyf/z1bL/k30fPIOd55tA1vEk5DiOhQLfx8Go6Oz/RchnKkU8pA1ksf4hswPFXnMH3Fe9X7PZDxXtpF77l+Hbf0kif/wCGSx7tQ==
   </data>
  </layer>
  <layer id="7" name="Enemies" width="64" height="64" locked="1">

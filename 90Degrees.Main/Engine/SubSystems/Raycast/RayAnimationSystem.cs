@@ -26,12 +26,14 @@ namespace Twengine.SubSystems.Raycast
             float deltaTimeInSeconds = entityWorld.Delta / 10000000.0f;
             animator.UpdateFrame(deltaTimeInSeconds);
 
-            if (e.HasComponent<Sprite>() || e.HasComponent<RaycastSprite>()) {
-                Sprite sprite = e.HasComponent<Sprite>() ? e.GetComponent<Sprite>() : e.GetComponent<RaycastSprite>();
-                int frameIndex = GetNextFrameIndex(transform, animator, sprite);
+            if (!e.HasComponent<Sprite>() && !e.HasComponent<RaycastSprite>()) return;
+            Sprite sprite = e.HasComponent<Sprite>() ? e.GetComponent<Sprite>() : e.GetComponent<RaycastSprite>();
+            int frameIndex = GetNextFrameIndex(transform, animator, sprite);
+            sprite.FrameIndex = frameIndex;
 
-                sprite.FrameIndex = frameIndex;
-            }
+            if (!e.HasComponent<FpsWeaponAnimator>()) return;
+            var fpsWeaponAnimator = e.GetComponent<FpsWeaponAnimator>();
+            transform.Position = fpsWeaponAnimator.GetPosition(sprite.FrameIndex);
         }
 
 

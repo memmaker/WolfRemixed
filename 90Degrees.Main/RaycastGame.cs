@@ -226,8 +226,7 @@ namespace raycaster
             fpsWeaponSystem.BulletHit += BulletHit;
             fpsWeaponSystem.DamageDealt += new DamageDealtEventHandler(fpsWeaponSystem_DamageDealt);
             mSystemManager.SetSystem(fpsWeaponSystem,  GameLoopType.Update);
-
-            mSystemManager.SetSystem(new FpsWeaponAnimationSystem(),  GameLoopType.Update);
+            
             
             mTilemapCollisionSystem = new TilemapCollisionSystem(mTilemap, mRaycaster);
             mTilemapCollisionSystem.PlayerFoundSecret += PlayerFoundSecret;
@@ -298,7 +297,7 @@ namespace raycaster
                         case 2: // Wolf Gatling Gun
                             EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "More lead, more death!",6, EntitySpawn.CreateWolfGatling);
                             break;
-                        case 3: // Pistol
+                        case 3: // Blake Pistol
                             EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Blake won't need this..", 4, EntitySpawn.CreateBlakeStoneAutoChargePistol);
                             break;
                         case 113: // necronomicon
@@ -334,8 +333,10 @@ namespace raycaster
                         case 51:
                         case 52:
                         case 53:
-                        case 112:
                             EntitySpawn.CreateDecoSprite(mTilemap.SpriteTextures, spawnPos, tileIndex, false);
+                            break;
+                        case 112: // scroll
+                            EntitySpawn.CreateDecoSprite(mTilemap.SpriteTextures, spawnPos, tileIndex, true);
                             break;
                         case 63:
                             Entity redlight = EntitySpawn.CreateTwoStateAnimatedSprite(spawnPos, mTilemap.SpriteTextures,

@@ -176,7 +176,7 @@ namespace Twengine.SubSystems.Raycast
                 playerTransform.IsVisible = !playerTransform.IsVisible;
                 mKeyBuffer.Clear();
             }
-            if (bufferString.Contains("fxgunslotsofguns"))
+            if (bufferString.Contains("fxguns"))
             {
                 OnPlayerActivatedWeaponCheat();
                 mKeyBuffer.Clear();

@@ -880,13 +880,13 @@ namespace raycaster
             int ypos = (int)(screenDimension.Y - ((frameHeight / 2f) * scale) - statusbarHeight);
             e.AddComponent(new Transform(xpos, ypos, 0f));
             e.AddComponent(new Sprite(pistol, 0) { Scale = scale, Origin = new Vector2(32, 32) });
-            e.AddComponent(new Weapon("Blakes Auto Charge Pistol", 3, 12, 10, 20) { PenetrationCount = 1, Range = 40, NeedsAmmo = false, Accuracy = 4, IsSilent = true});
+            e.AddComponent(new Weapon("Blakes Auto Charge Pistol", 3, 12, 10, 20) { PenetrationCount = 1, Range = 40, NeedsAmmo = false, Accuracy = 4, IsSilent = true, IsAutomatic = false });
             SpriteAnimator spriteAnimator = new SpriteAnimator();
-            Animation animation = spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
-            animation.Loop = true;
-            spriteAnimator.Paused = false;
+            spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             spriteAnimator.AddAnimation("Fire", new List<int>() { 1, 2, 3, 4, 0 }, 9, false);
             spriteAnimator.CurrentAnimation = "Idle";
+            spriteAnimator.Paused = false;
+
             FpsWeaponAnimator fpsWeaponAnimator = new FpsWeaponAnimator(5, new Vector2(xpos, ypos), 2);
             e.AddComponent(fpsWeaponAnimator);
             e.AddComponent(spriteAnimator);
