@@ -18,7 +18,7 @@ namespace Degrees.Main.UI
         {
             mPlayerHealthPoints = playerHealthPoints;
 
-            Entity hudFace = EntitySpawn.CreateHudFace(new Point(Const.InternalRenderResolutionWidth, Const.InternalRenderResolutionHeight),
+            Entity hudFace = EntitySpawn.CreateHudFace(new Point(Const.InternalRenderResolutionWidth, Const.SpriteRenderResolutionHeight),
                 (o, args) => AnimateFaceIdleAnimation());
             mHudFaceAnimator = hudFace.GetComponent<SpriteAnimator>();
         }

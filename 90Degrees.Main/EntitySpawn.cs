@@ -766,7 +766,7 @@ namespace raycaster
             SpriteSheet shotgun = AssetManager.Default.LoadSpriteSheet("Weapons/Duke/dukeshotgun.png", 128, 128);
             Entity e = sWorld.CreateEntity();
             e.Group = "Hud";
-            float scale = screenDimension.X / 320f;
+            float scale = screenDimension.X / 240.0f;
             int frameHeight = 128;
 
 
@@ -779,7 +779,7 @@ namespace raycaster
             Animation animation = spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             animation.Loop = true;
             spriteAnimator.Paused = false;
-            spriteAnimator.AddAnimation("Fire", new List<int>() { 1, 2, 3, 4, 5, 6, 5, 4, 3 }, 6, false);
+            spriteAnimator.AddAnimation("Fire", new List<int>() { 1, 2, 3, 4, 5, 6, 5, 4, 3 }, 10, false);
             spriteAnimator.CurrentAnimation = "Idle";
             e.AddComponent(spriteAnimator);
             FpsWeaponAnimator fpsWeaponAnimator = new FpsWeaponAnimator(7, new Vector2(xpos, ypos), 1);
@@ -804,7 +804,7 @@ namespace raycaster
             Animation animation = spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             animation.Loop = true;
             spriteAnimator.Paused = false;
-            spriteAnimator.AddAnimation("Fire", new List<int>() { 1, 2, 3, 4, 3, 2 }, 4, false);
+            spriteAnimator.AddAnimation("Fire", new List<int>() { 1, 2, 3, 4, 3, 2 }, 7, false);
             spriteAnimator.CurrentAnimation = "Idle";
             e.AddComponent(spriteAnimator);
             FpsWeaponAnimator fpsWeaponAnimator = new FpsWeaponAnimator(5, new Vector2(xpos, ypos), 1);
@@ -999,7 +999,7 @@ namespace raycaster
             SpriteSheet pistol = AssetManager.Default.LoadSpriteSheet("Weapons/Rott/pistol_sheet.png", 128, 128);
             Entity e = sWorld.CreateEntity();
             e.Group = "Hud";
-            float scale = screenDimension.X / 480f;
+            float scale = screenDimension.X / 320f;
             int frameHeight = 128;
             int xpos = (int)(screenDimension.X * 0.5 + 8 * scale);
             int ypos = (int)(screenDimension.Y - ((frameHeight / 2f) * scale) - statusbarHeight);

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using raycaster;
 using XNAGameGui.Gui.Widgets;
 
 namespace XNAGameGui.Gui
@@ -93,11 +94,13 @@ namespace XNAGameGui.Gui
             }
         }
 
+        public static RenderTarget2D GuiLayer;
+
         public GameGui()
         {
             RootWidget = new BaseWidget();
             Fonts = new Dictionary<GameFont, SpriteFont>();
-
+            
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteFont guiFont, SpriteFont longTextFont)
@@ -106,6 +109,8 @@ namespace XNAGameGui.Gui
             WhiteRectangle.SetData(new[] { Color.White });
             Fonts[GameFont.Gui] = guiFont;
             Fonts[GameFont.LongTexts] = longTextFont;
+            GuiLayer = new RenderTarget2D(graphicsDevice, Const.InternalRenderResolutionWidth,
+                Const.SpriteRenderResolutionHeight);
         }
 
         public void MouseMoved(Point mousePosition)
@@ -116,7 +121,7 @@ namespace XNAGameGui.Gui
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise);
             RootWidget.Draw(spriteBatch, this);
             spriteBatch.End();
         }

@@ -34,7 +34,6 @@ namespace Twengine.SubSystems.Raycast
         private RenderTarget2D mThreeDeeView;
 
         private SpriteSheet mWallTextures;
-        private Texture2D[] mCrosshairs;
 
         public bool SecretWallsVisible { get; set; }
 
@@ -124,9 +123,6 @@ namespace Twengine.SubSystems.Raycast
             mDestinationOnScreenRect = new Rectangle();
             mTextureSegmentRect = new Rectangle();
 
-
-            mCrosshairs = new Texture2D[] { content.LoadTexture("Weapons/crosshairwhite.png") };
-
             mFloorTexture = new RenderTarget2D(graphicsDevice, mFloor.Width, mFloor.Height, false, SurfaceFormat.Color, DepthFormat.None);
             mCeilingTexture = new RenderTarget2D(graphicsDevice, mCeiling.Width, mCeiling.Height, false, SurfaceFormat.Color, DepthFormat.None);
             mThreeDeeView = new RenderTarget2D(graphicsDevice, mRaycasterResolutionX, mRaycasterResolutionY, false, SurfaceFormat.Color, DepthFormat.None);
@@ -201,10 +197,6 @@ namespace Twengine.SubSystems.Raycast
 
             // draw weapon
             //mSpriteBatch.Draw(mWeaponTextures[0], new Vector2((mRaycasterResolutionX / 2) + 100, mRaycasterResolutionY + 20), null, Color.White, 0f, new Vector2(mWeaponTextures[0].Width, mWeaponTextures[0].Height), 1f, SpriteEffects.None, 0.2f);
-
-            // draw crosshair
-            mSpriteBatch.Draw(mCrosshairs[0], new Vector2(mRaycasterResolutionX / 2, mRaycasterResolutionY / 2), null, Color.Red, 0f, new Vector2(mCrosshairs[0].Width / 2, mCrosshairs[0].Height / 2), 1f, SpriteEffects.None, 0.2f);
-
 
             DrawFlashScreen();
 

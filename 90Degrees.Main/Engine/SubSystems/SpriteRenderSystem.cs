@@ -19,7 +19,7 @@ namespace Twengine.SubSystems
             : base()
         {
             mSpriteBatch = spriteBatch;
-            mSpritesRenderTarget = new RenderTarget2D(mSpriteBatch.GraphicsDevice, Const.InternalRenderResolutionWidth, Const.InternalRenderResolutionHeight);
+            mSpritesRenderTarget = new RenderTarget2D(mSpriteBatch.GraphicsDevice, Const.InternalRenderResolutionWidth, Const.SpriteRenderResolutionHeight);
         }
 
         public Texture2D SpriteLayer

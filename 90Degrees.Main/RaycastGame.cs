@@ -38,6 +38,7 @@ namespace raycaster
         protected static GraphicsDeviceManager Graphics;
         protected Artemis.Manager.SystemManager mSystemManager;
 
+        private Texture2D[] mCrosshairs;
         protected static MapManager mMapManager;
         protected static int sScreenWidth;
         protected static int sScreenHeight;
@@ -146,12 +147,13 @@ namespace raycaster
 
             mMapManager = new MapManager(Content);
 
+
+            mCrosshairs = new Texture2D[] { AssetManager.Default.LoadTexture("Weapons/crosshairwhite.png") };
+
             SpriteFont spriteFont = Content.Load<SpriteFont>("Fonts/DefaultFont");
             DebugDrawer.Init(mSpriteBatch, spriteFont);
 
-            sGui.LoadContent(Content, GraphicsDevice, spriteFont, spriteFont);
-            GameGui.Viewport = GraphicsDevice.Viewport;
-
+ 
 
             mSystemManager = sWorld.SystemManager;
 
@@ -182,15 +184,16 @@ namespace raycaster
             // 800x600
             // 640x480
             // 320x240
-            var xRes = 800;
-            var yRes = 600;
+            var xRes = 1024;
+            var yRes = 768;
 
             sScreenWidth = Const.InternalRenderResolutionWidth;
             sScreenHeight = Const.InternalRenderResolutionHeight;
-            if (Graphics.GraphicsDevice != null) GameGui.Viewport = Graphics.GraphicsDevice.Viewport;
             Resolution.Init(ref Graphics);
             Resolution.SetVirtualResolution(sScreenWidth, sScreenHeight);
             Resolution.SetResolution(xRes, yRes, false);
+
+            if (Graphics.GraphicsDevice != null) GameGui.Viewport = Graphics.GraphicsDevice.Viewport;
 
             mStatusBarRenderTarget = new RenderTarget2D(GraphicsDevice, sScreenWidth, sScreenHeight);
             base.Initialize();
@@ -357,25 +360,25 @@ namespace raycaster
                     switch (tileIndex)
                     {
                         case 0: // ROTT Pistol
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "hmm, a H.U.N.T. Pistol..", 3, EntitySpawn.CreateRottPistol);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "hmm, a H.U.N.T. Pistol..", 2, EntitySpawn.CreateRottPistol);
                             break;
                         case 1: // Wolf Assault Rifle
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Time to mow down some Nazis..", 5, EntitySpawn.CreateWolfRifle);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Time to mow down some Nazis..", 3, EntitySpawn.CreateWolfRifle);
                             break;
                         case 2: // Wolf Gatling Gun
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "More lead, more death!", 6, EntitySpawn.CreateWolfGatling);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "More lead, more death!", 4, EntitySpawn.CreateWolfGatling);
                             break;
                         case 3: // Blake Pistol
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Blake won't need this..", 4, EntitySpawn.CreateBlakeStoneAutoChargePistol);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Blake won't need this..", 5, EntitySpawn.CreateBlakeStoneAutoChargePistol);
                             break;
                         case 113: // necronomicon
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Klaatu Verata ..Nektu?! ", 9, EntitySpawn.CreateMagicHand);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Klaatu Verata ..Nektu?! ", 8, EntitySpawn.CreateMagicHand);
                             break;
                         case 114: // duke shotgun
                             EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Come, get some!", 7, EntitySpawn.CreateDukeShotgun);
                             break;
                         case 115: // doom shotgun
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Got a Boomstick!", 8, EntitySpawn.CreateDoomShotgun);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Got a Boomstick!", 6, EntitySpawn.CreateDoomShotgun);
                             break;
                         case 4: // ammo
                             EntitySpawn.CreateAmmoPickup(spawnPos);
@@ -746,10 +749,10 @@ namespace raycaster
             CreatePlayer(mTilemap.PlayerSpawn, mTilemap.PlayerViewDirection);
             mMapRenderer.Player = Player;
 
-            GiveWeaponToPlayer(2, EntitySpawn.CreateWolfKnife);
-            GiveWeaponToPlayer(1, EntitySpawn.CreateDoomPunch);
+            GiveWeaponToPlayer(1, EntitySpawn.CreateWolfKnife);
+            GiveWeaponToPlayer(0, EntitySpawn.CreateDoomPunch);
             
-            ChangePlayerWeapon(1);
+            ChangePlayerWeapon(0);
         }
 
 
@@ -792,7 +795,9 @@ namespace raycaster
             mMessageFont = Content.Load<SpriteFont>("Fonts/WolfFontSmall");
             mLongTextFont = Content.Load<SpriteFont>("Fonts/LongTextFont");
             mLongTextFont.Spacing = 2;
+
             sGui.LoadContent(Content, GraphicsDevice, mHudFont, mLongTextFont);
+            GameGui.Viewport = GraphicsDevice.Viewport;
 
             AudioManager.LoadSound("Music/Wolfenstein/wolfmenu.mp3", (int)SoundCue.MenuMusic, true);
             AudioManager.LoadSound("Music/Wolfenstein/wolfintro.mp3", (int)SoundCue.IntroMusic, true);
@@ -846,15 +851,12 @@ namespace raycaster
 
         public static void GiveAllWeaponsToPlayer()
         {
-            List<Func<Point, int, Entity>> weaponFunctions = new List<Func<Point, int, Entity>>() { null, EntitySpawn.CreateWolfKnife, EntitySpawn.CreateRottPistol, EntitySpawn.CreateWolfRifle, EntitySpawn.CreateWolfGatling, EntitySpawn.CreateBlakeStoneAutoChargePistol, EntitySpawn.CreateMagicHand, EntitySpawn.CreateDoomPunch, EntitySpawn.CreateDoomShotgun, EntitySpawn.CreateDukeShotgun };
+            List<Func<Point, int, Entity>> weaponFunctions = new List<Func<Point, int, Entity>>() { EntitySpawn.CreateDoomPunch, EntitySpawn.CreateWolfKnife, EntitySpawn.CreateRottPistol, EntitySpawn.CreateWolfRifle, EntitySpawn.CreateWolfGatling, EntitySpawn.CreateBlakeStoneAutoChargePistol, EntitySpawn.CreateDoomShotgun, EntitySpawn.CreateDukeShotgun, EntitySpawn.CreateMagicHand };
             Inventory inventory = Player.GetComponent<Inventory>();
             int index = 0;
             foreach (Func<Point, int, Entity> weaponFunction in weaponFunctions)
             {
-                if (weaponFunction != null && inventory.Items[index] == null)
-                {
-                    GiveWeaponToPlayer(index, weaponFunction);
-                }
+                GiveWeaponToPlayer(index, weaponFunction);
                 index++;
             }
             PlayerAmmo = 99;
@@ -866,7 +868,7 @@ namespace raycaster
             if (inventory.Items[inventorySlotIndex] == null)
             {
                 Debug.Print("Created HUD Weapon Entity..");
-                inventory.Items[inventorySlotIndex] = creationFunction(new Point(sScreenWidth, sScreenHeight),
+                inventory.Items[inventorySlotIndex] = creationFunction(new Point(Const.InternalRenderResolutionWidth, Const.SpriteRenderResolutionHeight),
                                                                        sRaycastRenderSystem.StatusbarHeight);
                 inventory.Items[inventorySlotIndex].IsEnabled = false;
             }
@@ -1186,7 +1188,7 @@ namespace raycaster
         {
             Inventory inventory = Player.GetComponent<Inventory>();
             if (inventory.Items[weaponIndex] == null) return;
-            if (inventory.SelectedItem > 0)
+            if (inventory.SelectedItem > -1)
             {
                 Entity oldWeapon = inventory.GetSelectedItem();
                 oldWeapon.IsEnabled = false;
@@ -1326,31 +1328,34 @@ namespace raycaster
         public static LabelWidget CreateTextWidget(string text, float fractionalWidth, float fractionalHeight)
         {
             LabelWidget textWidget = new LabelWidget(text);
-            float height = sScreenHeight * fractionalHeight;
-            float width = sScreenWidth * fractionalWidth;
+            GameGui.RootWidget.AddChild(textWidget);
+            float height = GameGui.Viewport.Height * fractionalHeight;
+            float width = GameGui.Viewport.Width * fractionalWidth;
             float xborder = (1.0f - fractionalWidth) / 2;
             float yborder = (1.0f - fractionalHeight) / 4;
-            textWidget.Bounds = new UniRectangle(new UniScalar(xborder, 0), new UniScalar(yborder, 0), width, height);
             textWidget.DrawLabelBackground = true;
             textWidget.DrawBackgroundShadow = false;
             textWidget.LabelColor = new Color(22, 22, 30, 240);
             textWidget.Font = GameFont.LongTexts;
             textWidget.BorderSize = 15;
             textWidget.IsSizeDependingOnContent = true;
-            GameGui.RootWidget.AddChild(textWidget);
+            textWidget.Bounds = new UniRectangle(new UniScalar(xborder, 0), new UniScalar(yborder, 0), width, height);
+
             return textWidget;
         }
 
         public static LabelWidget FullScreenOverlay()
         {
             LabelWidget overlay = new LabelWidget();
-            float height = sScreenHeight;
-            float width = sScreenWidth;
+            GameGui.RootWidget.AddChild(overlay);
+
+            float height = GameGui.Viewport.Height;
+            float width = GameGui.Viewport.Width;
             overlay.Bounds = new UniRectangle(0, 0, width, height);
             overlay.DrawLabelBackground = true;
             overlay.DrawBackgroundShadow = false;
             overlay.LabelColor = new Color(0, 0, 0, 0);
-            GameGui.RootWidget.AddChild(overlay);
+            
             return overlay;
         }
 
@@ -1414,6 +1419,7 @@ namespace raycaster
             if (mGameStateManager.ActiveState != null && (mGameStateManager.ActiveState.GetType() == typeof(GamePlayState) || mGameStateManager.ActiveState.GetType() == typeof(StoryTellingState) || mGameStateManager.ActiveState.GetType() == typeof(EscapeMenuState)) && FinishedLoading)
             {
                 sWorld.Draw();
+
                 DrawStatusbar();
 
                 GraphicsDevice.SetRenderTarget(null);
@@ -1425,12 +1431,18 @@ namespace raycaster
                 mSpriteBatch.Draw(mSpriteRenderSystem.SpriteLayer, GraphicsDevice.Viewport.Bounds, Color.White);   // face && weapon
                 mSpriteBatch.Draw(mStatusBarRenderTarget, GraphicsDevice.Viewport.Bounds, Color.White);   // face && weapon
 
+                // draw crosshair
+                mSpriteBatch.Draw(mCrosshairs[0], GraphicsDevice.Viewport.Bounds.Center.ToVector2(), null, Color.Red, 0f, new Vector2(mCrosshairs[0].Width / 2, mCrosshairs[0].Height / 2), 1f, SpriteEffects.None, 0.2f);
+
+
                 // render sprites
                 // render hud
                 // render minimap
                 mSpriteBatch.End();
+
             }
-            sGui.Draw(mSpriteBatch);
+
+            sGui.Draw(mSpriteBatch); 
 
             DebugDrawer.Draw();
             
