@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace XNAGameGui.Gui.Widgets
 {
@@ -32,16 +31,19 @@ namespace XNAGameGui.Gui.Widgets
         protected Rectangle mDestinationRectangle;
         private string[] mLines;
         public int MaxLines { get; set; }
-        public override UniRectangle Bounds { get { return base.Bounds; }
+        public override UniRectangle Bounds
+        {
+            get { return base.Bounds; }
             set
             {
                 base.Bounds = value;
                 UpdatePosition();
-            } }
+            }
+        }
 
         public LabelWidget() : this("")
         {
-            
+
         }
 
         public LabelWidget(string text)
@@ -68,12 +70,12 @@ namespace XNAGameGui.Gui.Widgets
         public override void Draw(SpriteBatch spriteBatch, GameGui gui)
         {
             if (!IsVisible) return;
-            
+
             if (DrawLabelBackground)
             {
                 if (DrawBackgroundShadow)
                 {
-                    Rectangle shadowRect = new Rectangle(mDestinationRectangle.X - 3, mDestinationRectangle.Y - 4,mDestinationRectangle.Width,mDestinationRectangle.Height);
+                    Rectangle shadowRect = new Rectangle(mDestinationRectangle.X - 3, mDestinationRectangle.Y - 4, mDestinationRectangle.Width, mDestinationRectangle.Height);
                     spriteBatch.Draw(GameGui.WhiteRectangle, shadowRect, Color.Black);
                 }
                 if (Background != null)
@@ -84,7 +86,7 @@ namespace XNAGameGui.Gui.Widgets
                 {
                     spriteBatch.Draw(GameGui.WhiteRectangle, mDestinationRectangle, LabelColor);
                 }
-                
+
             }
 
             foreach (KeyValuePair<string, HudIcon> keyValuePair in Icons)
@@ -92,12 +94,12 @@ namespace XNAGameGui.Gui.Widgets
                 HudIcon hudIcon = keyValuePair.Value;
                 spriteBatch.Draw(hudIcon.SourceSheet.Texture, hudIcon.ScreenPosition,
                                  hudIcon.SourceSheet.GetSourceRectByIndex(hudIcon.FrameIndex), Color.White, 0f, Vector2.Zero, hudIcon.Scale, SpriteEffects.None, 0f);
-                
+
             }
 
             if (Text != "")
             {
-                
+
                 float yOffset = 0;
                 int startIndex = 0;
                 int length = mLines.Length;
@@ -189,8 +191,8 @@ namespace XNAGameGui.Gui.Widgets
             {
                 SpriteFont spriteFont = GameGui.Fonts[Font];
                 Vector2 contentSize = spriteFont.MeasureString(mText);
-                int newWidth = (int) (contentSize.X + (BorderSize * 2));
-                int newHeight = (int) (contentSize.Y + (BorderSize * 3));
+                int newWidth = (int)(contentSize.X + (BorderSize * 2));
+                int newHeight = (int)(contentSize.Y + (BorderSize * 3));
                 int xdiff = width - newWidth;
                 int ydiff = height - newHeight;
 

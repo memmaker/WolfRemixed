@@ -1,5 +1,4 @@
-﻿using Artemis;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
@@ -20,10 +19,10 @@ namespace Twengine.Managers
         public event EventHandler<SpawnEntityEventArgs> CreateItems;
         public event EventHandler<SpawnEntityEventArgs> CreateEnemies;
         public event EventHandler<SpawnEntityEventArgs> CreateMetaInfo;
-        
+
         protected TiledMap mMap;
         private ContentManager mContentManager;
-        private Dictionary<string,Texture2D> mTextures;
+        private Dictionary<string, Texture2D> mTextures;
 
         public MapManager(ContentManager content)
         {
@@ -49,7 +48,7 @@ namespace Twengine.Managers
             foreach (TiledMapTileset tileSheet in mMap.Tilesets)
             {
                 mTextures[tileSetNames[tileSheet.Name]] = tileSheet.Texture;
-                
+
             }
             TiledMapTileLayer wallLayer = mMap.GetLayer<TiledMapTileLayer>("Walls");
             //CollisionDetector.RegisterCollisionLayer(MapViewport, collisionLayer);
@@ -109,7 +108,7 @@ namespace Twengine.Managers
                         }
                     }
 
-                    Point pos = new Point(x,y);
+                    Point pos = new Point(x, y);
                     TiledMapProperties props = new TiledMapProperties();
                     foreach (var thing in objectLayer.Objects)
                     {

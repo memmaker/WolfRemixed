@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Twengine.Components;
-using Twengine.Components.Meta;
-using Twengine.Managers;
-using Twengine.Helper;
-using Artemis.System;
+﻿using Artemis;
 using Artemis.Attributes;
 using Artemis.Manager;
-using Artemis;
+using Artemis.System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Twengine.Components.Meta;
 
 namespace Twengine.SubSystems
 {
@@ -32,7 +24,7 @@ namespace Twengine.SubSystems
         {
             mIndex = 0;
             base.Begin();
-            mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone);
+            mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, IndependentResolutionRendering.Resolution.getTransformationMatrix());
         }
 
         protected override void End()
@@ -43,7 +35,7 @@ namespace Twengine.SubSystems
 
         public override void Process(Entity e, Message message)
         {
-            DeferredDrawString(message.Text,mIndex,message.IsCentered);
+            DeferredDrawString(message.Text, mIndex, message.IsCentered);
         }
 
         private void DeferredDrawString(string text, int index, bool centered)
@@ -55,9 +47,9 @@ namespace Twengine.SubSystems
             {
                 int width = mSpriteBatch.GraphicsDevice.Viewport.Width;
                 int height = mSpriteBatch.GraphicsDevice.Viewport.Height;
-                Vector2 screenCenter = new Vector2(width/2,height/2);
+                Vector2 screenCenter = new Vector2(width / 2, height / 2);
                 Vector2 stringSize = mFont.MeasureString(text);
-                Vector2 fontOffset = new Vector2(stringSize.X/2,stringSize.Y/2 + mFont.LineSpacing);
+                Vector2 fontOffset = new Vector2(stringSize.X / 2, stringSize.Y / 2 + mFont.LineSpacing);
                 pos = screenCenter - fontOffset;
             }
             else

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAGameGui.Gui.Widgets
 {
@@ -11,6 +10,6 @@ namespace XNAGameGui.Gui.Widgets
         {
             LabelColor = Color.Gainsboro;
         }
-        
+
     }
 }

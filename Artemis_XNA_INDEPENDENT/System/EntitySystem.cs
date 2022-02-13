@@ -38,14 +38,12 @@ namespace Artemis.System
 {
     #region Using statements
 
-    using global::System;
     using global::System.Collections.Generic;
     using global::System.Diagnostics;
 #if XBOX || WINDOWS_PHONE || PORTABLE || FORCEINT32
     using BigInteger = global::System.Int32;
 #endif
-#if !XBOX && !WINDOWS_PHONE  && !PORTABLE && !UNITY5
-    using global::System.Numerics;
+#if !XBOX && !WINDOWS_PHONE && !PORTABLE && !UNITY5
 #endif
     using Artemis.Blackboard;
 
@@ -80,7 +78,7 @@ namespace Artemis.System
 
         /// <summary>Initializes a new instance of the <see cref="EntitySystem"/> class.</summary>
         /// <param name="aspect">The aspect.</param>
-        protected EntitySystem(Aspect aspect) 
+        protected EntitySystem(Aspect aspect)
             : this()
         {
             Debug.Assert(aspect != null, "Aspect must not be null.");

@@ -183,7 +183,7 @@ namespace Artemis.Utils
             // Make copy of element to remove so it can be returned.
             T result = this.elements[index];
             --this.Count;
-            
+
             // Overwrite item to remove with last element.
             this.elements[index] = this.elements[this.Count];
 

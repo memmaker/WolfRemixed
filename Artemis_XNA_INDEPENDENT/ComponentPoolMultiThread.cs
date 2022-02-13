@@ -39,9 +39,8 @@ namespace Artemis
 {
     #region Using statements
 
-    using global::System;
-
     using Artemis.Interface;
+    using global::System;
 
     #endregion Using statements
 
@@ -54,7 +53,7 @@ namespace Artemis
     {
         /// <summary>The pool.</summary>
         private readonly ComponentPool<T> pool;
-        
+
         /// <summary>The sync.</summary>
         private readonly object sync;
 

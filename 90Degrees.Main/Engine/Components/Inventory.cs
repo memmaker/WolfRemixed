@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Artemis;
+﻿using Artemis;
 using Artemis.Interface;
+using System;
 
 namespace Twengine.Components
 {
@@ -15,9 +12,9 @@ namespace Twengine.Components
         public int SelectedItem
         {
             get { return mSelectedItem; }
-            set 
-            { 
-                mSelectedItem = value >= 0 && value <= mCapacity - 1 ? value : -1; 
+            set
+            {
+                mSelectedItem = value >= 0 && value <= mCapacity - 1 ? value : -1;
             }
         }
         public Inventory(int capacity)
@@ -31,6 +28,6 @@ namespace Twengine.Components
             if (mSelectedItem == -1) throw new IndexOutOfRangeException("No item selected..");
             return Items[mSelectedItem];
         }
-        
+
     }
 }

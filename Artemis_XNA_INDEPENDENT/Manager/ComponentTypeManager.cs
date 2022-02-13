@@ -43,8 +43,7 @@ namespace Artemis.Manager
     using global::System.Diagnostics;
     using global::System.Linq;
     using global::System.Reflection;
-#if !XBOX && !WINDOWS_PHONE  && !PORTABLE && !UNITY5
-    using global::System.Numerics;
+#if !XBOX && !WINDOWS_PHONE && !PORTABLE && !UNITY5
 #endif
 #if XBOX || WINDOWS_PHONE || PORTABLE || FORCEINT32
     using BigInteger = global::System.Int32;
@@ -177,7 +176,7 @@ namespace Artemis.Manager
                 {
                     yield return keyValuePair.Key;
                 }
-            }            
+            }
         }
 
         /// <summary>Sets the type for specified ComponentType T.</summary>

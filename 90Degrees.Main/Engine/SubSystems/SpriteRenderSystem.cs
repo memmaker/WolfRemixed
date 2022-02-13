@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Artemis;
+﻿using Artemis;
 using Artemis.System;
+using IndependentResolutionRendering;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using raycaster;
 using Twengine.Components;
-using Twengine.Managers;
 
 namespace Twengine.SubSystems
 {
@@ -17,24 +13,32 @@ namespace Twengine.SubSystems
         private SpriteBatch mSpriteBatch;
         private Transform mTransform;
         private Sprite mSprite;
+        private RenderTarget2D mSpritesRenderTarget;
 
         public SpriteRenderSystem(SpriteBatch spriteBatch)
             : base()
         {
             mSpriteBatch = spriteBatch;
-            
+            mSpritesRenderTarget = new RenderTarget2D(mSpriteBatch.GraphicsDevice, Const.InternalRenderResolutionWidth, Const.InternalRenderResolutionHeight);
         }
-       
+
+        public Texture2D SpriteLayer
+        {
+            get { return mSpritesRenderTarget; }
+        }
+
         protected override void Begin()
         {
             base.Begin();
-            mSpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone);
+            mSpriteBatch.GraphicsDevice.SetRenderTarget(mSpritesRenderTarget);
+            mSpriteBatch.GraphicsDevice.Clear(Color.Transparent);
+            mSpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Resolution.getTransformationMatrix());
         }
 
         protected override void End()
         {
-            base.End();
             mSpriteBatch.End();
+            base.End();
         }
 
         public override void Process(Entity e, Sprite sprite, Transform transform)

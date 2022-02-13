@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAGameGui.Gui.Widgets
 {
     public delegate string CounterToString(int counter);
 
-    
+
 
     public class ButtonWidget : LabelWidget
     {
@@ -40,14 +39,14 @@ namespace XNAGameGui.Gui.Widgets
         public bool IsMarkable { get; set; }
         public bool AppendCounter { get; set; }
         private int mCounter;
-        
+
 
         public int Counter
         {
             get { return mCounter; }
             set
             {
-                mCounter = (int) MathHelper.Clamp(value, CounterMin, CounterMax);
+                mCounter = (int)MathHelper.Clamp(value, CounterMin, CounterMax);
             }
         }
 
@@ -114,7 +113,7 @@ namespace XNAGameGui.Gui.Widgets
         {
             Counter++;
         }
-        
+
 
         public void SetCounterBounds(int min, int max)
         {
@@ -140,7 +139,7 @@ namespace XNAGameGui.Gui.Widgets
         {
             Vector2 pos = GetScreenOffset();
             Vector2 size = GetAbsoluteSize();
-            Rectangle absoluteRect = new Rectangle((int) pos.X, (int) pos.Y, (int) size.X, (int) size.Y);
+            Rectangle absoluteRect = new Rectangle((int)pos.X, (int)pos.Y, (int)size.X, (int)size.Y);
             return absoluteRect.Contains(mousePosition);
         }
 

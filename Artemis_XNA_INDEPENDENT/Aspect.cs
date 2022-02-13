@@ -42,7 +42,6 @@ namespace Artemis
     using global::System.Diagnostics;
     using global::System.Linq;
 #if !XBOX && !WINDOWS_PHONE && !PORTABLE && !UNITY5
-    using global::System.Numerics;
 #endif
 
 #if UNITY5
@@ -95,7 +94,7 @@ namespace Artemis
         {
             return new Aspect();
         }
-        
+
         /// <summary>Excludes the specified types.</summary>
         /// <param name="types">The types.</param>
         /// <returns>The specified Aspect.</returns>
@@ -118,7 +117,7 @@ namespace Artemis
         public virtual bool Interests(Entity entity)
         {
             Debug.Assert(entity != null, "Entity must not be null.");
-            
+
             if (!(this.ContainsTypesMap > 0 || this.ExcludeTypesMap > 0 || this.OneTypesMap > 0))
             {
                 return false;
@@ -133,9 +132,9 @@ namespace Artemis
             ////1001 & 0100 = 0000 NOK           
             ////0011 & 1001 = 0001 Ok
 
-            return ((this.OneTypesMap      & entity.TypeBits) != 0                     || this.OneTypesMap      == 0) &&
+            return ((this.OneTypesMap & entity.TypeBits) != 0 || this.OneTypesMap == 0) &&
                    ((this.ContainsTypesMap & entity.TypeBits) == this.ContainsTypesMap || this.ContainsTypesMap == 0) &&
-                   ((this.ExcludeTypesMap  & entity.TypeBits) == 0                     || this.ExcludeTypesMap  == 0);
+                   ((this.ExcludeTypesMap & entity.TypeBits) == 0 || this.ExcludeTypesMap == 0);
         }
 
         /// <summary>Gets all.</summary>

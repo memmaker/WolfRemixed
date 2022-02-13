@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Artemis;
+﻿using Artemis;
 using Artemis.System;
 using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Twengine.Components;
 using Twengine.Datastructures;
-using Twengine.Helper;
 using Twengine.Managers;
 
 namespace Twengine.SubSystems
 {
     public class PositionedEventArgs : EventArgs
     {
-        public Vector2 PositionOfEvent{ get; set;}
+        public Vector2 PositionOfEvent { get; set; }
     }
-    public class TilemapCollisionSystem : EntityComponentProcessingSystem<Collider, Transform>
+    public class CollisionSystem : EntityComponentProcessingSystem<Collider, Transform>
     {
         public event EventHandler<PositionedEventArgs> PlayerFoundSecret;
         private List<Point> mRelativeNeighbors;
@@ -27,7 +26,7 @@ namespace Twengine.SubSystems
         private HashSet<Point> mSecretWalls;
         private List<Entity>[,] mMapData;
 
-        public TilemapCollisionSystem(Tilemap map, Raycaster raycaster)
+        public CollisionSystem(Tilemap map, Raycaster raycaster)
             : base()
         {
             ChangeMap(map);
@@ -52,7 +51,7 @@ namespace Twengine.SubSystems
             {
                 for (int x = 0; x < mMapWidth; x++)
                 {
-                    if (mTileMap.GetCellMetaDataByPosition(x,y) == '§')
+                    if (mTileMap.GetCellMetaDataByPosition(x, y) == '§')
                     {
                         mSecretWalls.Add(new Point(x, y));
                     }
@@ -63,7 +62,7 @@ namespace Twengine.SubSystems
         private void OnPlayerFoundSecret(Vector2 position)
         {
             if (PlayerFoundSecret == null) return;
-            PlayerFoundSecret(this,new PositionedEventArgs(){PositionOfEvent = position});
+            PlayerFoundSecret(this, new PositionedEventArgs() { PositionOfEvent = position });
         }
 
         public override void Process(Entity e, Collider collider, Transform transform)
@@ -76,7 +75,7 @@ namespace Twengine.SubSystems
             if (e.Group == "Player")
             {
                 mRaycaster.SyncRaycasterCamToPlayer(transform);
-                Point playerCell = new Point((int) transform.Position.X, (int) transform.Position.Y);
+                Point playerCell = new Point((int)transform.Position.X, (int)transform.Position.Y);
                 if (mSecretWalls.Contains(playerCell))
                 {
                     // player walks through fake/secret wall
@@ -84,7 +83,7 @@ namespace Twengine.SubSystems
                     mSecretWalls.Remove(playerCell);
                 }
             }
-            
+
         }
 
         public Vector2 CollideWithMap(Collider collider, Vector2 position)
@@ -167,10 +166,10 @@ namespace Twengine.SubSystems
                     continue;
 
                 char metaData = mTileMap.GetCellMetaDataByPosition(neighborTile.X, neighborTile.Y);
-                if (mTileMap.GetCellDataByPosition(new Point(neighborTile.X, neighborTile.Y)) > 0 &&
+                if (mTileMap.GetCellDataByPosition(new Point(neighborTile.X, neighborTile.Y)) > -1 &&
                     metaData != 's') // is a wall and no secret wall
                 {
-                    
+
                     mNeighborTiles.Add(neighborTile);
                 }
                 else if (metaData == 'd' && mTileMap.Entities[neighborTile.Y, neighborTile.X].Count > 0)
@@ -178,7 +177,7 @@ namespace Twengine.SubSystems
                     // is a door
                     var entities = mTileMap.Entities[neighborTile.Y, neighborTile.X];
                     var door = entities.Find(e => e.IsActive && e.IsEnabled && e.HasComponent<Door>())?.GetComponent<Door>();
-                    if (door is {IsOpen: false})
+                    if (door is { IsOpen: false })
                     {
                         mNeighborTiles.Add(neighborTile);
                     }
@@ -246,6 +245,6 @@ namespace Twengine.SubSystems
             }
             return blockingEntities;
         }
-        
+
     }
 }

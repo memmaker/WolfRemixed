@@ -1,20 +1,19 @@
-﻿using System;
-using Artemis;
+﻿using Artemis;
 using Artemis.System;
 using Microsoft.Xna.Framework;
+using System;
 using Twengine.Components;
 using Twengine.Components.Meta;
-using Twengine.Helper;
 using Twengine.Managers;
 using XNAHelper;
 
 namespace Twengine.SubSystems.Raycast
 {
-    public class RayAnimationSystem : EntityComponentProcessingSystem<SpriteAnimator, Transform>
+    public class AnimationSystem : EntityComponentProcessingSystem<SpriteAnimator, Transform>
     {
         private Raycaster mRaycaster;
         public int SideRangeInDegrees { get; set; }
-        public RayAnimationSystem(Raycaster raycaster)
+        public AnimationSystem(Raycaster raycaster)
             : base()
         {
             mRaycaster = raycaster;

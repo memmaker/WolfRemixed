@@ -1,10 +1,6 @@
-﻿using System;
+﻿using Artemis.Interface;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Artemis;
-using Artemis.Interface;
-using Microsoft.Xna.Framework;
 
 namespace Twengine.Components
 {
@@ -32,8 +28,8 @@ namespace Twengine.Components
 
         private Dictionary<string, Animation> mAnimations;
         public event EventHandler<EventArgs> FinishedPlaying;
-        
-        public bool Paused{ get; set; }
+
+        public bool Paused { get; set; }
 
         public int CurrentFrameIndex { get { return mAnimations[mCurrentAnimation].AnimationIndices[mAnimationIndex]; } }
         private string mCurrentAnimation;
@@ -123,8 +119,8 @@ namespace Twengine.Components
                 Loop = loop,
             };
             mDirectionalAnimations[name] = directionalAnimation;
-            
-            
+
+
             Animation newAnim = new Animation
             {
                 AnimationIndices = animationIndices,
@@ -155,7 +151,7 @@ namespace Twengine.Components
             List<List<int>> dirList = new List<List<int>>();
             for (int i = 0; i < directionCount; i++)
             {
-                
+
                 List<int> dirFrames = new List<int>();
                 for (int j = 0; j < frameCount; j++)
                 {
@@ -204,13 +200,13 @@ namespace Twengine.Components
         public Animation AddAnimation(string name, List<int> animationIndices, float fps, bool loop)
         {
             Animation newAnim = new Animation
-                                    {
-                                        AnimationIndices = animationIndices,
-                                        Name = name,
-                                        TimePerFrame = 1.0f/fps,
-                                        Loop = loop,
-                                        IsDirectional = false
-                                    };
+            {
+                AnimationIndices = animationIndices,
+                Name = name,
+                TimePerFrame = 1.0f / fps,
+                Loop = loop,
+                IsDirectional = false
+            };
             mAnimations[name] = newAnim;
             return newAnim;
         }
@@ -236,7 +232,7 @@ namespace Twengine.Components
             }
         }
 
-        
+
 
         private void IncreaseAnimationIndex()
         {

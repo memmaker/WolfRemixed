@@ -1,7 +1,6 @@
-﻿using System;
-using Artemis;
-using Artemis.Interface;
+﻿using Artemis.Interface;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace Twengine.Components.Meta
 {

@@ -1,14 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Artemis;
+﻿using Artemis;
+using Artemis.Manager;
+using Artemis.Utils;
+using Engine.GameStates;
+using IndependentResolutionRendering;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MP3Player;
 using raycaster.GameStates;
 using raycaster.Scripts;
 using raycaster.StoryTelling;
-using Twengine;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
+using System.Text;
+using Degrees.Main.UI;
 using Twengine.Components;
 using Twengine.Components.Meta;
 using Twengine.Datastructures;
@@ -18,28 +26,38 @@ using Twengine.SubSystems;
 using Twengine.SubSystems.Raycast;
 using XNAGameGui.Gui;
 using XNAGameGui.Gui.Widgets;
-using System.Configuration;
 using XNAHelper;
-using Artemis.Manager;
-using Artemis.Utils;
-using Microsoft.Xna.Framework.Audio;
-using MP3Player;
 
 namespace raycaster
 {
 
-    class RaycastGame : ComponentTwengine
+    class RaycastGame : Game
     {
+        protected static EntityWorld sWorld;
+        protected SpriteBatch mSpriteBatch;
+        protected static GraphicsDeviceManager Graphics;
+        protected Artemis.Manager.SystemManager mSystemManager;
+
+        protected static MapManager mMapManager;
+        protected static int sScreenWidth;
+        protected static int sScreenHeight;
+        public static event EventHandler<EventArgs> TicEvent;
+        private int mTics;
+        protected static GameStateManager mGameStateManager;
+        public static AudioPlayer AudioManager { get; set; }
+        protected static GameGui sGui;
+        private MouseState mLastmouseState;
+
         private static Raycaster mRaycaster;
         private static RaycastRenderSystem sRaycastRenderSystem;
         public static bool FinishedLoading { get; set; }
         private static bool mLowResRaytracing;
 
-        private static RaycastMapRenderer mMapRenderer;
-        private static TilemapCollisionSystem mTilemapCollisionSystem;
+        private static MapRenderer mMapRenderer;
+        private static CollisionSystem mCollisionSystem;
 
         private static Tilemap mTilemap;
-        
+
         private static string[] mMapList;
         private static int mCurrentMapIndex;
 
@@ -53,8 +71,8 @@ namespace raycaster
         private SpriteFont mHudFont;
         private SpriteFont mMessageFont;
 
-        private static FPSControlSystem mFpsControlSystem;
-        private static SpriteAnimator mHudFaceAnimator;
+        private static InputHandler mInputHandler;
+        
         private SpriteFont mLongTextFont;
 
         private bool mFullscreen;
@@ -73,8 +91,17 @@ namespace raycaster
         private bool mSecretWallsVisible;
 
 
-        public RaycastGame() : base(true, false)
+        public RaycastGame() : base()
         {
+            Graphics = new GraphicsDeviceManager(this);
+            sWorld = new EntityWorld();
+            Content.RootDirectory = "Content";
+            mTics = 0;
+            sGui = new GameGui();
+            mLastmouseState = Mouse.GetState();
+            mGameStateManager = new GameStateManager(Services);
+            AudioManager = new AudioPlayer();
+            Components.Add(mGameStateManager);
             // XNA
             Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             int width, height;
@@ -83,8 +110,8 @@ namespace raycaster
                 mMouseSensitivity = 0.50f;
                 mFullscreen = false;
                 mLowResRaytracing = false;
-                width = 640;
-                height = 360;
+                width = Const.InternalRenderResolutionWidth;
+                height = Const.InternalRenderResolutionHeight;
                 mSecretWallsVisible = false;
             }
             else
@@ -100,16 +127,85 @@ namespace raycaster
             FinishedLoading = false;
             IsMouseVisible = false;
             IsFixedTimeStep = true;
-            
+
+            SetupGameState();
+
+        }
+
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+            sGui.UnloadContent();
+            Shutdown();
+        }
+        protected override void LoadContent()
+        {
+            mSpriteBatch = new SpriteBatch(GraphicsDevice);
+
+            AssetManager.Default.Init(Content, GraphicsDevice);
+
+            mMapManager = new MapManager(Content);
+
+            SpriteFont spriteFont = Content.Load<SpriteFont>("Fonts/DefaultFont");
+            DebugDrawer.Init(mSpriteBatch, spriteFont);
+
+            sGui.LoadContent(Content, GraphicsDevice, spriteFont, spriteFont);
+            GameGui.Viewport = GraphicsDevice.Viewport;
+
+
+            mSystemManager = sWorld.SystemManager;
+
+            LoadGame();
+
+
+            mSystemManager.SetSystem(new BehaviorSystem(), GameLoopType.Update);
+            mSystemManager.SetSystem(new PhysicsSystem(), GameLoopType.Update);
+            mSystemManager.SetSystem(new ExpirationSystem(), GameLoopType.Update);
+
+           
+
+            AddSubSystems();
+
+            sWorld.InitializeAll();
+
+
+           
+            PostInit();
+
+            base.LoadContent();
+        }
+
+        protected override void Initialize()
+        {
+            // 1200x900
+            // 1024x768
+            // 800x600
+            // 640x480
+            // 320x240
+            var xRes = 800;
+            var yRes = 600;
+
+            sScreenWidth = Const.InternalRenderResolutionWidth;
+            sScreenHeight = Const.InternalRenderResolutionHeight;
+            if (Graphics.GraphicsDevice != null) GameGui.Viewport = Graphics.GraphicsDevice.Viewport;
+            Resolution.Init(ref Graphics);
+            Resolution.SetVirtualResolution(sScreenWidth, sScreenHeight);
+            Resolution.SetResolution(xRes, yRes, false);
+
+            mStatusBarRenderTarget = new RenderTarget2D(GraphicsDevice, sScreenWidth, sScreenHeight);
+            base.Initialize();
+        }
+
+        
+        public void SetupGameState()
+        {
             mEnergyBarriers = new HashSet<Entity>();
             mEnergyReactorsAlive = new HashSet<Entity>();
             mRedLights = new HashSet<Entity>();
             mHiddenMonsters = new HashSet<Entity>();
             mTimers = new List<CallbackTimer>();
-            // misc 
-            ChangeResolution(width, height, mFullscreen);
 
-            mMapList = new[]{"map1"};//,"map02.txt"};
+            mMapList = new[] { "map1" };//,"map02.txt"};
             mCurrentMapIndex = 0;
 
             PlayerAmmo = 0;
@@ -119,29 +215,8 @@ namespace raycaster
             mZombieSpawnArea = new Rectangle(50, 20, 11, 6);
             mZombieTriggerArea = new Rectangle(45, 12, 17, 14);
 
+            
         }
-
-        protected override void Initialize()
-        {
-            ChangeResolution(640, 360, false);
-
-            base.Initialize();
-        }
-
-        public static new void ChangeResolution(int screenWidth, int screenHeight, bool fullscreen)
-        {
-            sScreenWidth = screenWidth;
-            sScreenHeight = screenHeight;
-            Graphics.PreferredBackBufferWidth = sScreenWidth;
-            Graphics.PreferredBackBufferHeight = sScreenHeight;
-            Graphics.IsFullScreen = fullscreen;
-            Graphics.SynchronizeWithVerticalRetrace = true;
-            Graphics.ApplyChanges();
-            if (Graphics.GraphicsDevice != null) GameGui.Viewport = Graphics.GraphicsDevice.Viewport;
-
-            if (sRaycastRenderSystem != null) sRaycastRenderSystem.ViewportChanged(screenWidth, screenHeight);
-        }
-
 
         private static void CreateConfiguration()
         {
@@ -149,7 +224,7 @@ namespace raycaster
             Config.AppSettings.Settings.Add("ScreenWidth", sScreenWidth.ToString());
             Config.AppSettings.Settings.Add("ScreenHeight", sScreenHeight.ToString());
             Config.AppSettings.Settings.Add("LowResRaycasting", mLowResRaytracing.ToString());
-            Config.AppSettings.Settings.Add("MouseSensitivity", mFpsControlSystem.MouseSensitivity.ToString());
+            Config.AppSettings.Settings.Add("MouseSensitivity", mInputHandler.MouseSensitivity.ToString());
             Config.AppSettings.Settings.Add("SecretWallsVisible", sRaycastRenderSystem.SecretWallsVisible.ToString());
             Config.Save(ConfigurationSaveMode.Full);
         }
@@ -165,7 +240,7 @@ namespace raycaster
             Config.AppSettings.Settings["ScreenWidth"].Value = sScreenWidth.ToString();
             Config.AppSettings.Settings["ScreenHeight"].Value = sScreenHeight.ToString();
             Config.AppSettings.Settings["LowResRaycasting"].Value = mLowResRaytracing.ToString();
-            Config.AppSettings.Settings["MouseSensitivity"].Value = mFpsControlSystem.MouseSensitivity.ToString();
+            Config.AppSettings.Settings["MouseSensitivity"].Value = mInputHandler.MouseSensitivity.ToString();
             Config.AppSettings.Settings["SecretWallsVisible"].Value = sRaycastRenderSystem.SecretWallsVisible.ToString();
             Config.Save(ConfigurationSaveMode.Full);
         }
@@ -174,7 +249,7 @@ namespace raycaster
 
         #region initialization
 
-        protected override void AddSubSystems()
+        protected void AddSubSystems()
         {
             mMapManager.CreateWalls += mMapManager_CreateWalls;
             mMapManager.CreateMetaInfo += mMapManager_CreateMetaInfo;
@@ -185,66 +260,59 @@ namespace raycaster
 
             sRaycastRenderSystem = new RaycastRenderSystem(mSpriteBatch, AssetManager.Default, mTilemap, sScreenWidth, sScreenHeight, mLowResRaytracing) { SecretWallsVisible = mSecretWallsVisible };
             mRaycaster = sRaycastRenderSystem.Raycaster;
-            
-            mSystemManager.SetSystem(sRaycastRenderSystem,  GameLoopType.Draw);
 
-            mSystemManager.SetSystem(new RayAnimationSystem(mRaycaster),  GameLoopType.Update);
+            mSystemManager.SetSystem(sRaycastRenderSystem, GameLoopType.Draw);
 
-            mSystemManager.SetSystem(new DoorMovementSystem(mTilemap),  GameLoopType.Update);
+            mSystemManager.SetSystem(new AnimationSystem(mRaycaster), GameLoopType.Update);
 
-            mFpsControlSystem = new FPSControlSystem(mRaycaster, sScreenWidth, sScreenHeight, mMouseSensitivity);
-            mFpsControlSystem.PlayerPressedFire += PlayerPressedFire;
-            mFpsControlSystem.PlayerUsed += PlayerUsed;
-            mFpsControlSystem.ToggleMap += (o, args) => mMapRenderer.DrawMap = !mMapRenderer.DrawMap;
+            mSystemManager.SetSystem(new DoorMovementSystem(mTilemap), GameLoopType.Update);
 
-            mFpsControlSystem.MapZoomIn += delegate { mRaycaster.Camera.EyeHeight--; EntitySpawn.CreateMessage("Eyeheight:" + mRaycaster.Camera.EyeHeight); };
-            //mFpsControlSystem.MapZoomOut += delegate { mRaycaster.Camera.EyeHeight++; EntitySpawn.CreateMessage("Eyeheight:" + mRaycaster.Camera.EyeHeight); };
-            mFpsControlSystem.MapZoomOut += delegate { SpawnInZombieArea(); };
-            mFpsControlSystem.ChangeWeapon += (o, args) => ChangePlayerWeapon(args.WeaponIndex);
-            mFpsControlSystem.PlayerMovedIntoTile += PlayerMovedIntoTile;
-            mFpsControlSystem.ActivatedWeaponCheat += (o, args) => AllWeaponsCheatActivated();
+            mInputHandler = new InputHandler(mRaycaster, sScreenWidth, sScreenHeight, mMouseSensitivity);
+            mInputHandler.PlayerPressedFire += PlayerPressedFire;
+            mInputHandler.PlayerUsed += PlayerUsed;
+            mInputHandler.ToggleMap += (o, args) => mMapRenderer.DrawMap = !mMapRenderer.DrawMap;
+
+            mInputHandler.MapZoomIn += delegate { mRaycaster.Camera.EyeHeight--; EntitySpawn.CreateMessage("Eyeheight:" + mRaycaster.Camera.EyeHeight); };
+            //mInputHandler.MapZoomOut += delegate { mRaycaster.Camera.EyeHeight++; EntitySpawn.CreateMessage("Eyeheight:" + mRaycaster.Camera.EyeHeight); };
+            mInputHandler.MapZoomOut += delegate { SpawnInZombieArea(); };
+            mInputHandler.ChangeWeapon += (o, args) => ChangePlayerWeapon(args.WeaponIndex);
+            mInputHandler.PlayerMovedIntoTile += PlayerMovedIntoTile;
+            mInputHandler.ActivatedWeaponCheat += (o, args) => AllWeaponsCheatActivated();
 
             /*
-            mFpsControlSystem.MapZoomIn += (o, args) => mMapRenderer.GridSizeInPixels++;
-            mFpsControlSystem.MapZoomOut += (o, args) => mMapRenderer.GridSizeInPixels--;
+            mInputHandler.MapZoomIn += (o, args) => mMapRenderer.GridSizeInPixels++;
+            mInputHandler.MapZoomOut += (o, args) => mMapRenderer.GridSizeInPixels--;
             */
-            mSystemManager.SetSystem(mFpsControlSystem,  GameLoopType.Update);
+            mSystemManager.SetSystem(mInputHandler, GameLoopType.Update);
 
 
-            mMapRenderer = new RaycastMapRenderer(mSpriteBatch, AssetManager.Default, mTilemap, sScreenWidth, sScreenHeight, mHudFont, mRaycaster);
-            mSystemManager.SetSystem(mMapRenderer,  GameLoopType.Draw);
+            mMapRenderer = new MapRenderer(mSpriteBatch, AssetManager.Default, mTilemap, sScreenWidth, sScreenHeight, mHudFont, mRaycaster);
+            mSystemManager.SetSystem(mMapRenderer, GameLoopType.Draw);
 
-            FpsWeaponSystem fpsWeaponSystem = new FpsWeaponSystem(mRaycaster);
-            fpsWeaponSystem.PlayerUsedAmmo += args => PlayerAmmo--;
-            fpsWeaponSystem.PlayerWeaponFired += args =>
+            WeaponSystem mWeaponSystem = new WeaponSystem(mRaycaster);
+            mWeaponSystem.PlayerUsedAmmo += args => PlayerAmmo--;
+            mWeaponSystem.PlayerWeaponFired += args =>
                                                      {
                                                          if (CurrentWeapon.FireSoundCue != null)
                                                              AudioManager.PlayEffect((int)CurrentWeapon.FireSoundCue);
                                                          if (!CurrentWeapon.IsSilent)
-                                                            AlertNonHiddenEnemiesNearPosition(mPlayerTransform.Position);
+                                                             AlertNonHiddenEnemiesNearPosition(mPlayerTransform.Position);
                                                      };
-            fpsWeaponSystem.BulletHit += BulletHit;
-            fpsWeaponSystem.DamageDealt += new DamageDealtEventHandler(fpsWeaponSystem_DamageDealt);
-            mSystemManager.SetSystem(fpsWeaponSystem,  GameLoopType.Update);
-            
-            
-            mTilemapCollisionSystem = new TilemapCollisionSystem(mTilemap, mRaycaster);
-            mTilemapCollisionSystem.PlayerFoundSecret += PlayerFoundSecret;
-            mSystemManager.SetSystem(mTilemapCollisionSystem, GameLoopType.Update);
+            mWeaponSystem.BulletHit += BulletHit;
+            mWeaponSystem.DamageDealt += new DamageDealtEventHandler(fpsWeaponSystem_DamageDealt);
+            mSystemManager.SetSystem(mWeaponSystem, GameLoopType.Update);
 
-            mSystemManager.SetSystem(new MessageRenderSystem(mSpriteBatch, mMessageFont),  GameLoopType.Draw);
 
-            mSystemManager.SetSystem(new SpriteRenderSystem(mSpriteBatch), GameLoopType.Draw);  // default 2d sprite rendering
+            mCollisionSystem = new CollisionSystem(mTilemap, mRaycaster);
+            mCollisionSystem.PlayerFoundSecret += PlayerFoundSecret;
+            mSystemManager.SetSystem(mCollisionSystem, GameLoopType.Update);
+
+            mSystemManager.SetSystem(new MessageRenderSystem(mSpriteBatch, mMessageFont), GameLoopType.Draw);
+
+            mSpriteRenderSystem = new SpriteRenderSystem(mSpriteBatch);
+            mSystemManager.SetSystem(mSpriteRenderSystem, GameLoopType.Draw);  // default 2d sprite rendering
 
             EntitySpawn.Init(sWorld, mTilemap);
-
-            /*
-            EntitySpawn.SpawnThings();
-
-            InitialSpawnPlayer();
-            
-            */
-
         }
 
         void fpsWeaponSystem_DamageDealt(DamageDealtEventArgs args)
@@ -257,7 +325,7 @@ namespace raycaster
 
         static void BulletHit(HitLocationEventArgs args)
         {
-            
+
             EntitySpawn.CreateBulletHitAnimation(args.HitLocation, args.IsEnemyHit);
         }
 
@@ -295,13 +363,13 @@ namespace raycaster
                             EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Time to mow down some Nazis..", 5, EntitySpawn.CreateWolfRifle);
                             break;
                         case 2: // Wolf Gatling Gun
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "More lead, more death!",6, EntitySpawn.CreateWolfGatling);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "More lead, more death!", 6, EntitySpawn.CreateWolfGatling);
                             break;
                         case 3: // Blake Pistol
                             EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Blake won't need this..", 4, EntitySpawn.CreateBlakeStoneAutoChargePistol);
                             break;
                         case 113: // necronomicon
-                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Klaatu Verata ..Nektu?! ",9, EntitySpawn.CreateMagicHand);
+                            EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Klaatu Verata ..Nektu?! ", 9, EntitySpawn.CreateMagicHand);
                             break;
                         case 114: // duke shotgun
                             EntitySpawn.CreateWeaponPickup(mTilemap.SpriteTextures, spawnPos, tileIndex, "Come, get some!", 7, EntitySpawn.CreateDukeShotgun);
@@ -340,7 +408,7 @@ namespace raycaster
                             break;
                         case 63:
                             Entity redlight = EntitySpawn.CreateTwoStateAnimatedSprite(spawnPos, mTilemap.SpriteTextures,
-                                                                                                     new List<int>() {63}, new List<int>() {63, 64},
+                                                                                                     new List<int>() { 63 }, new List<int>() { 63, 64 },
                                                                                                      false);
                             mRedLights.Add(redlight);
                             break;
@@ -353,7 +421,7 @@ namespace raycaster
                         case 76:    // reactor
                             Entity reactor = EntitySpawn.CreateDestroyableObstacle(mTilemap.SpriteTextures, spawnPos, tileIndex, 8, 3);
                             HealthPoints healthPoints = reactor.GetComponent<HealthPoints>();
-                            healthPoints.Dying += delegate(object o, KilledEventArgs args)
+                            healthPoints.Dying += delegate (object o, KilledEventArgs args)
                                                       {
                                                           mEnergyReactorsAlive.Remove(reactor);
                                                           ReactorDestroyed();
@@ -435,7 +503,7 @@ namespace raycaster
                             break;
                     }
                     spawnCounter++;
-                  
+
                 }
             }
             Debug.Print("Spawned " + spawnCounter + " entities..");
@@ -446,7 +514,7 @@ namespace raycaster
         {
             if (mEnergyReactorsAlive.Count == 0)
             {
-                AudioManager.PlayEffect((int) SoundCue.AlarmSound);
+                AudioManager.PlayEffect((int)SoundCue.AlarmSound);
                 foreach (Entity energyBarrier in mEnergyBarriers)
                 {
                     energyBarrier.Group = "Deco";
@@ -486,12 +554,12 @@ namespace raycaster
         private static void LoadMap(string mapname)
         {
             mTilemap = Tilemap.FromScratch(64, 64);
-            
+
             mMapManager.LoadMap("Maps/" + mapname);
             Texture2D wallTexture = mMapManager.GetTileSheet("WallTextures");
             mTilemap.WallTextures = new SpriteSheet(wallTexture, 64, 64);
             mTilemap.SpriteTextures = new SpriteSheet(mMapManager.GetTileSheet("WolfItems"), 64, 64);
-            
+
         }
 
         static void mMapManager_CreateEnemies(object sender, SpawnEntityEventArgs e)
@@ -501,7 +569,7 @@ namespace raycaster
 
         static void mMapManager_CreateItems(object sender, SpawnEntityEventArgs e)
         {
-            
+
             mTilemap.ItemSpawnPoints.Add(e.Position.ToCellCenteredVector2(), e.TileIndex);
             if (e.Properties.ContainsKey("MessageText"))
             {
@@ -519,19 +587,19 @@ namespace raycaster
             switch (e.TileIndex)
             {
                 case 0:
-                    mTilemap.PlayerViewDirection = new Vector2(1,0);
+                    mTilemap.PlayerViewDirection = new Vector2(1, 0);
                     mTilemap.PlayerSpawn = e.Position.ToCellCenteredVector2();
                     break;
                 case 1:
-                    mTilemap.PlayerViewDirection = new Vector2(0,-1);
+                    mTilemap.PlayerViewDirection = new Vector2(0, -1);
                     mTilemap.PlayerSpawn = e.Position.ToCellCenteredVector2();
                     break;
                 case 2:
-                    mTilemap.PlayerViewDirection = new Vector2(0,1);
+                    mTilemap.PlayerViewDirection = new Vector2(0, 1);
                     mTilemap.PlayerSpawn = e.Position.ToCellCenteredVector2();
                     break;
                 case 3:
-                    mTilemap.PlayerViewDirection = new Vector2(-1,0);
+                    mTilemap.PlayerViewDirection = new Vector2(-1, 0);
                     mTilemap.PlayerSpawn = e.Position.ToCellCenteredVector2();
                     break;
                 case 4:
@@ -548,33 +616,39 @@ namespace raycaster
                     break;
                 case 8:
                     MessageTriggerInfo messageTriggerInfo = new MessageTriggerInfo();
-                    string message = e.Properties["MessageText"].ToString().Replace("\\n","\n");
+                    string message = e.Properties["MessageText"].ToString().Replace("\\n", "\n");
                     bool centered = e.Properties["Centered"] == "true" ? true : false;
                     messageTriggerInfo.IsCentered = centered;
                     messageTriggerInfo.Text = message;
                     mTilemap.CreateMessageTrigger(e.Position, messageTriggerInfo);
                     break;
-                    
+
             }
-            
+
         }
 
         static void mMapManager_CreateWalls(object sender, SpawnEntityEventArgs e)
         {
+            bool secretWall = e.Properties.ContainsKey("SecretWall") && bool.Parse(e.Properties["SecretWall"]);
             switch (e.TileIndex)
             {
                 case 4:
                 case 16:
                 case 18:
-                    mTilemap.CreateDoor(e.Position,e.TileIndex);
-                    break;
-                case 9:
-                    mTilemap.CreateSecretWall(e.Position, e.TileIndex);
+                    mTilemap.CreateDoor(e.Position, e.TileIndex);
                     break;
                 default:
-                    mTilemap.CreateWall(e.Position, e.TileIndex);
+                    if (secretWall)
+                    {
+                        mTilemap.CreateSecretWall(e.Position, e.TileIndex);
+                    }
+                    else
+                    {
+                        mTilemap.CreateWall(e.Position, e.TileIndex);
+                    }
                     break;
             }
+
             if (e.Properties.Count > 0 && e.Properties.ContainsKey("NeedsKey") && e.Properties["NeedsKey"] == "Gold")
                 mTilemap.SetKeyNeed(e.Position, "Gold");
         }
@@ -589,7 +663,7 @@ namespace raycaster
             if (mZombieTriggerArea.Contains(mPlayerTransform.LastCellPosition))
             {
                 if (mZombieSpawnTimer == null)
-                    mZombieSpawnTimer = new CallbackTimer(SpawnInZombieArea,3,true);
+                    mZombieSpawnTimer = new CallbackTimer(SpawnInZombieArea, 3, true);
             }
             else // not in trigger area..
             {
@@ -600,7 +674,7 @@ namespace raycaster
                 }
 
             }
-            
+
             /*
             if (mTilemap.MessageTriggers.ContainsKey(mPlayerTransform.LastCellPosition))
             {
@@ -617,10 +691,10 @@ namespace raycaster
             Color fadeColor = Color.Red;
             fadeColor.A = 180;
             fadeColor.R = 100;
-            FadeToColorEvent fadeToRed = new FadeToColorEvent(fadeColor, 2) {DeferredEnd = true, IsNonBlocking = true };
+            FadeToColorEvent fadeToRed = new FadeToColorEvent(fadeColor, 2) { DeferredEnd = true, IsNonBlocking = true };
             storyEvents.Add(fadeToRed);
             storyEvents.Add(new ChangeEyeHeightEvent(mRaycaster, 1, -128));
-            storyEvents.Add(new ShowTextEvent("You died.\n*Right Mouse Button* to continue.",0.5f,0.5f,true));
+            storyEvents.Add(new ShowTextEvent("You died.\n*Right Mouse Button* to continue.", 0.5f, 0.5f, true));
             storyEvents.Add(new CallBackEvent(callback) { IsMandatory = true });
             mGameStateManager.Push(new StoryTellingState(mGameStateManager, storyEvents));
         }
@@ -653,8 +727,8 @@ namespace raycaster
         public static void ShowLoadingScreen()
         {
             mLoadingScreen = new LabelWidget();
-            List<Texture2D> loadingScreens = new List<Texture2D>(){AssetManager.Default.LoadTexture("Menu/loading_id_widescreen.png"),AssetManager.Default.LoadTexture("Menu/loading_wolf_widescreen.png"),AssetManager.Default.LoadTexture("Menu/loading_bs_widescreen.png")};
-            mLoadingScreen.Background = loadingScreens[TwenMath.Random.Next(0,loadingScreens.Count)];
+            List<Texture2D> loadingScreens = new List<Texture2D>() { AssetManager.Default.LoadTexture("Menu/loading_id_widescreen.png"), AssetManager.Default.LoadTexture("Menu/loading_wolf_widescreen.png"), AssetManager.Default.LoadTexture("Menu/loading_bs_widescreen.png") };
+            mLoadingScreen.Background = loadingScreens[TwenMath.Random.Next(0, loadingScreens.Count)];
             mLoadingScreen.Bounds = new UniRectangle(0, 0, GameGui.Viewport.Width, GameGui.Viewport.Height);
             mLoadingScreen.DrawLabelBackground = true;
             GameGui.RootWidget.AddChild(mLoadingScreen);
@@ -671,67 +745,13 @@ namespace raycaster
             mTimers.Add(mMultiKillTimer);
             CreatePlayer(mTilemap.PlayerSpawn, mTilemap.PlayerViewDirection);
             mMapRenderer.Player = Player;
-            InitialCreatePlayerWeapon();
+
+            GiveWeaponToPlayer(2, EntitySpawn.CreateWolfKnife);
+            GiveWeaponToPlayer(1, EntitySpawn.CreateDoomPunch);
+            
+            ChangePlayerWeapon(1);
         }
 
-
-        protected override void LoadGame()
-        {
-            mHudFont = Content.Load<SpriteFont>("Fonts/WolfFont");
-            mMessageFont = Content.Load<SpriteFont>("Fonts/WolfFontSmall");
-            mLongTextFont =  Content.Load<SpriteFont>("Fonts/LongTextFont");
-            mLongTextFont.Spacing = 2;
-            sGui.LoadContent(Content, GraphicsDevice, mHudFont, mLongTextFont);
-
-            AudioManager.LoadSound("Music/Wolfenstein/wolfmenu.mp3", (int) SoundCue.MenuMusic, true);
-            AudioManager.LoadSound("Music/Wolfenstein/wolfintro.mp3", (int) SoundCue.IntroMusic, true);
-            
-            AudioManager.LoadSound("Music/Wolfenstein/wolfplay01.mp3", (int) SoundCue.GamePlayMusic01, true);
-            AudioManager.LoadSound("Music/Wolfenstein/wolfplay02.mp3", (int) SoundCue.GamePlayMusic02, true);
-            AudioManager.LoadSound("Music/Wolfenstein/wolfplay03.mp3", (int) SoundCue.GamePlayMusic03, true);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot1.wav"), (int) SoundCue.Gunshot01);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot2.wav"), (int) SoundCue.Gunshot02);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot3.wav"), (int) SoundCue.Gunshot03);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol1.wav"), (int) SoundCue.Pistol1);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol2.wav"), (int) SoundCue.Pistol2);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet1.wav"), (int) SoundCue.Ricochet1);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet2.wav"), (int) SoundCue.Ricochet2);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet3.wav"), (int) SoundCue.Ricochet3);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/achtung.wav"), (int) SoundCue.Achtung);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarm.wav"), (int) SoundCue.Alarm);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/werda.wav"), (int) SoundCue.WerDa);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/opendoor.wav"), (int) SoundCue.CloseDoor);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/closedoor.wav"), (int) SoundCue.OpenDoor);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/meinLeben.wav"), (int) SoundCue.MeinLeben);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarmSound.wav"), (int) SoundCue.AlarmSound);
-            
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound2.wav"), (int) SoundCue.Rifle1);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound3.wav"), (int) SoundCue.Rifle2);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Machine Gun.wav"), (int) SoundCue.MachineGun);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Gatling Gun.wav"), (int) SoundCue.GatlingGun);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Knife.wav"), (int) SoundCue.Knife);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Enemy Pain.wav"), (int) SoundCue.EnemyPain);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Dies.wav"), (int) SoundCue.PlayerDies);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 1.wav"), (int) SoundCue.PlayerPain1);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 2.wav"), (int) SoundCue.PlayerPain2);
-            
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/doublekill.wav"), (int) SoundCue.DoubleKill);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/triplekill.wav"), (int) SoundCue.TripleKill);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/multikill.wav"), (int) SoundCue.MultiKill);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/ultrakill.wav"), (int) SoundCue.UltraKill);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/monsterkill.wav"), (int) SoundCue.MonsterKill);
-
-            
-        }
 
         public static void CreatePlayer(Vector2 pos, Vector2 playerViewDirection)
         {
@@ -746,7 +766,7 @@ namespace raycaster
             Player.Tag = "LocalPlayer";
             Player.AddComponent(new Collider(0.2f));
             Player.AddComponent(new FPSControl() { MoveBackward = Keys.S, MoveForward = Keys.W, MoveLeft = Keys.A, MoveRight = Keys.D, ToggleMap = Keys.M, MapZoomIn = Keys.OemPlus, MapZoomOut = Keys.OemMinus });
-            mPlayerTransform = new Transform(pos, TwenMath.DirectionVectorToRotation(playerViewDirection)) { CollideWithMap = true,CollideWithEntityMap = true, MaxSpeed = 4 };
+            mPlayerTransform = new Transform(pos, TwenMath.DirectionVectorToRotation(playerViewDirection)) { CollideWithMap = true, CollideWithEntityMap = true, MaxSpeed = 4 };
             mPlayerTransform.BeginInvisibility += new EventHandler<EventArgs>(BeginInvisibility);
             mPlayerTransform.EndInvisibility += new EventHandler<EventArgs>(EndInvisibility);
             Player.AddComponent(mPlayerTransform);
@@ -759,31 +779,72 @@ namespace raycaster
             Player.AddComponent(PlayerHealthPoints);
             Player.AddComponent(new Inventory(10));
             Player.Refresh();// always call Refresh() when adding/removing components!
-            
+
             mTilemap.AddEntity(Player);
+
+            sHudFace = new HudFace(PlayerHealthPoints);
         }
 
 
-        private static void InitialCreatePlayerWeapon()
+        protected void LoadGame()
         {
-            Entity hudFace = EntitySpawn.CreateHudFace(new Point(sScreenWidth, sScreenHeight), sRaycastRenderSystem.StatusbarHeight,
-                                                       (o, args) => AnimateFaceIdleAnimation());
-            mHudFaceAnimator = hudFace.GetComponent<SpriteAnimator>();
+            mHudFont = Content.Load<SpriteFont>("Fonts/WolfFont");
+            mMessageFont = Content.Load<SpriteFont>("Fonts/WolfFontSmall");
+            mLongTextFont = Content.Load<SpriteFont>("Fonts/LongTextFont");
+            mLongTextFont.Spacing = 2;
+            sGui.LoadContent(Content, GraphicsDevice, mHudFont, mLongTextFont);
 
-            GiveWeaponToPlayer(2, EntitySpawn.CreateWolfKnife);
-            GiveWeaponToPlayer(1, EntitySpawn.CreateDoomPunch);
-            //GiveAllWeponsToPlayer();
-            Debug.Print("Spawned 2 Entities (HudFace & StartWeapon)");
+            AudioManager.LoadSound("Music/Wolfenstein/wolfmenu.mp3", (int)SoundCue.MenuMusic, true);
+            AudioManager.LoadSound("Music/Wolfenstein/wolfintro.mp3", (int)SoundCue.IntroMusic, true);
 
-            /*
-            GiveWeaponToPlayer(6, EntitySpawn.CreateWolfRifle);
-            GiveWeaponToPlayer(7, EntitySpawn.CreateWolfGatling);
-            GiveWeaponToPlayer(9, EntitySpawn.CreateMagicHand);
-            */
-            ChangePlayerWeapon(1);
+            AudioManager.LoadSound("Music/Wolfenstein/wolfplay01.mp3", (int)SoundCue.GamePlayMusic01, true);
+            AudioManager.LoadSound("Music/Wolfenstein/wolfplay02.mp3", (int)SoundCue.GamePlayMusic02, true);
+            AudioManager.LoadSound("Music/Wolfenstein/wolfplay03.mp3", (int)SoundCue.GamePlayMusic03, true);
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot1.wav"), (int)SoundCue.Gunshot01);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot2.wav"), (int)SoundCue.Gunshot02);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot3.wav"), (int)SoundCue.Gunshot03);
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol1.wav"), (int)SoundCue.Pistol1);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol2.wav"), (int)SoundCue.Pistol2);
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet1.wav"), (int)SoundCue.Ricochet1);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet2.wav"), (int)SoundCue.Ricochet2);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet3.wav"), (int)SoundCue.Ricochet3);
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/achtung.wav"), (int)SoundCue.Achtung);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarm.wav"), (int)SoundCue.Alarm);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/werda.wav"), (int)SoundCue.WerDa);
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/opendoor.wav"), (int)SoundCue.CloseDoor);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/closedoor.wav"), (int)SoundCue.OpenDoor);
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/meinLeben.wav"), (int)SoundCue.MeinLeben);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarmSound.wav"), (int)SoundCue.AlarmSound);
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound2.wav"), (int)SoundCue.Rifle1);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound3.wav"), (int)SoundCue.Rifle2);
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Machine Gun.wav"), (int)SoundCue.MachineGun);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Gatling Gun.wav"), (int)SoundCue.GatlingGun);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Knife.wav"), (int)SoundCue.Knife);
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Enemy Pain.wav"), (int)SoundCue.EnemyPain);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Dies.wav"), (int)SoundCue.PlayerDies);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 1.wav"), (int)SoundCue.PlayerPain1);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 2.wav"), (int)SoundCue.PlayerPain2);
+
+
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/doublekill.wav"), (int)SoundCue.DoubleKill);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/triplekill.wav"), (int)SoundCue.TripleKill);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/multikill.wav"), (int)SoundCue.MultiKill);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/ultrakill.wav"), (int)SoundCue.UltraKill);
+            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/monsterkill.wav"), (int)SoundCue.MonsterKill);
+
+
         }
 
-        public static void GiveAllWeponsToPlayer()
+        public static void GiveAllWeaponsToPlayer()
         {
             List<Func<Point, int, Entity>> weaponFunctions = new List<Func<Point, int, Entity>>() { null, EntitySpawn.CreateWolfKnife, EntitySpawn.CreateRottPistol, EntitySpawn.CreateWolfRifle, EntitySpawn.CreateWolfGatling, EntitySpawn.CreateBlakeStoneAutoChargePistol, EntitySpawn.CreateMagicHand, EntitySpawn.CreateDoomPunch, EntitySpawn.CreateDoomShotgun, EntitySpawn.CreateDukeShotgun };
             Inventory inventory = Player.GetComponent<Inventory>();
@@ -810,7 +871,7 @@ namespace raycaster
                 inventory.Items[inventorySlotIndex].IsEnabled = false;
             }
             PlayerAmmo += inventory.Items[inventorySlotIndex].GetComponent<Weapon>().CurrentAmmo;
-            AnimateEvilGrinOnHudFace();
+            sHudFace.AnimateEvilGrinOnHudFace();
             ChangePlayerWeapon(inventorySlotIndex);
         }
 
@@ -820,15 +881,10 @@ namespace raycaster
             PlayerAmmo += amount;
         }
 
-        protected override void PostInit()
+        protected void PostInit()
         {
             if (mTilemap == null) return;
-            /*
-            mCollisionSystem.SetWorldSize(mTilemap.MapWidth, mTilemap.MapHeight, 1);
-            mCollisionSystem.RegisterCollisionTestNew(0, 4);    // player vs. pickups
-            mCollisionSystem.RegisterCollisionTestNew(5, 3);    // projectiles vs. enemys
-            */
-            mGameStateManager.Push(new MainMenuState(sWorld,mSystemManager,mGameStateManager,mFpsControlSystem,mSpriteBatch));
+            mGameStateManager.Push(new MainMenuState(sWorld, mSystemManager, mGameStateManager, mInputHandler, mSpriteBatch));
         }
 
         #endregion
@@ -837,7 +893,6 @@ namespace raycaster
 
         private void PlayerUsed(object sender, EventArgs e)
         {
-
             if (CheckForUsableEntity())
                 return;
             if (CheckForUsableDoor())
@@ -848,7 +903,7 @@ namespace raycaster
 
         private bool CheckForUsableWall()
         {
-            if (TwenMath.DistanceToTile(mPlayerTransform.Position, mRaycaster.TargetedWall) <= 2) 
+            if (TwenMath.DistanceToTile(mPlayerTransform.Position, mRaycaster.TargetedWall) <= 2)
             {
                 if (mTilemap.GetCellDataByPosition(mRaycaster.TargetedWall) == 6)
                 {
@@ -863,7 +918,7 @@ namespace raycaster
                     }
                     else
                     {
-                        ShowMessageStory(new MessageTriggerInfo(){IsCentered = true, Text = "Gold Key needed."});
+                        ShowMessageStory(new MessageTriggerInfo() { IsCentered = true, Text = "Gold Key needed." });
                     }
                 }
             }
@@ -885,7 +940,7 @@ namespace raycaster
 
         private bool CheckForUsableEntity()
         {
-            List<Entity> targetedEntities = mRaycaster.TargetedEntities[mRaycaster.ScreenWidth/2];
+            List<Entity> targetedEntities = mRaycaster.TargetedEntities[mRaycaster.ScreenWidth / 2];
             if (targetedEntities.Count > 0)
             {
                 Transform transform = GetFirstUsableEntityTransform(targetedEntities);
@@ -893,7 +948,7 @@ namespace raycaster
                 {
                     if (Vector2.Distance(mPlayerTransform.Position, transform.Position) <= 2)
                     {
-                        Point cell = new Point((int) transform.Position.X, (int) transform.Position.Y);
+                        Point cell = new Point((int)transform.Position.X, (int)transform.Position.Y);
                         ShowMessageStory(mTilemap.MessageTriggers[cell]);
                         return true;
                     }
@@ -904,13 +959,13 @@ namespace raycaster
 
         private Transform GetFirstUsableEntityTransform(List<Entity> targetedEntities)
         {
-            for (int index = targetedEntities.Count - 1; index >= 0 ; index--)
+            for (int index = targetedEntities.Count - 1; index >= 0; index--)
             {
                 Entity targetedEntity = targetedEntities[index];
                 Transform transform = targetedEntity.GetComponent<Transform>();
                 if (transform == null) continue;
-                if (mTilemap.MessageTriggers.ContainsKey(new Point((int) transform.Position.X,
-                                                                   (int) transform.Position.Y)))
+                if (mTilemap.MessageTriggers.ContainsKey(new Point((int)transform.Position.X,
+                                                                   (int)transform.Position.Y)))
                 {
                     return transform;
                 }
@@ -918,21 +973,11 @@ namespace raycaster
             return null;
         }
 
-        private void OpenDoor(Point targetedDoor)
+        private void OpenDoor(Point cellPosition)
         {
-            List<Entity> entities = mTilemap.Entities[targetedDoor.Y, targetedDoor.X];
-            if (entities.Count > 0)
-            {
-                foreach (Entity entityAtPosition in entities)
-                {
-                    if (entityAtPosition.Group == "Door")
-                    {
-                        Door door = entityAtPosition.GetComponent<Door>();
-                        if (!door.IsOpening)
-                            door.StartOpenDoor();
-                    }
-                }
-            }
+            var door = mTilemap.GetDoorAt(cellPosition);
+            if (door is {IsOpening: false})
+                door.StartOpenDoor();
         }
 
         private void PlayerPressedFire(object sender, EventArgs e)
@@ -980,20 +1025,20 @@ namespace raycaster
 
                 RelativeDirection dir = TwenMath.GetDirection(mPlayerTransform.Forward, targetDir);
 
-                AnimateFaceLookingToEnemy(dir);
+                sHudFace.AnimateFaceLookingToEnemy(dir);
             }
             else
             {
-                AnimatePainOnHudFace(e.Damage);
+                sHudFace.AnimatePainOnHudFace(e.Damage);
             }
-            AudioManager.PlayRandomEffect(new List<int>(){(int)SoundCue.PlayerPain1,  (int)SoundCue.PlayerPain2 });
+            AudioManager.PlayRandomEffect(new List<int>() { (int)SoundCue.PlayerPain1, (int)SoundCue.PlayerPain2 });
             //mHudFaceAnimator.FinishedPlaying += new EventHandler<EventArgs>(mHudFaceAnimator_FinishedPlaying);
-            
+
         }
 
         private static void PlayerDied(object sender, EventArgs e)
         {
-            AudioManager.PlayEffect((int) SoundCue.PlayerDies);
+            AudioManager.PlayEffect((int)SoundCue.PlayerDies);
             ShowYouDiedStory(Respawn);
         }
 
@@ -1003,11 +1048,11 @@ namespace raycaster
 
             SpawnPlayer(mTilemap.PlayerSpawn, mTilemap.PlayerViewDirection);
             PlayerHealthPoints.RestoreToFull();
-            AnimateFaceIdleAnimation();
+            sHudFace.AnimateFaceIdleAnimation();
             mRaycaster.Camera.EyeHeight = 0;
             ChangeMapTo(mCurrentMapIndex);
             mZombieSpawnCounter = 0;
-            
+
             /*
             SpawnPlayer(mTilemap.PlayerSpawn, mTilemap.PlayerViewDirection);
             PlayerHealthPoints.RestoreToFull();
@@ -1036,7 +1081,7 @@ namespace raycaster
 
         void PlayerFoundSecret(object sender, PositionedEventArgs e)
         {
-            EntitySpawn.CreateMessage("You found a secret area!",5,true);
+            EntitySpawn.CreateMessage("You found a secret area!", 5, true);
         }
 
         static void EndInvisibility(object sender, EventArgs e)
@@ -1052,19 +1097,19 @@ namespace raycaster
         private static void EndImmortality(object sender, EventArgs e)
         {
             EntitySpawn.CreateMessage("DEGREELESSNESS MODE OFF");
-            AnimateFaceIdleAnimation();
+            sHudFace.AnimateFaceIdleAnimation();
         }
 
         private static void BeginImmortality(object sender, EventArgs e)
         {
             EntitySpawn.CreateMessage("DEGREELESSNESS MODE ON");
-            AnimateFaceIdleAnimation();
+            sHudFace.AnimateFaceIdleAnimation();
         }
 
         private void AllWeaponsCheatActivated()
         {
             EntitySpawn.CreateMessage("impulse 9 activated..");
-            GiveAllWeponsToPlayer();
+            GiveAllWeaponsToPlayer();
         }
 
 
@@ -1096,12 +1141,15 @@ namespace raycaster
 
         private static CallbackTimer mMultiKillTimer;
         private static int mZombieSpawnCounter;
+        private SpriteRenderSystem mSpriteRenderSystem;
+        private RenderTarget2D mStatusBarRenderTarget;
+        private static HudFace sHudFace;
 
         private static void ResetMultiKills()
         {
             if (MultiKillCounter >= 6)
             {
-                AudioManager.PlayEffect((int) SoundCue.MonsterKill);
+                AudioManager.PlayEffect((int)SoundCue.MonsterKill);
             }
             else if (MultiKillCounter == 5)
             {
@@ -1126,7 +1174,7 @@ namespace raycaster
         public static void HealPlayer(int amount)
         {
             PlayerHealthPoints.Heal(amount);
-            AnimateFaceIdleAnimation();
+            sHudFace.AnimateFaceIdleAnimation();
         }
 
         public static void DealDamageToPlayer(int amount)
@@ -1150,7 +1198,7 @@ namespace raycaster
             newWeapon.IsEnabled = true;
             newWeapon.Refresh();
             CurrentWeapon = newWeapon.GetComponent<Weapon>();
-            
+
         }
 
         private static void ChangeMapTo(int mapIndex)
@@ -1158,11 +1206,11 @@ namespace raycaster
             FinishedLoading = false;
 
             KillAllEntitiesOnMapExceptPlayers();
-            
+
             ResetKeys();
 
             LoadMap(mMapList[mapIndex]);
-            
+
             TicEvent += ChangeMap;  // wait one tick for entities to vanish out of the subsystems.. then change map..
         }
 
@@ -1180,18 +1228,18 @@ namespace raycaster
             int x = TwenMath.Random.Next(mZombieSpawnArea.Left, mZombieSpawnArea.Right);
             int y = TwenMath.Random.Next(mZombieSpawnArea.Top, mZombieSpawnArea.Bottom);
 
-            while (mTilemap.Entities[y,x].Count > 0)
+            while (mTilemap.Entities[y, x].Count > 0)
             {
                 x = TwenMath.Random.Next(mZombieSpawnArea.Left, mZombieSpawnArea.Right);
                 y = TwenMath.Random.Next(mZombieSpawnArea.Top, mZombieSpawnArea.Bottom);
             }
-            
+
             if (mZombieSpawnCounter != 10)
                 EntitySpawn.CreateZombie(new Vector2(x + 0.5f, y + 0.5f), null);
             else
                 EntitySpawn.CreateZombie(new Vector2(x + 0.5f, y + 0.5f), pos => EntitySpawn.CreateKeyPickup(pos, 9, "Gold"));
             mZombieSpawnCounter++;
-            
+
             Debug.Print("Spawned Zombie #" + mZombieSpawnCounter);
         }
 
@@ -1203,7 +1251,7 @@ namespace raycaster
             List<Entity> allEntities = new List<Entity>(mTilemap.AllEntities);
             mTilemap.RemoveAllEntities();
             mRaycaster.TargetedWall = Point.Zero;
-           
+
             foreach (Entity entity in allEntities)
             {
                 if (entity.Group == "Player") continue;
@@ -1212,7 +1260,7 @@ namespace raycaster
             }
             Debug.Print("Killed " + killCounter + " entities..(Player still alive)");
         }
-        public static void KillAllEntities()
+        public static void Reset()
         {
             int killCounter = 0;
             Bag<Entity> allEntities = sWorld.EntityManager.ActiveEntities;
@@ -1231,6 +1279,8 @@ namespace raycaster
                 }
                 */
             }
+            sWorld.Clear();
+            sWorld.UnloadContent();
             Debug.Print("Killed " + killCounter + " entities..(Player killed)");
         }
 
@@ -1242,16 +1292,16 @@ namespace raycaster
 
         static void ChangeMap(object sender, EventArgs e)
         {
-            
+
             TicEvent -= ChangeMap;
             mRaycaster.ChangeMap(mTilemap);
             mMapRenderer.ChangeMap(mTilemap);
             mMapRenderer.DrawMap = false;
             sRaycastRenderSystem.ChangeMap(mTilemap);
-            mTilemapCollisionSystem.ChangeMap(mTilemap);
+            mCollisionSystem.ChangeMap(mTilemap);
             EntitySpawn.ChangeMap(mTilemap);
             SpawnThings();
-            
+
 
             SpawnPlayer(mTilemap.PlayerSpawn, mTilemap.PlayerViewDirection);
             mTilemap.AddEntity(Player);
@@ -1264,7 +1314,7 @@ namespace raycaster
             LabelWidget curLabel = new LabelWidget("PAUSED!");
             float height = 90;
             float width = 200;
-            curLabel.Bounds = new UniRectangle(new UniScalar(0.5f, -(width/2)), new UniScalar(0.1f, 0), width, height);
+            curLabel.Bounds = new UniRectangle(new UniScalar(0.5f, -(width / 2)), new UniScalar(0.1f, 0), width, height);
             curLabel.DrawLabelBackground = true;
             curLabel.DrawBackgroundShadow = true;
             curLabel.LabelColor = Color.DarkBlue;
@@ -1296,96 +1346,22 @@ namespace raycaster
             LabelWidget overlay = new LabelWidget();
             float height = sScreenHeight;
             float width = sScreenWidth;
-            overlay.Bounds = new UniRectangle(0,0, width, height);
+            overlay.Bounds = new UniRectangle(0, 0, width, height);
             overlay.DrawLabelBackground = true;
             overlay.DrawBackgroundShadow = false;
-            overlay.LabelColor = new Color(0,0,0,0);
+            overlay.LabelColor = new Color(0, 0, 0, 0);
             GameGui.RootWidget.AddChild(overlay);
             return overlay;
         }
 
-        protected override void Shutdown()
+        protected void Shutdown()
         {
             //throw new NotImplementedException();
             SaveConfiguration();
             AudioManager.Dispose();
         }
 
-        #region status bar face animation
-
-        public static void AnimateEvilGrinOnHudFace()
-        {
-            if (PlayerHealthPoints.Health < 20)
-                mHudFaceAnimator.CurrentAnimation = "Grin20Percent";
-            else if (PlayerHealthPoints.Health < 40)
-                mHudFaceAnimator.CurrentAnimation = "Grin40Percent";
-            else if (PlayerHealthPoints.Health < 60)
-                mHudFaceAnimator.CurrentAnimation = "Grin60Percent";
-            else if (PlayerHealthPoints.Health < 80)
-                mHudFaceAnimator.CurrentAnimation = "Grin80Percent";
-            else
-                mHudFaceAnimator.CurrentAnimation = "GrinFullHealth";
-
-            mHudFaceAnimator.ResetAndPlay();
-        }
-
-        public static void AnimatePainOnHudFace(int damage)
-        {
-            string prefix = "";
-            if (damage >= 20)
-                prefix = "Big";
-
-            if (PlayerHealthPoints.Health < 20)
-                mHudFaceAnimator.CurrentAnimation = prefix + "Pain20Percent";
-            else if (PlayerHealthPoints.Health < 40)
-                mHudFaceAnimator.CurrentAnimation = prefix + "Pain40Percent";
-            else if (PlayerHealthPoints.Health < 60)
-                mHudFaceAnimator.CurrentAnimation = prefix + "Pain60Percent";
-            else if (PlayerHealthPoints.Health < 80)
-                mHudFaceAnimator.CurrentAnimation = prefix + "Pain80Percent";
-            else
-                mHudFaceAnimator.CurrentAnimation = prefix + "PainFullHealth";
-
-            mHudFaceAnimator.ResetAndPlay();
-
-
-        }
-
-        public static void AnimateFaceIdleAnimation()
-        {
-            if (PlayerHealthPoints.IsImmortal)
-                mHudFaceAnimator.CurrentAnimation = "IdleImmortal";
-            else if (PlayerHealthPoints.Health < 20)
-                mHudFaceAnimator.CurrentAnimation = "Idle20Percent";
-            else if (PlayerHealthPoints.Health < 40)
-                mHudFaceAnimator.CurrentAnimation = "Idle40Percent";
-            else if (PlayerHealthPoints.Health < 60)
-                mHudFaceAnimator.CurrentAnimation = "Idle60Percent";
-            else if (PlayerHealthPoints.Health < 80)
-                mHudFaceAnimator.CurrentAnimation = "Idle80Percent";
-            else
-                mHudFaceAnimator.CurrentAnimation = "IdleFullHealth";
-
-            mHudFaceAnimator.ResetAndPlay();
-        }
-
-        private static void AnimateFaceLookingToEnemy(RelativeDirection dir)
-        {
-            if (PlayerHealthPoints.Health < 20)
-                mHudFaceAnimator.CurrentAnimation = "Look" + dir + "20Percent";
-            else if (PlayerHealthPoints.Health < 40)
-                mHudFaceAnimator.CurrentAnimation = "Look" + dir + "40Percent";
-            else if (PlayerHealthPoints.Health < 60)
-                mHudFaceAnimator.CurrentAnimation = "Look" + dir + "60Percent";
-            else if (PlayerHealthPoints.Health < 80)
-                mHudFaceAnimator.CurrentAnimation = "Look" + dir + "80Percent";
-            else
-                mHudFaceAnimator.CurrentAnimation = "Look" + dir + "FullHealth";
-
-            mHudFaceAnimator.ResetAndPlay();
-        }
-
-        #endregion
+        
 
         protected override void Update(GameTime gameTime)
         {
@@ -1394,48 +1370,70 @@ namespace raycaster
             if (!IsActive) return;
             if (mZombieSpawnTimer != null)
                 mZombieSpawnTimer.Update(gameTime.ElapsedGameTime.TotalSeconds);
-            for (int index = mTimers.Count-1; index >= 0; index--)
+            for (int index = mTimers.Count - 1; index >= 0; index--)
             {
                 CallbackTimer callbackTimer = mTimers[index];
                 callbackTimer.Update(gameTime.ElapsedGameTime.TotalSeconds);
                 if (callbackTimer.IsDone())
                     mTimers.Remove(callbackTimer);
             }
-            /*
-            foreach (Entity targetedEntity in mRaycaster.TargetedEntities)
-            {
-                MetaBehavior metaBehavior = targetedEntity.GetComponent<MetaBehavior>();
-                if (metaBehavior != null)
-                {
-                    ActorStateMachine actorStateMachine = metaBehavior.GetBehavior<ActorStateMachine>();
-                    if (actorStateMachine != null)
-                    {
-                        DebugDrawer.DrawString(targetedEntity.Group + ": " + actorStateMachine.CurrentState);
-                    }
-                }
-                SpriteAnimator spriteAnimator = targetedEntity.GetComponent<SpriteAnimator>();
-                if (spriteAnimator != null)
-                    DebugDrawer.DrawString(targetedEntity.Group + ": " + spriteAnimator.CurrentAnimation);
-            }
-            */
+            
             mTilemap.UpdateEntities();
+
+            MouseState mouseState = Mouse.GetState();
+
+            mLastmouseState = mouseState;
+
+            AudioManager.Update();
+
+            if (mGameStateManager.ActiveState == null)
+                this.Exit();
+
+            mGameStateManager.Update(gameTime);
+
+            OnTic();
             base.Update(gameTime);
+        }
+        private void OnTic()
+        {
+            if (TicEvent != null)
+            {
+                mTics++;
+                if (mTics == 2)
+                    TicEvent(this, new EventArgs());
+            }
+            else
+            {
+                mTics = 0;
+            }
         }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            Resolution.BeginDraw();
 
-            if ((mGameStateManager.ActiveState.GetType() == typeof(GamePlayState) || mGameStateManager.ActiveState.GetType() == typeof(StoryTellingState) || mGameStateManager.ActiveState.GetType() == typeof(EscapeMenuState)) && FinishedLoading)
+            if (mGameStateManager.ActiveState != null && (mGameStateManager.ActiveState.GetType() == typeof(GamePlayState) || mGameStateManager.ActiveState.GetType() == typeof(StoryTellingState) || mGameStateManager.ActiveState.GetType() == typeof(EscapeMenuState)) && FinishedLoading)
             {
                 sWorld.Draw();
-                mSpriteBatch.Begin();
                 DrawStatusbar();
+
+                GraphicsDevice.SetRenderTarget(null);
+
+                mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
+
+                // render 3d view
+                mSpriteBatch.Draw(sRaycastRenderSystem.ThreeDeeView, GraphicsDevice.Viewport.Bounds, Color.White); // Raycasting view
+                mSpriteBatch.Draw(mSpriteRenderSystem.SpriteLayer, GraphicsDevice.Viewport.Bounds, Color.White);   // face && weapon
+                mSpriteBatch.Draw(mStatusBarRenderTarget, GraphicsDevice.Viewport.Bounds, Color.White);   // face && weapon
+
+                // render sprites
+                // render hud
+                // render minimap
                 mSpriteBatch.End();
             }
-
             sGui.Draw(mSpriteBatch);
 
             DebugDrawer.Draw();
+            
 
             base.Draw(gameTime);
         }
@@ -1443,6 +1441,10 @@ namespace raycaster
         {
             if (PlayerHealthPoints != null)
             {
+                mSpriteBatch.GraphicsDevice.SetRenderTarget(mStatusBarRenderTarget);
+                mSpriteBatch.GraphicsDevice.Clear(Color.Transparent);
+                mSpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Resolution.getTransformationMatrix());
+
                 string hpString = PlayerHealthPoints.Health.ToString();
                 int offsetLeft = 75;
                 Vector2 hpStringSize = mHudFont.MeasureString(hpString);
@@ -1467,21 +1469,21 @@ namespace raycaster
                         mSpriteBatch.DrawString(mHudFont, ammoString, ammoPos, ammoColor, 0f, new Vector2(0, ammoStringSize.Y),
                                                 1f, SpriteEffects.None, 0.5f);
                     }
-                    /*
-                    string weaponNameString = CurrentWeapon.Name;
-                    Vector2 weaponNameStringSize = mHudFont.MeasureString(weaponNameString);
-                    Vector2 weaponNamePos = new Vector2(sScreenWidth - weaponNameStringSize.X - 20, sScreenHeight);
-                    mSpriteBatch.DrawString(mHudFont, weaponNameString, weaponNamePos + shadowOffset, Color.Black, 0f,
-                                            new Vector2(0, weaponNameStringSize.Y), 1f, SpriteEffects.None, 0.5f);
-                    Color weaponNameColor = Color.White;
-                    mSpriteBatch.DrawString(mHudFont, weaponNameString, weaponNamePos, weaponNameColor, 0f,
-                                            new Vector2(0, weaponNameStringSize.Y),
-                                            1f, SpriteEffects.None, 0.5f);
-                    */
                 }
+                mSpriteBatch.End();
             }
 
-            
+
+        }
+
+        public static string GetEntityString(IEnumerable<Entity> entitiesOnCell)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Entity entity in entitiesOnCell)
+            {
+                sb.Append(entity.Group + ", ");
+            }
+            return sb.ToString();
         }
 
 

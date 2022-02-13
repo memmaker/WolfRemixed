@@ -93,7 +93,7 @@ namespace Artemis.Manager
             this.mergedBag = new Bag<EntitySystem>();
 #if FULLDOTNET
             this.drawLayers = new SortedDictionary<int, SystemLayer>();
-            this.updateLayers = new SortedDictionary<int, SystemLayer>();                
+            this.updateLayers = new SortedDictionary<int, SystemLayer>();
 #else
             this.drawLayers = new Dictionary<int, SystemLayer>();
             this.updateLayers = new Dictionary<int, SystemLayer>();                
@@ -243,7 +243,7 @@ namespace Artemis.Manager
         /// <summary>Updates the specified execution type.</summary>
         internal void Draw()
         {
-            Process(this.drawLayers);                 
+            Process(this.drawLayers);
         }
 
         /// <summary>Processes the specified systems to process.</summary>

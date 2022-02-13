@@ -37,13 +37,13 @@
 #if METRO
 namespace Artemis.Utils
 {
-    #region Using statements
+#region Using statements
 
     using global::System;
 
     using global::System.Reflection;
 
-    #endregion
+#endregion
 
     /// <summary>The metro compatibility extensions.</summary>
     internal static class MetroCompatibilityExtensions

@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Artemis;
+﻿using Artemis;
 using Artemis.Manager;
 using Engine.GameStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using TurnBasedCombat.GameStates;
-using Twengine;
 using Twengine.Managers;
 using Twengine.SubSystems.Raycast;
 using XNAGameGui.Gui;
@@ -19,10 +18,10 @@ namespace raycaster.GameStates
         private readonly EntityWorld mWorld;
         private readonly SystemManager mSystemManager;
         private readonly GameStateManager mStateManager;
-        private readonly FPSControlSystem mFPSControl;
+        private readonly InputHandler mFPSControl;
         private readonly SpriteBatch mSpriteBatch;
 
-        public MainMenuState(EntityWorld world, SystemManager systemManager, GameStateManager stateManager, FPSControlSystem fpsControl, SpriteBatch spriteBatch)
+        public MainMenuState(EntityWorld world, SystemManager systemManager, GameStateManager stateManager, InputHandler fpsControl, SpriteBatch spriteBatch)
             : base(stateManager)
         {
             mWorld = world;
@@ -41,10 +40,10 @@ namespace raycaster.GameStates
                     mGameStateManager.Pop();
                     break;
                 case "Play":
-                    mGameStateManager.Push(new GamePlayState(mWorld, mSystemManager, mStateManager, mFPSControl, mSpriteBatch));
+                    mGameStateManager.Push(new GamePlayState(mWorld, mStateManager, mFPSControl));
                     break;
                 case "Options":
-                    mGameStateManager.Push(new OptionsMenuState(mWorld, mSystemManager, mStateManager, mFPSControl, mSpriteBatch));
+                    mGameStateManager.Push(new OptionsMenuState(mStateManager));
                     break;
             }
         }
@@ -54,39 +53,38 @@ namespace raycaster.GameStates
         {
             base.OnEntered();
             float menuWidth = GameGui.Viewport.Width * 0.4f;
-            mMenu = new MenuWindowWidget(new List<string>() { "Play", "Options", "Quit" }, (int) menuWidth, (int) (menuWidth - (2*20)));
+            mMenu = new MenuWindowWidget(new List<string>() { "Play", "Options", "Quit" }, (int)menuWidth, (int)(menuWidth - (2 * 20)));
             mMenu.Background = AssetManager.Default.LoadTexture("Menu/titlescreen_widescreen.png");
             mMenu.Bounds = new UniRectangle(0, 0, new UniScalar(1, 0), new UniScalar(1, 0));
             mMenu.DrawLabelBackground = true;
-            mMenu.Buttons["Play"].IsSelected = true;
-            foreach (ButtonWidget button in mMenu.Buttons.Values)
+            foreach (ButtonWidget button in mMenu.Buttons)
             {
                 button.LabelColor = new Color(55, 55, 55);
                 button.SelectionColor = new Color(103, 84, 15);
             }
             GameGui.RootWidget.AddChild(mMenu);
-            ComponentTwengine.AudioManager.PlaySound((int) SoundCue.MenuMusic, true);
+            RaycastGame.AudioManager.PlaySound((int)SoundCue.MenuMusic, true);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            ComponentTwengine.AudioManager.PlaySound((int) SoundCue.MenuMusic, true);
+            RaycastGame.AudioManager.PlaySound((int)SoundCue.MenuMusic, true);
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            ComponentTwengine.AudioManager.StopSound((int) SoundCue.MenuMusic);
+            RaycastGame.AudioManager.StopSound((int)SoundCue.MenuMusic);
         }
         protected override void OnLeaving()
         {
             base.OnLeaving();
-            
+
             //mMainScreen.Desktop.Children.Remove(mMenu);
             //mGui.RootWidget.RemoveChild(mMenu);
             mMenu.Destroy();
-            ComponentTwengine.AudioManager.StopSound((int)SoundCue.MenuMusic);
+            RaycastGame.AudioManager.StopSound((int)SoundCue.MenuMusic);
         }
 
         protected override void KeyPressed(Keys key)

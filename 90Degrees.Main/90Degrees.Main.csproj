@@ -63,9 +63,6 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="UI\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\90Degrees.MP3Player\MP3Player.csproj" />
     <ProjectReference Include="..\Artemis_XNA_INDEPENDENT\Artemis.csproj" />
   </ItemGroup>

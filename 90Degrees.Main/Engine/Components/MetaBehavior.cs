@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Artemis;
+using Artemis.Interface;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Artemis;
-using Artemis.Interface;
-using Twengine.Helper;
-using XNAHelper;
 using Script = Twengine.Scripts.Script;
 
 namespace Twengine.Components
@@ -35,11 +33,11 @@ namespace Twengine.Components
             mBehaviorList[behavior.GetType()] = behavior;
         }
 
-        public T GetBehavior<T>() where T: Script
+        public T GetBehavior<T>() where T : Script
         {
             if (mBehaviorList.ContainsKey(typeof(T)))
             {
-                return (T)mBehaviorList[typeof (T)];
+                return (T)mBehaviorList[typeof(T)];
             }
             return null;
         }

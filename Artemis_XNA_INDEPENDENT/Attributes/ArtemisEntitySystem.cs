@@ -38,9 +38,8 @@ namespace Artemis.Attributes
 {
     #region Using statements
 
-    using global::System;
-
     using Artemis.Manager;
+    using global::System;
 
     #endregion Using statements
 

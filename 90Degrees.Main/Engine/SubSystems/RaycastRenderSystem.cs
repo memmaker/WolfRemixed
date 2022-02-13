@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Artemis;
+﻿using Artemis;
 using Artemis.System;
+using IndependentResolutionRendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using raycaster;
 using Twengine.Components;
 using Twengine.Datastructures;
-using Twengine.Helper;
 using Twengine.Managers;
 using XNAHelper;
 
@@ -21,8 +22,8 @@ namespace Twengine.SubSystems.Raycast
         private Rectangle mCeiling;
         private Rectangle mFloor;
 
-        private int mRaycasterResolutionX;
-        private int mRaycasterResolutionY;
+        private int mRaycasterResolutionX = Const.InternalRenderResolutionWidth;
+        private int mRaycasterResolutionY = Const.InternalRenderResolutionHeight;
 
         private BasicRaycastHitInfo[] mWallInfos;
         private List<Entity> mVisibleEntities;
@@ -52,23 +53,21 @@ namespace Twengine.SubSystems.Raycast
         private float mFlashIntensity;
         private int mLowResResolutionWidth;
         private int fov;
-        private bool mLowRes;
         private AssetManager mContent;
 
         public RaycastRenderSystem(SpriteBatch spriteBatch, AssetManager content, Tilemap map, int screenWidth, int screenHeight, bool lowResRaytracing)
             : base(Aspect.Empty())
         {
-            
+
             mSpriteBatch = spriteBatch;
             mGraphicsDevice = spriteBatch.GraphicsDevice;
             mFlashColor = Color.CornflowerBlue;
             mFlashIntensity = 0;
-            
+
             // raycaster
             mContent = content;
             
-            mLowRes = lowResRaytracing;
-            
+
             //mStatusbarHeight = (int) (screenHeight * 0.07f);
             mStatusbarHeight = 0;
             mTextureHeight = 64;
@@ -78,26 +77,22 @@ namespace Twengine.SubSystems.Raycast
             Tilemap = map;
             mWallTextures = Tilemap.WallTextures;
 
-            
+
             SecretWallsVisible = true;
-            
+
             Raycaster = new Raycaster(Tilemap, mRaycasterResolutionX, mRaycasterResolutionY, fov, Tilemap.PlayerSpawn, Tilemap.PlayerViewDirection);
 
-            SetResolutionDependentValues(screenWidth, screenHeight);
-            
+            SetResolutionDependentValues(Const.InternalRenderResolutionWidth, Const.InternalRenderResolutionHeight);
+
             Debug.Assert(mCeiling.Height + mFloor.Height == mRaycasterResolutionY, "Floor plus Ceiling are not using whole screenheight..");
         }
-
+        
         private void SetResolutionDependentValues(int screenWidth, int screenHeight)
         {
             mScreenWidth = screenWidth;
             mScreenHeight = screenHeight;
-            mThreeDeeViewRect = new Rectangle(0, 0, screenWidth, screenHeight - mStatusbarHeight);
-            SetResolution(mLowRes ? 640 : screenWidth);
-        }
-        public void ViewportChanged(int screenWidth, int screenHeight)
-        {
-            SetResolutionDependentValues(screenWidth,screenHeight);
+            mThreeDeeViewRect = new Rectangle(0, 0, screenWidth, screenHeight);
+            SetResolution(screenWidth);
         }
         private void SetResolution(int raycastWidth)
         {
@@ -106,7 +101,7 @@ namespace Twengine.SubSystems.Raycast
             float displayRatio = mScreenWidth / (float)mScreenHeight;
             mRaycasterResolutionX = mLowResResolutionWidth;
             mRaycasterResolutionY = (int)(Math.Ceiling(mLowResResolutionWidth / displayRatio) - (mStatusbarHeight / mScreenScale));
-            
+
             Raycaster.ViewportChanged(mRaycasterResolutionX, mRaycasterResolutionY);
             mCeiling = new Rectangle(0, 0, mRaycasterResolutionX, mRaycasterResolutionY / 2);
             mFloor = new Rectangle(0, mCeiling.Bottom, mRaycasterResolutionX, mRaycasterResolutionY - mCeiling.Height);
@@ -138,9 +133,9 @@ namespace Twengine.SubSystems.Raycast
 
             CreateFloor(Tilemap.PseudoShading, Tilemap.FloorColor);
             CreateCeiling(Tilemap.PseudoShading, Tilemap.CeilingColor);
-            
-            
-            
+
+
+
         }
 
         public void ChangeMap(Tilemap tilemap)
@@ -184,11 +179,7 @@ namespace Twengine.SubSystems.Raycast
 
             DrawScreenView(mWallInfos, mVisibleEntities);
 
-            mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise);
 
-            mSpriteBatch.Draw(mThreeDeeView, mThreeDeeViewRect, Color.White);
-
-            mSpriteBatch.End();
         }
 
         public int PlayerAmmo { get; set; }
@@ -198,7 +189,7 @@ namespace Twengine.SubSystems.Raycast
         private void DrawScreenView(BasicRaycastHitInfo[] raycastHitInfos, List<Entity> sprites)
         {
             mGraphicsDevice.SetRenderTarget(mThreeDeeView);
-            mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
             //mSpriteBatch.Begin();
 
             mSpriteBatch.Draw(mFloorTexture, mFloor, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);  // draw floor
@@ -220,8 +211,7 @@ namespace Twengine.SubSystems.Raycast
             mSpriteBatch.End();
 
 
-            mGraphicsDevice.SetRenderTarget(null);
-            
+
         }
 
         private void DrawFlashScreen()
@@ -241,9 +231,13 @@ namespace Twengine.SubSystems.Raycast
             }
         }
 
-        
+
 
         public string WeaponName { get; set; }
+        public Texture2D ThreeDeeView
+        {
+            get { return mThreeDeeView; }
+        }
 
         private void DrawWalls(BasicRaycastHitInfo[] raycastHitInfos)
         {
@@ -252,7 +246,7 @@ namespace Twengine.SubSystems.Raycast
 
                 TexturedDraw(raycastHitInfo);
                 //UntexturedDraw(raycastHitInfo);
-                
+
             }
         }
 
@@ -267,7 +261,7 @@ namespace Twengine.SubSystems.Raycast
 
                 //DebugDrawer.DrawRectangle(sprite.TextureOpaqueRect[sprite.FrameIndex]);
                 //DebugDrawer.DrawString("Sprite Frame: " + sprite.FrameIndex);
-                
+
                 foreach (SpriteStripe stripe in sprite.Stripes)
                 {
                     Rectangle stripeRect = stripe.TextureRect;
@@ -275,14 +269,14 @@ namespace Twengine.SubSystems.Raycast
                     mSpriteBatch.Draw(sprite.SpriteSheet.Texture, stripe.ScreenRect, stripeRect, drawColor, 0f, Vector2.Zero, SpriteEffects.None, 0.5f);
                 }
             }
-            
+
         }
 
 
         private void CreateCeiling(bool shaded, Color baseColor)
         {
             mGraphicsDevice.SetRenderTarget(mCeilingTexture);
-            mSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            mSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
             for (int y = 0; y <= mCeiling.Height; y++)
             {
                 double dist = Raycaster.HorizontalToDist(mRaycasterResolutionY - y);
@@ -298,7 +292,7 @@ namespace Twengine.SubSystems.Raycast
         private void CreateFloor(bool shaded, Color baseColor)
         {
             mGraphicsDevice.SetRenderTarget(mFloorTexture);
-            mSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            mSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
             for (int y = 0; y <= mFloor.Height; y++)
             {
                 double dist = Raycaster.HorizontalToDist(y + mFloor.Top);
@@ -311,13 +305,13 @@ namespace Twengine.SubSystems.Raycast
             mGraphicsDevice.SetRenderTarget(null);
         }
 
-       
+
 
         private void TexturedDraw(BasicRaycastHitInfo raycastHitInfo)
         {
             int texIndex = 0;
-            if (raycastHitInfo.WallType == 0) return;
-            texIndex = raycastHitInfo.WallType - 1;
+            if (raycastHitInfo.WallType == -1) return;
+            texIndex = raycastHitInfo.WallType;
 
             Rectangle texRect = mWallTextures.GetSourceRectByIndex(texIndex);
 
@@ -329,8 +323,8 @@ namespace Twengine.SubSystems.Raycast
             {
                 texRect = mWallTextures.GetSourceRectByIndex(doorIndex + 1);
             }
-            
-            
+
+
             //textureSegmentRect = new Rectangle(raycastHitInfo.TexX, 0, 1, mTextureHeight);
 
             int texX;
@@ -368,13 +362,13 @@ namespace Twengine.SubSystems.Raycast
             mSpriteBatch.Draw(texture, mDestinationOnScreenRect, mTextureSegmentRect, drawColor, 0f, Vector2.Zero, SpriteEffects.None, 0.9f);
         }
 
-        
+
 
         private int IsDoorSide(BasicRaycastHitInfo raycastHitInfo)
         {
             if (raycastHitInfo.VisibleWallSide == WallSide.East && Tilemap.GetCellMetaDataByPosition(raycastHitInfo.MapX + 1, raycastHitInfo.MapY) == 'd')
                 return Tilemap.DoorSpawnPoints[new Point(raycastHitInfo.MapX + 1, raycastHitInfo.MapY)];
-            
+
             if (raycastHitInfo.VisibleWallSide == WallSide.West && Tilemap.GetCellMetaDataByPosition(raycastHitInfo.MapX - 1, raycastHitInfo.MapY) == 'd')
                 return Tilemap.DoorSpawnPoints[new Point(raycastHitInfo.MapX - 1, raycastHitInfo.MapY)];
 
@@ -392,7 +386,7 @@ namespace Twengine.SubSystems.Raycast
         {
             mFlashColor = color;
             mFlashIntensity = intensity;
-            mFlashColor.A = (byte) (intensity * 255);
+            mFlashColor.A = (byte)(intensity * 255);
         }
     }
 }

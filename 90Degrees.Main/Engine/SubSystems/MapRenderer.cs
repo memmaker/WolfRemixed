@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using Artemis;
+﻿using Artemis;
 using Artemis.System;
+using IndependentResolutionRendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 using Twengine.Components;
 using Twengine.Datastructures;
-using Twengine.Helper;
 using Twengine.Managers;
 using XNAHelper;
 
 namespace Twengine.SubSystems.Raycast
 {
-    public class RaycastMapRenderer : EntityProcessingSystem
+    public class MapRenderer : EntityProcessingSystem
     {
         private SpriteBatch mSpriteBatch;
         private GraphicsDevice mGraphicsDevice;
@@ -33,9 +33,9 @@ namespace Twengine.SubSystems.Raycast
         public int GridSizeInPixels
         {
             get { return mGridSizeInPixels; }
-            set 
-            { 
-                mGridSizeInPixels = (int) MathHelper.Clamp(value, 2, 50);
+            set
+            {
+                mGridSizeInPixels = (int)MathHelper.Clamp(value, 2, 50);
                 mThingSizeInPixels = GridSizeInPixels / 2;
                 int width = mMapSize * 2 * mGridSizeInPixels;
                 int height = mMapSize * 2 * mGridSizeInPixels;
@@ -46,7 +46,7 @@ namespace Twengine.SubSystems.Raycast
                     mMapDisplay = null;
                 }
                 mMapDisplay = new RenderTarget2D(mGraphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None);
-                mOffset = new Vector2(mScreenWidth-width,0);
+                mOffset = new Vector2(mScreenWidth - width, 0);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Twengine.SubSystems.Raycast
         private bool[,] mFogMap;
         private int mMapSize;
 
-        public RaycastMapRenderer(SpriteBatch spriteBatch, AssetManager content, Tilemap map, int screenWidth, int screenHeight, SpriteFont hudFont, Raycaster raycaster)
+        public MapRenderer(SpriteBatch spriteBatch, AssetManager content, Tilemap map, int screenWidth, int screenHeight, SpriteFont hudFont, Raycaster raycaster)
             : base(Aspect.Empty())
         {
             mBackground = false;
@@ -87,12 +87,12 @@ namespace Twengine.SubSystems.Raycast
 
         private void DrawMapDisplay(IDictionary<int, Entity> entities)
         {
-            mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
             mFogMap = mRaycaster.FogOfWarMap;
             Rectangle mapRect = GetMapRect();
 
             if (mBackground) DrawBackground();
-            
+
             DrawThings(mapRect);
             //DrawPlayer();
             DrawWalls(mapRect);
@@ -103,19 +103,19 @@ namespace Twengine.SubSystems.Raycast
 
         private void DrawBackground()
         {
-            Rectangle destRect = new Rectangle(0, 0, mTilemap.MapWidth * GridSizeInPixels,mTilemap.MapHeight*GridSizeInPixels);
-            mSpriteBatch.Draw(mPixel,destRect,Color.CornflowerBlue);
+            Rectangle destRect = new Rectangle(0, 0, mTilemap.MapWidth * GridSizeInPixels, mTilemap.MapHeight * GridSizeInPixels);
+            mSpriteBatch.Draw(mPixel, destRect, Color.CornflowerBlue);
         }
 
         private void DrawLoS()
         {
             List<List<Point>> andClearLastLineOfSightLines = mTilemap.GetLastLineOfSightLines();
-            
+
             foreach (List<Point> lineOfSightLine in andClearLastLineOfSightLines)
             {
                 foreach (Point point in lineOfSightLine)
                 {
-                    DrawCellOnMap(point.X,point.Y,Color.Turquoise);
+                    DrawCellOnMap(point.X, point.Y, Color.Turquoise);
                 }
             }
         }
@@ -129,7 +129,7 @@ namespace Twengine.SubSystems.Raycast
             {
                 for (int x = mapRect.Left; x < mapRect.Right; x++)
                 {
-                    List<Entity> entities = mTilemap.Entities[y,x];
+                    List<Entity> entities = mTilemap.Entities[y, x];
                     foreach (Entity entity in entities)
                     {
                         if (entity.Group != "Hud")
@@ -224,21 +224,21 @@ namespace Twengine.SubSystems.Raycast
                 ycounter++;
                 xcounter = 0;
             }
-            
+
         }
 
         private Rectangle GetMapRect()
         {
-            
+
             Transform transform = Player.GetComponent<Transform>();
-            Point currentPlayerCell = new Point((int) transform.Position.X, (int) transform.Position.Y);
+            Point currentPlayerCell = new Point((int)transform.Position.X, (int)transform.Position.Y);
             int startX = Math.Max(0, currentPlayerCell.X - mMapSize);
             int startY = Math.Max(0, currentPlayerCell.Y - mMapSize);
 
             int endX = Math.Min(mTilemap.MapWidth, currentPlayerCell.X + mMapSize);
             int endY = Math.Min(mTilemap.MapHeight, currentPlayerCell.Y + mMapSize);
 
-            return new Rectangle(startX,startY,endX - startX, endY - startY);
+            return new Rectangle(startX, startY, endX - startX, endY - startY);
         }
 
         private void DrawDirectedThingOnMap(Vector2 position, float rotationInRadians, Color drawColor)
@@ -263,7 +263,7 @@ namespace Twengine.SubSystems.Raycast
             int doorDepth = 4;
             if (orientation == Orientation.Horizontal)
             {
-                int x = (int)((position.X * GridSizeInPixels) - (mGridSizeInPixels/2) + mOffset.X);
+                int x = (int)((position.X * GridSizeInPixels) - (mGridSizeInPixels / 2) + mOffset.X);
                 int y = (int)((position.Y * GridSizeInPixels) - (doorDepth / 2) + mOffset.Y);
                 destRect = new Rectangle(x, y, mGridSizeInPixels, doorDepth);
             }
@@ -279,8 +279,8 @@ namespace Twengine.SubSystems.Raycast
 
         private void DrawCellOnMap(int x, int y, Color color)
         {
-            int xDest = (int) ((x * GridSizeInPixels) + mOffset.X);
-            int yDest = (int) ((y * GridSizeInPixels) + mOffset.Y);
+            int xDest = (int)((x * GridSizeInPixels) + mOffset.X);
+            int yDest = (int)((y * GridSizeInPixels) + mOffset.Y);
             Rectangle destRect = new Rectangle(xDest, yDest, GridSizeInPixels, GridSizeInPixels);
             mSpriteBatch.Draw(mPixel, destRect, color);
         }

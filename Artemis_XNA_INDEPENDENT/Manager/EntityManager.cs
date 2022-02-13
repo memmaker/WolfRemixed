@@ -38,18 +38,17 @@ namespace Artemis.Manager
 {
     #region Using statements
 
-    using global::System;
-    using global::System.Collections.Generic;
-    using global::System.Diagnostics;
-
     using Artemis.Interface;
     using Artemis.System;
     using Artemis.Utils;
+    using global::System;
+    using global::System.Collections.Generic;
+    using global::System.Diagnostics;
 #if UNITY5
     using MathNet.Numerics;
 #endif
 
-#endregion Using statements
+    #endregion Using statements
 
     /// <summary>The Entity Manager.</summary>
     public sealed class EntityManager

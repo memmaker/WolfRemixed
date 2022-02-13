@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Twengine.Helper;
 using Twengine.Managers;
 using XNAHelper;
 
@@ -18,7 +15,7 @@ namespace Twengine.Components
     {
         public Color DrawColor { get; set; }
         public bool IsFlashing { get; set; }
-        
+
         public RaycastSprite(SpriteSheet sheet, int index)
             : base(sheet, index)
         {
@@ -35,6 +32,6 @@ namespace Twengine.Components
             IsFlashing = true;
         }
 
-        
+
     }
 }

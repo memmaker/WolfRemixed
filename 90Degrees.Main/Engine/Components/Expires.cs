@@ -1,5 +1,4 @@
-﻿using Artemis;
-using Artemis.Interface;
+﻿using Artemis.Interface;
 
 namespace Twengine.Components
 {
@@ -32,4 +31,6 @@ namespace Twengine.Components
             get { return mLifeTime <= 0; }
         }
     }
+
+    public delegate void DefaultCallback();
 }

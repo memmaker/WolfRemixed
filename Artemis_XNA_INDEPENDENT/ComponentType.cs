@@ -53,7 +53,7 @@ namespace Artemis
 
     /// <summary>Represents a Component Type.</summary>
     [DebuggerDisplay("Id:{Id}, Bit:{Bit}")]
-    public sealed class ComponentType 
+    public sealed class ComponentType
     {
         /// <summary>The bit next instance of the <see cref="ComponentType"/> class will get.</summary>
         private static BigInteger nextBit;

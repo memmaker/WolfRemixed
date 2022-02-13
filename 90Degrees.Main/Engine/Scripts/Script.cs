@@ -21,7 +21,7 @@ namespace Twengine.Scripts
             Initialize();
         }
 
-        protected virtual void Initialize(){}
+        protected virtual void Initialize() { }
 
         public abstract void Update(float delta);
 
@@ -32,7 +32,7 @@ namespace Twengine.Scripts
 
         public virtual void OnCollision(Entity collidingEntity)
         {
-            
+
         }
     }
 }

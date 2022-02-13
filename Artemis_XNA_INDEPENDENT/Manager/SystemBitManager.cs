@@ -42,7 +42,6 @@ namespace Artemis.Manager
     using Artemis.System;
 
 #if !XBOX && !WINDOWS_PHONE && !PORTABLE && !UNITY5
-    using global::System.Numerics;
 #endif
 
 #if XBOX || WINDOWS_PHONE || PORTABLE || FORCEINT32

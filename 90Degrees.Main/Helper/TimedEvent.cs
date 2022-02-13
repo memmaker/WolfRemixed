@@ -7,7 +7,7 @@ namespace XNAHelper
     {
         private TimedEventHandler mHandler;
         private Timer mTimer;
-        
+
         public TimedEvent(TimedEventHandler handler, float secondsTillFire)
             : this(handler, secondsTillFire, false)
         {
@@ -16,10 +16,10 @@ namespace XNAHelper
         public TimedEvent(TimedEventHandler handler, float secondsTillFire, bool repeat)
         {
             mHandler = handler;
-            mTimer = new Timer(secondsTillFire*1000) {AutoReset = repeat, Enabled = true};
+            mTimer = new Timer(secondsTillFire * 1000) { AutoReset = repeat, Enabled = true };
             mTimer.Elapsed += (o, args) => mHandler();
         }
 
-       
+
     }
 }

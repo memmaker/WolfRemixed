@@ -33,16 +33,15 @@ namespace Artemis
 {
     #region Using statements
 
+    using Artemis.Exceptions;
+    using Artemis.Interface;
+    using Artemis.Manager;
+    using Artemis.Utils;
     using global::System;
     using global::System.Collections.Generic;
     using global::System.Diagnostics;
     using global::System.Linq;
     using global::System.Reflection;
-
-    using Artemis.Exceptions;
-    using Artemis.Interface;
-    using Artemis.Manager;
-    using Artemis.Utils;
 
     #endregion
 
@@ -107,7 +106,7 @@ namespace Artemis
             this.GroupManager = new GroupManager();
             this.PoolCleanupDelay = 10;
             this.dateTime = FastDateTime.Now;
-            if(initializeAll)
+            if (initializeAll)
                 this.InitializeAll(processAttributes);
         }
 
@@ -260,7 +259,7 @@ namespace Artemis
         /// <param name="assembliesToScan">The assemblies to scan for data attributes.</param>
         public void InitializeAll(params Assembly[] assembliesToScan)
         {
-            if(!this.isInitialized)
+            if (!this.isInitialized)
             {
                 bool processAttributes = assembliesToScan != null && assembliesToScan.Length > 0;
                 this.SystemManager.InitializeAll(processAttributes, assembliesToScan);
@@ -274,7 +273,7 @@ namespace Artemis
         /// <param name="processAttributes">if set to <see langword="true" /> [process attributes].</param>
         public void InitializeAll(bool processAttributes = false)
         {
-            if(!this.isInitialized)
+            if (!this.isInitialized)
             {
                 this.SystemManager.InitializeAll(processAttributes);
                 this.isInitialized = true;

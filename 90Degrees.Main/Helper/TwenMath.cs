@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 
 
 namespace XNAHelper
@@ -34,7 +34,7 @@ namespace XNAHelper
 
         public static float RadianAngleBetween2DVectors(Vector2 from, Vector2 to)
         {
-            return (float) (Math.Atan2(to.Y, to.X) - Math.Atan2(from.Y, from.X));
+            return (float)(Math.Atan2(to.Y, to.X) - Math.Atan2(from.Y, from.X));
         }
 
         public static bool IsAtPosition(Vector2 source, Vector2 target, float accuracy)
@@ -89,7 +89,7 @@ namespace XNAHelper
             float accuracy = MathHelper.ToRadians(360) / 8;
             if (rotationInRadians > 0 - accuracy && rotationInRadians < 0 + accuracy)
                 return Direction.North;
-            
+
             float east = MathHelper.ToRadians(90);
             if (rotationInRadians > east - accuracy && rotationInRadians < east + accuracy)
                 return Direction.East;
@@ -108,7 +108,7 @@ namespace XNAHelper
 
         public static Direction RotationToDirectionEight(float rotationInRadians)
         {
-            float accuracy = MathHelper.ToRadians(360)/16;
+            float accuracy = MathHelper.ToRadians(360) / 16;
 
             if (rotationInRadians > 0 - accuracy && rotationInRadians < 0 + accuracy)
                 return Direction.North;
@@ -172,8 +172,8 @@ namespace XNAHelper
             double dx = Math.Abs(x1 - x0);
             double dy = Math.Abs(y1 - y0);
 
-            int x = (int) Math.Floor(x0);
-            int y = (int) Math.Floor(y0);
+            int x = (int)Math.Floor(x0);
+            int y = (int)Math.Floor(y0);
 
             int n = 1;
             int x_inc, y_inc;
@@ -239,7 +239,7 @@ namespace XNAHelper
             int dy = Math.Abs(y1 - y0);
 
             int sx, sy;
-            
+
             if (x0 < x1) sx = 1; else sx = -1;
             if (y0 < y1) sy = 1; else sy = -1;
 
@@ -255,7 +255,7 @@ namespace XNAHelper
                     err = err - dy;
                     x0 = x0 + sx;
                 }
-                
+
                 if (e2 >= dx) continue;
 
                 err = err + dx;
@@ -321,8 +321,8 @@ namespace XNAHelper
             // than 0 the lines would need to be longer to intersect.
             if (ua >= 0d && ua <= 1d && ub >= 0d && ub <= 1d)
             {
-                ptIntersection.X = (float) (line1.X1 + (ua * (line1.X2 - line1.X1)));
-                ptIntersection.Y = (float) (line1.Y1 + (ua * (line1.Y2 - line1.Y1)));
+                ptIntersection.X = (float)(line1.X1 + (ua * (line1.X2 - line1.X1)));
+                ptIntersection.Y = (float)(line1.Y1 + (ua * (line1.Y2 - line1.Y1)));
                 return true;
             }
             return false;

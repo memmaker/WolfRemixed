@@ -7,4 +7,3 @@ raycasting engine.
  * Add missing sound effects
  * Fix screen sizes and scaling
  * Secret walls should not be obvious
- * Does Zombie Spawning have an end condition?

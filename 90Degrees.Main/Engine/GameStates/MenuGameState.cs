@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using Artemis;
 using Engine.GameStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Twengine;
 using XNAGameGui.Gui.Widgets;
 
 namespace TurnBasedCombat.GameStates
@@ -14,11 +10,11 @@ namespace TurnBasedCombat.GameStates
     public abstract class MenuGameState : GameState, Engine.GameStates.IUpdateable
     {
         protected MenuWindowWidget mMenu;
-        
+
         protected GameStateManager mGameStateManager;
         protected KeyboardState mLastKeyboardState;
         private MouseState mLastMouseState;
-        
+
         protected int MarkerLimit { get; set; }
 
         public bool Enabled => true;
@@ -27,7 +23,6 @@ namespace TurnBasedCombat.GameStates
         public event ButtonEventHandler ButtonPressed;
         public event ButtonEventHandler ButtonMarked;
         public event ButtonEventHandler ButtonUnmarked;
-        public event ButtonEventHandler ButtonAppendedStringChanged;
         public event ButtonEventHandler CounterIncreased;
         public event ButtonEventHandler CounterDecreased;
 
@@ -47,8 +42,16 @@ namespace TurnBasedCombat.GameStates
 
             if (key == Keys.Enter)
             {
-                var button = GetSelectedButton();
+                var button = mMenu.GetSelectedButton();
                 ButtonPressed(button);
+            }
+            else if (key == Keys.Up)
+            {
+                mMenu.SelectPrevious();
+            }
+            else if (key == Keys.Down)
+            {
+                mMenu.SelectNext();
             }
 
         }
@@ -105,7 +108,7 @@ namespace TurnBasedCombat.GameStates
             MouseState mouseState = Mouse.GetState();
             if (mLastMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
             {
-                ButtonWidget selectedButton = GetSelectedButton();
+                ButtonWidget selectedButton = mMenu.GetSelectedButton();
 
                 if (selectedButton != null)
                 {
@@ -132,14 +135,14 @@ namespace TurnBasedCombat.GameStates
                             OnCounterChange(selectedButton, true);
 
                     }
-                    
+
                     else
                         OnPressed(selectedButton);
                 }
             }
             if (mLastMouseState.RightButton == ButtonState.Released && mouseState.RightButton == ButtonState.Pressed)
             {
-                ButtonWidget selectedButton = GetSelectedButton();
+                ButtonWidget selectedButton = mMenu.GetSelectedButton();
                 if (selectedButton != null)
                 {
                     if (selectedButton.AppendCounter)
@@ -165,17 +168,6 @@ namespace TurnBasedCombat.GameStates
 
             mLastKeyboardState = keyboardState;
             mLastMouseState = mouseState;
-        }
-        public ButtonWidget GetSelectedButton()
-        {
-            foreach (ButtonWidget buttonWidget in mMenu.Buttons.Values)
-            {
-                if (buttonWidget.IsSelected)
-                {
-                    return buttonWidget;
-                }
-            }
-            return null;
         }
     }
 }

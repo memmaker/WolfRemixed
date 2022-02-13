@@ -41,7 +41,6 @@ namespace Artemis
     using global::System.Diagnostics;
 
 #if !XBOX && !WINDOWS_PHONE && !PORTABLE && !UNITY5
-    using global::System.Numerics;
 #endif
 #if XBOX || WINDOWS_PHONE || PORTABLE || FORCEINT32
     using BigInteger = global::System.Int32;
@@ -146,10 +145,10 @@ namespace Artemis
                 var oldTag = this.entityWorld.TagManager.GetTagOfEntity(this);
                 if (value != oldTag)
                 {
-                    if(oldTag != null)
+                    if (oldTag != null)
                         this.entityWorld.TagManager.Unregister(this);
 
-                    if(value != null)
+                    if (value != null)
                         this.entityWorld.TagManager.Register(value, this);
                 }
             }

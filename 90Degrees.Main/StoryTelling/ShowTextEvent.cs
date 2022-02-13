@@ -26,7 +26,7 @@ namespace raycaster.StoryTelling
 
         public override void Update(GameTime gameTime)
         {
-            
+
         }
 
         public override void Begin()
@@ -42,7 +42,7 @@ namespace raycaster.StoryTelling
 
         public override void Reset()
         {
-            
+
         }
     }
 }

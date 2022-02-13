@@ -1,5 +1,4 @@
-﻿using Artemis;
-using Artemis.Interface;
+﻿using Artemis.Interface;
 using Microsoft.Xna.Framework.Input;
 
 namespace Twengine.Components.Meta

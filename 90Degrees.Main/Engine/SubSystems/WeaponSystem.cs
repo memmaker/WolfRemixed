@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Artemis;
+﻿using Artemis;
 using Artemis.System;
 using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Twengine.Components;
-using Twengine.Helper;
 using Twengine.Managers;
 using XNAHelper;
 
@@ -33,22 +31,22 @@ namespace Twengine.SubSystems.Raycast
         public bool IsEnemyHit { get; set; }
     }
 
-    public class FpsWeaponSystem : EntityComponentProcessingSystem<Weapon, SpriteAnimator, FpsWeaponAnimator>
+    public class WeaponSystem : EntityComponentProcessingSystem<Weapon, SpriteAnimator, FpsWeaponAnimator>
     {
         public event WeaponEventHandler PlayerUsedAmmo;
         public event WeaponEventHandler PlayerWeaponFired;
         public event HitLocationEventHandler BulletHit;
         public event DamageDealtEventHandler DamageDealt;
         private Raycaster mRaycaster;
-        
 
-        public FpsWeaponSystem(Raycaster raycaster)
+
+        public WeaponSystem(Raycaster raycaster)
             : base()
         {
             mRaycaster = raycaster;
         }
         public override void Process(Entity e, Weapon weapon, SpriteAnimator spriteAnimator, FpsWeaponAnimator fpsWeaponAnimator)
-        {   
+        {
 
             if (weapon.IsAutomatic)
             {
@@ -65,7 +63,7 @@ namespace Twengine.SubSystems.Raycast
                 Debug.Print("Frame: " + spriteAnimator.CurrentFrameIndex);
                 if (fpsWeaponAnimator.HitOnFrame == spriteAnimator.CurrentFrameIndex && spriteAnimator.EnteredFrameThisTick)
                 {
-                    
+
                     OnPlayerFiredWeapon(e, weapon);
                     if (weapon.NeedsAmmo)
                     {
@@ -93,7 +91,7 @@ namespace Twengine.SubSystems.Raycast
         private void OnPlayerUsedAmmo(Entity weapon, Weapon weaponComponent)
         {
             if (PlayerUsedAmmo == null) return;
-            PlayerUsedAmmo(new WeaponEventArgs(){WeaponEntity =  weapon, WeaponComponent = weaponComponent});
+            PlayerUsedAmmo(new WeaponEventArgs() { WeaponEntity = weapon, WeaponComponent = weaponComponent });
         }
 
         private void SpawnProjectile(Weapon weapon)
@@ -120,11 +118,11 @@ namespace Twengine.SubSystems.Raycast
                         {
                             if (!damageDealt.ContainsKey(targetedEntity))
                             {
-                                damageDealt.Add(targetedEntity,0);
+                                damageDealt.Add(targetedEntity, 0);
                             }
                             int damage = TwenMath.Random.Next(weapon.MinDamagePerHit, weapon.MaxDamagePerHit + 1);
                             DealDamage(targetedEntity, damage);
-                            
+
                             damageDealt[targetedEntity] += damage;
 
                             hittableEntityHit = true;
@@ -179,7 +177,7 @@ namespace Twengine.SubSystems.Raycast
         {
             if (DamageDealt != null)
             {
-                DamageDealt(new DamageDealtEventArgs() {DamageDealt = damageDealt});
+                DamageDealt(new DamageDealtEventArgs() { DamageDealt = damageDealt });
             }
         }
 

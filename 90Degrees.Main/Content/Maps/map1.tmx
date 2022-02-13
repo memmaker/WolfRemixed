@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" infinite="0" nextlayerid="10" nextobjectid="23">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" infinite="0" nextlayerid="10" nextobjectid="37">
  <tileset firstgid="1" name="Enemies" tilewidth="64" tileheight="64" tilecount="42" columns="7">
   <image source="wolfenemies_sheet.png" width="448" height="384"/>
  </tileset>
@@ -14,7 +14,7 @@
  </tileset>
  <layer id="1" name="Walls" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   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
+   eJztmVtv1DAQRv2jtmKFUFcUxFMrFSi3LbxQCdFyEfCA1D7yy6nVjDQMM+NvbCebhRxptIntJjmZ2HHclBYWFhYWFhbG5mFFTM2hET2I+uzKHynjdWjU+E/9PFj+1j2IPBut+d+Vf025xjp4LbK95n9diC8sPoh9jTH9x8j/deEYX41yz1/GxihP6W//qfv/GP4Inr9Fjf/VsH1ltOH+uc130XZMf21c9N6Z1jt+7dSRy4VxHdz/Qvxmxs5/bX2m1L8v2Taa/x9pmvyXxvIe/h/ZNuKvsc/5z3DvTyJ+pjb/lrkuMt8rEfWvgd71n9Of737y50T9jwKhMYW/5IZto+/utVFueUlyO+T7TivP/vK5jzz/kpJ/aR/Jq4T8iW+F9pF5Qqu/zG8S9XIfdeZI/0j+S0T9f7HtjajbKCHrHwHnkPdI808J6/8lWvKv+Xn7SP6PxC9t74O/JOqv5Z1CG/d6+N9UBFGbf4qzIV7fxuNh+81tvBjavxrKLHaxvsFB+r/3/nsJnKPkL79/WjkAI6P5R+Y/z4B2z1Nsfti6/npQbtLN38stcRY4pnculCn9tyzO090YcC7Kt4FjeudaDYE+2x6Wv1VmXdMWaPcutftnVmC7Vn90jTY7vQXbovfUA70upN2S/zt69/8nafz+r92HXv0/+v1/LCIpZceBY3rnIqSjtl+ip38J8u/5/vd8e/ij6x+ovxWUuzXbfg9Eyb92/hddD0H8Lcifk/s2OWog/iV4e83f+/7v6X+abH+Psf1ToP4keG7O09TPPxpEzfc/Zy75517erzxfa/7H6v8e0j8p+xaIf7T/U5wMv6fgfk9/dG6M+FNY/rWBXM+u81+LN2fKdQ+MuhZ/a1xr6f+1eM8f1d1X6nr7R9cG9jX/LcGx1jtrwvtbC60fI9fN70WEaHtOziF34dsbo5zjPZO5j3jrWy3Xzak9DvVd3s+1e+Hl2/puR9rMMf8c5HnX3OS4qY2jc/HPeH29RGv+I+OCRY9+ZI0BJTQ3WabNY+aU/0ytP/I+ttrMzb/X/6WQeezc/GvR3JDxz1v33nf//y3//0L/91g5EV2nI/bJ/55Th/7/SjK397+H59iSf4s5+nvPf49vdk7r9+9vXsEdvA==
   </data>
  </layer>
  <layer id="3" name="MetaInfo" width="64" height="64" locked="1">
@@ -22,7 +22,7 @@
    eJzt10kKgDAMAED/48Ht/39ToYIHW6UXu8xACUgihUhahwEAAAAAAKA9S4jrr7sAoDRTiEsyq19T5HnsPI3lf62nbrX1fw6xlP0AlOh+R+p1Xl7n25zMokVn7/WdGuV8t73O+JZ8/R97YtYBALwbj7Vl1qbqct8JQH92pVwE7w==
   </data>
  </layer>
- <objectgroup id="9" name="Objects">
+ <objectgroup id="9" name="Objects" locked="1">
   <object id="7" name="Message" x="3328" y="1408" width="64" height="64">
    <properties>
     <property name="Centered" type="bool" value="true"/>
@@ -126,16 +126,32 @@
   </object>
   <object id="2" name="Secret Wall" x="960" y="1856" width="64" height="64">
    <properties>
-    <property name="Destroyable" type="bool" value="true"/>
+    <property name="SecretWall" type="bool" value="true"/>
    </properties>
   </object>
   <object id="3" name="Secret Wall" x="1024" y="1857" width="64" height="64">
    <properties>
-    <property name="Destroyable" type="bool" value="true"/>
+    <property name="SecretWall" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="23" template="Templates/SecretWall.tx" x="2624" y="3648"/>
+  <object id="24" name="Secret Wall" x="1664" y="2112" width="64" height="64">
+   <properties>
+    <property name="SecretWall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="26" template="Templates/SecretWall.tx" x="832" y="1536"/>
+  <object id="28" template="Templates/SecretWall.tx" x="768" y="1536"/>
+  <object id="29" template="Templates/SecretWall.tx" x="640" y="832"/>
+  <object id="30" template="Templates/SecretWall.tx" x="2688" y="832"/>
+  <object id="31" template="Templates/SecretWall.tx" x="3072" y="3648"/>
+  <object id="32" template="Templates/SecretWall.tx" x="1728" y="3904"/>
+  <object id="33" template="Templates/SecretWall.tx" x="896" y="3392"/>
+  <object id="34" template="Templates/SecretWall.tx" x="1152" y="3200"/>
+  <object id="35" template="Templates/SecretWall.tx" x="1216" y="3136"/>
+  <object id="36" template="Templates/SecretWall.tx" x="1920" y="1408"/>
  </objectgroup>
- <layer id="5" name="Items" width="64" height="64">
+ <layer id="5" name="Items" width="64" height="64" locked="1">
   <data encoding="base64" compression="zlib">
    eJztm1lLxDAQgLv/Hzx2V1gVtd4XCvsg+rT6JKL45ov+BhXvFfFqMYU4JO1k08yk2XwQpk1zTDaZSdJmkyQSiUQikUjEPfM1p3PBHgjjSlsETrpCLhDWOTNCnjlknIpFRJqegS62TGVhlrA+DJT9HyIfWfgRMlJO7vNSbiWY2bTIu1ybFn6A8c+yr+eeM7kx7f9DJ1rYkXIrQMwqtwJMLCX4dVrEHMz+qbD/fK1vs+8bStdv0vW7YTkr4D4fHyq9rg3LDQ25/ZeI9K7nxU/p+ku6HsKEAJX9wz2gSf/faOInFeX6CPw9dP5R1X5d28vwcf5f51YgQkZd8z/GBzaFFBl/5VYNVrB+sClsZKFDWN+AsC5KVO9GoO3rfAH2PXHTx1oIhGb/JqSG8U1g10GZB0IOgOSkl6i/F+m+59mOa5WvC2ktZMOZIu6CXAs+VO2H+OhX696nF/ZwkoUjRPrXinuXmM57Kls/FhLT/3UB17YdTTyGbWS6c038qZCw/dMJj/2XvXvjtj9V/ZzjP0Qoz49wA+2+1TLLj7EH1zYzTuOf2/+Eyh1xfU34tjEq/YrnW4gy8jN13cpU5TyUPFP1961lfRRA+7f9jSJ+suY4PSX7jHXfVzwv8xGhUvi+x8T/83ffyf/z1bL/k30fPIOd55tA1vEk5DiOhQLfx8Go6Oz/RchnKkU8pA1ksf4hswPFXnMH3Fe9X7PZDxXtpF77l+Hbf0kif/wCGSx7tQ==
   </data>

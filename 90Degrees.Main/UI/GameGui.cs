@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using IndependentResolutionRendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using XNAGameGui.Gui.Widgets;
 
 namespace XNAGameGui.Gui
@@ -54,7 +54,7 @@ namespace XNAGameGui.Gui
         public UniRectangle(UniScalar x, UniScalar y, float width, float height)
             : this()
         {
-            Location = new UniVector(x,y);
+            Location = new UniVector(x, y);
             Size = new UniVector(width, height);
         }
 
@@ -84,7 +84,7 @@ namespace XNAGameGui.Gui
 
         public static Viewport Viewport
         {
-            get { return mViewport; } 
+            get { return mViewport; }
             set
             {
                 mViewport = value;
@@ -97,7 +97,7 @@ namespace XNAGameGui.Gui
         {
             RootWidget = new BaseWidget();
             Fonts = new Dictionary<GameFont, SpriteFont>();
-            
+
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteFont guiFont, SpriteFont longTextFont)
@@ -116,7 +116,7 @@ namespace XNAGameGui.Gui
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.NonPremultiplied,SamplerState.PointWrap,DepthStencilState.None,RasterizerState.CullCounterClockwise);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
             RootWidget.Draw(spriteBatch, this);
             spriteBatch.End();
         }

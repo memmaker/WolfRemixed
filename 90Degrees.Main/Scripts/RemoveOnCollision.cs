@@ -1,7 +1,4 @@
-﻿using System;
-using Artemis;
-using Twengine.Components;
-using Twengine.Helper;
+﻿using Artemis;
 using Twengine.Scripts;
 
 namespace raycaster.Scripts
@@ -28,7 +25,7 @@ namespace raycaster.Scripts
 
         public override void Update(float delta)
         {
-            
+
         }
 
         public override void OnCollision(Entity collider)

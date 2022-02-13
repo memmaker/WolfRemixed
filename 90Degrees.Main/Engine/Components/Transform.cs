@@ -1,8 +1,6 @@
-﻿using System;
-using Artemis;
-using Artemis.Interface;
+﻿using Artemis.Interface;
 using Microsoft.Xna.Framework;
-using Twengine.Helper;
+using System;
 using XNAHelper;
 
 namespace Twengine.Components
@@ -16,7 +14,7 @@ namespace Twengine.Components
         public float MaxSpeed { get; set; }
         public Transform() { }
 
-        public Transform(int x, int y, float rotation) : this (new Vector2(x,y), rotation)
+        public Transform(int x, int y, float rotation) : this(new Vector2(x, y), rotation)
         {
         }
 
@@ -89,7 +87,7 @@ namespace Twengine.Components
             }
         }
 
-        
+
 
         private void OnEndInvisibility()
         {

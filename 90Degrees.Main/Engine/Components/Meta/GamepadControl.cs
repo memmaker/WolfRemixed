@@ -1,5 +1,4 @@
-﻿using Artemis;
-using Artemis.Interface;
+﻿using Artemis.Interface;
 
 namespace Twengine.Components.Meta
 {
@@ -12,7 +11,7 @@ namespace Twengine.Components.Meta
         public GamepadControl(int number)
         {
             Number = number;
-            
+
         }
 
         public int Number { get; private set; }

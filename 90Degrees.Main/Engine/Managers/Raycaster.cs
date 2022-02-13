@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Artemis;
+﻿using Artemis;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 using Twengine.Components;
 using Twengine.Components.Meta;
 using Twengine.Datastructures;
-using Twengine.Helper;
 using XNAHelper;
 
 namespace Twengine.Managers
@@ -38,8 +34,8 @@ namespace Twengine.Managers
     }
     public struct SpriteStripe
     {
-        public Rectangle ScreenRect { get; set;}
-        public Rectangle TextureRect { get; set;}
+        public Rectangle ScreenRect { get; set; }
+        public Rectangle TextureRect { get; set; }
     }
 
     public class Raycaster
@@ -55,7 +51,7 @@ namespace Twengine.Managers
         private List<Entity> mVisibleEntities;
         public BasicRaycastHitInfo[] LastHits { get; set; }
         public Point TargetedWall { get; set; }
-        
+
         private double mWallTextureWidth;
         /// <summary>
         /// what direction to step in y-direction (either +1 or -1)
@@ -96,7 +92,7 @@ namespace Twengine.Managers
 
         public List<Entity>[] TargetedEntities { get; private set; }
 
-        
+
 
         public bool[,] FogOfWarMap { get; private set; }
 
@@ -107,13 +103,17 @@ namespace Twengine.Managers
             ChangeMap(map);
 
             mWallTextureWidth = 64;
-            
-            Camera = new Camera(startPos,fov,viewDir);
+
+            Camera = new Camera(startPos, fov, viewDir);
 
             Resolution = 1;
-            
-        }
 
+        }
+        
+        public void ViewportChanged(int screenWidth, int screenHeight)
+        {
+            SetScreenDependentValues(screenWidth, screenHeight);
+        }
         private void SetScreenDependentValues(int screenWidth, int screenHeight)
         {
             LastHits = new BasicRaycastHitInfo[screenWidth];
@@ -123,12 +123,6 @@ namespace Twengine.Managers
             InitMapArrays();
             InitLastHitsAndTargetedEntities();
         }
-
-        public void ViewportChanged(int screenWidth, int screenHeight)
-        {
-            SetScreenDependentValues(screenWidth, screenHeight);
-        }
-
         private void InitLastHitsAndTargetedEntities()
         {
             for (int x = 0; x < ScreenWidth; x++)
@@ -141,7 +135,7 @@ namespace Twengine.Managers
 
         private void InitMapArrays()
         {
-            
+
             mVisibleEntities = new List<Entity>();
             TargetedEntities = new List<Entity>[mScreenWidth];
             TargetedWall = Point.Zero;
@@ -173,7 +167,7 @@ namespace Twengine.Managers
                 RaycastSprite sprite = entity.GetComponent<RaycastSprite>();
                 Transform transform = entity.GetComponent<Transform>();
                 SpriteAnimator animator = entity.GetComponent<SpriteAnimator>();
-                
+
 
                 sprite.Stripes.Clear();
 
@@ -186,8 +180,8 @@ namespace Twengine.Managers
                     OrientedSpriteRaycasting(sprite, transform);
                 }
 
-                
-                
+
+
             }
             return mVisibleEntities;
         }
@@ -219,14 +213,14 @@ namespace Twengine.Managers
                 else
                     objectOffset = 1 - (transform.Position.X - (int)transform.Position.X);
             }
-            
+
 
             double transformY;
             double transformStartY;
             double transformEndY;
             long drawStartX;
             long drawEndX;
-            Vector2 spritePos = new Vector2(transform.Position.X,transform.Position.Y);
+            Vector2 spritePos = new Vector2(transform.Position.X, transform.Position.Y);
             GetSpriteScreenX(transform.Position, out transformY);
 
             // add or substract 0.5 because the position of the sprite is the middle
@@ -252,7 +246,7 @@ namespace Twengine.Managers
             if (drawEndX > ScreenWidth) drawEndX = ScreenWidth;
 
             //switch variables depending on the orientation of the camera
-            
+
             if (drawStartX > drawEndX)
             {
                 long tempX = drawStartX;
@@ -260,8 +254,8 @@ namespace Twengine.Managers
                 drawEndX = tempX;
             }
 
-            
-            
+
+
             //loop through every vertical stripe of the sprite on screen
             for (long x = drawStartX; x < drawEndX; x++)
             {
@@ -332,8 +326,8 @@ namespace Twengine.Managers
                     }
                     else
                     {
-                        double diffPlusStepY = diffY + (1 - stepY)/2.0;
-                        perpWallDist = Math.Abs(diffPlusStepY/rayDirY) + Math.Abs(objectOffset/rayDirY);
+                        double diffPlusStepY = diffY + (1 - stepY) / 2.0;
+                        perpWallDist = Math.Abs(diffPlusStepY / rayDirY) + Math.Abs(objectOffset / rayDirY);
                     }
                 }
 
@@ -381,12 +375,12 @@ namespace Twengine.Managers
 
                 if (perpWallDist > objectOffset && x >= 0 && x < ScreenWidth && perpWallDist < LastHits[x].DistToWall)// && transformY > objectOffset)
                 {
-                    
+
                     Rectangle textureSourceRect = new Rectangle(sourceRectByIndex.X + texX, sourceRectByIndex.Y + 0, 1, sprite.SpriteSheet.FrameHeight);
 
-                    int drawStartY = (int) (((ScreenHeight / 2) + (Camera.EyeHeight / perpWallDist)) - (lineHeight / 2));
+                    int drawStartY = (int)(((ScreenHeight / 2) + (Camera.EyeHeight / perpWallDist)) - (lineHeight / 2));
 
-                    Rectangle spriteDestRect = new Rectangle((int) x, drawStartY, 1, lineHeight);
+                    Rectangle spriteDestRect = new Rectangle((int)x, drawStartY, 1, lineHeight);
                     sprite.Stripes.Add(new SpriteStripe() { TextureRect = textureSourceRect, ScreenRect = spriteDestRect });
                 }
 
@@ -401,27 +395,27 @@ namespace Twengine.Managers
             long spriteScreenX = GetSpriteScreenX(transform.Position, out spriteDepthZ);
 
             //calculate height of the sprite on screen
-            int spriteHeight = (int) Math.Abs(ScreenHeight/spriteDepthZ); //using "transformY" instead of the real distance prevents fisheye
-                
+            int spriteHeight = (int)Math.Abs(ScreenHeight / spriteDepthZ); //using "transformY" instead of the real distance prevents fisheye
+
             //calculate lowest and highest pixel to fill in current stripe
-            int drawStartY = (int) (-spriteHeight / 2 + ((ScreenHeight / 2) + (Camera.EyeHeight / spriteDepthZ)));
+            int drawStartY = (int)(-spriteHeight / 2 + ((ScreenHeight / 2) + (Camera.EyeHeight / spriteDepthZ)));
             //if (drawStartY < 0) drawStartY = 0;
             //int drawEndY = spriteHeight/2 + mScreenHeight/2;
             //if (drawEndY >= mScreenHeight) drawEndY = mScreenHeight - 1;
 
             //calculate width of the sprite
-            int spriteWidth = (int) Math.Abs(ScreenHeight/spriteDepthZ);
-            long drawStartX = -spriteWidth/2 + spriteScreenX;
+            int spriteWidth = (int)Math.Abs(ScreenHeight / spriteDepthZ);
+            long drawStartX = -spriteWidth / 2 + spriteScreenX;
             if (drawStartX < 0) drawStartX = 0;
-            long drawEndX = spriteWidth/2 + spriteScreenX;
+            long drawEndX = spriteWidth / 2 + spriteScreenX;
             if (drawEndX >= ScreenWidth) drawEndX = ScreenWidth - 1;
 
-                
+
             //loop through every vertical stripe of the sprite on screen
             Rectangle sourceRectByIndex = sprite.SourceRect;
             for (long x = drawStartX; x < drawEndX; x++)
             {
-                int texX = (int) ((256.0*(x - (-spriteWidth/2.0 + spriteScreenX))*sprite.SpriteSheet.FrameWidth/spriteWidth)/256.0);
+                int texX = (int)((256.0 * (x - (-spriteWidth / 2.0 + spriteScreenX)) * sprite.SpriteSheet.FrameWidth / spriteWidth) / 256.0);
                 //the conditions in the if are:
                 //1) it's in front of camera plane so you don't see things behind you
                 //2) it's on the screen (left)
@@ -432,12 +426,12 @@ namespace Twengine.Managers
 
                 if (spriteDepthZ > 0 && x > 0 && x < ScreenWidth && spriteDepthZ < mZBuffer[x] && sprite.SpriteSheet.TextureOpaqueRect[sprite.FrameIndex].Intersects(textureSourceRect))
                 {
-                    Rectangle spriteDestRect = new Rectangle((int) x, drawStartY, 1, spriteHeight);
-                    sprite.Stripes.Add(new SpriteStripe(){ScreenRect = spriteDestRect,TextureRect = textureSourceRect});
+                    Rectangle spriteDestRect = new Rectangle((int)x, drawStartY, 1, spriteHeight);
+                    sprite.Stripes.Add(new SpriteStripe() { ScreenRect = spriteDestRect, TextureRect = textureSourceRect });
                     TargetedEntities[x].Add(entity);
                 }
             }
-            sprite.Depth = (float) spriteDepthZ;
+            sprite.Depth = (float)spriteDepthZ;
         }
 
 
@@ -452,7 +446,7 @@ namespace Twengine.Managers
             double spriteX = spritePos.X - Position.X;
             double spriteY = spritePos.Y - Position.Y;
 
-            double invDet = 1.0/(ProjectionPlane.X * Direction.Y - Direction.X * ProjectionPlane.Y);
+            double invDet = 1.0 / (ProjectionPlane.X * Direction.Y - Direction.X * ProjectionPlane.Y);
 
             double transformX = invDet * (Direction.Y * spriteX - Direction.X * spriteY);
             transformY = invDet * (-ProjectionPlane.Y * spriteX + ProjectionPlane.X * spriteY);
@@ -474,10 +468,10 @@ namespace Twengine.Managers
         public BasicRaycastHitInfo[] Raycasting()
         {
             mVisibleEntities.Clear();
-            
-            FogOfWarMap[(int) Camera.Position.Y, (int) Camera.Position.X] = true;  // own field is visible..
 
-            int rays = (int) Math.Ceiling(ScreenWidth/(decimal)Resolution);
+            FogOfWarMap[(int)Camera.Position.Y, (int)Camera.Position.X] = true;  // own field is visible..
+
+            int rays = (int)Math.Ceiling(ScreenWidth / (decimal)Resolution);
 
 
             for (int x = 0; x < rays; x++)
@@ -534,9 +528,9 @@ namespace Twengine.Managers
                         break;
                     }
 
-                    
+
                     //Check if ray has hit a wall
-                    if (mMap[mapY, mapX] > 0)
+                    if (mMap[mapY, mapX] > -1)
                     {
                         wallHit = true;
                     }
@@ -555,7 +549,6 @@ namespace Twengine.Managers
                     obstructing = IsSpriteObstructing(mapX, mapY) ? true : obstructing; // if the ray was obstructed by a sprite (usually a door) mark just this one square as seen and then stop..
 
                     doorHit = UpdateDoorHit(x, mapX, mapY, doorHit);
-                    
                 }
                 #endregion
 
@@ -564,9 +557,7 @@ namespace Twengine.Managers
                 {
                     break;
                 }
-
                 
-
                 if (x == ScreenWidth / 2)
                 {
                     if (!doorHit)
@@ -577,21 +568,21 @@ namespace Twengine.Managers
                 }
 
                 //Calculate distance projected on camera direction (oblique distance will give fisheye effect!)
-                
+
                 perpObstacleDist = GetPerpWallDist(rayDirX, rayDirY, mapX, mapY, side);
 
                 mZBuffer[x] = perpObstacleDist;
 
                 //if (doorHit) continue; // doors are treated as sprites.. see orientedspriteraycasting
-                
+
                 //Calculate height of line to draw on screen
-                int lineHeight = (int) Math.Abs(ScreenHeight/perpObstacleDist);
+                int lineHeight = (int)Math.Abs(ScreenHeight / perpObstacleDist);
 
                 //calculate lowest and highest pixel to fill in current stripe
 
-                int drawStart = (int) (-lineHeight / 2 + ((ScreenHeight / 2) + (Camera.EyeHeight / perpObstacleDist)));
+                int drawStart = (int)(-lineHeight / 2 + ((ScreenHeight / 2) + (Camera.EyeHeight / perpObstacleDist)));
                 int realDrawStart = drawStart;
-                int drawEnd = (int) (lineHeight / 2 + ((ScreenHeight / 2) + (Camera.EyeHeight / perpObstacleDist)));
+                int drawEnd = (int)(lineHeight / 2 + ((ScreenHeight / 2) + (Camera.EyeHeight / perpObstacleDist)));
                 int realHeight = drawEnd - drawStart;
                 if (drawStart < 0 && drawEnd >= ScreenHeight)
                 {
@@ -603,9 +594,9 @@ namespace Twengine.Managers
 
                 //calculate value of wallX
                 double wallX = GetWallX(rayDirX, rayDirY, mapX, mapY, side);
-                
+
                 #region fill return info object
-                
+
                 LastHits[x].DistToWall = perpObstacleDist;
                 LastHits[x].MapX = mapX;
                 LastHits[x].MapY = mapY;
@@ -615,12 +606,12 @@ namespace Twengine.Managers
                 LastHits[x].X = x;
                 LastHits[x].DrawStartY = realDrawStart;
                 LastHits[x].ScreenLineHeight = drawEnd - drawStart;
-                LastHits[x].TexX = (int) (wallX*mWallTextureWidth);
+                LastHits[x].TexX = (int)(wallX * mWallTextureWidth);
                 LastHits[x].WallType = mMap[mapY, mapX];
 
 
                 #endregion
-                
+
             }
 
             return LastHits;
@@ -645,14 +636,8 @@ namespace Twengine.Managers
 
         private bool CheckForDoor(int mapX, int mapY)
         {
-            foreach (Entity entities in mTilemap.Entities[mapY, mapX])
-            {
-                if (entities.Group == "Door")
-                {
-                    return true;
-                }
-            }
-            return false;
+            char mapMetaData = mTilemap.GetCellMetaDataByPosition(mapX, mapY);
+            return (mapMetaData == 'd');
         }
 
         public Point TargetedDoor { get; set; }
@@ -716,9 +701,6 @@ namespace Twengine.Managers
             }
         }
 
-
-        
-
         private WallSide GetWallSideHit(double rayDirX, double rayDirY, int side)
         {
             WallSide wallSideHit;
@@ -756,7 +738,7 @@ namespace Twengine.Managers
         {
             double wallX; //where exactly the wall was hit
             if (side == 1) wallX = Camera.Position.X + ((mapY - Camera.Position.Y + (1 - stepY) / 2.0) / rayDirY) * rayDirX;
-            else           wallX = Camera.Position.Y + ((mapX - Camera.Position.X + (1 - stepX) / 2.0) / rayDirX) * rayDirY;
+            else wallX = Camera.Position.Y + ((mapX - Camera.Position.X + (1 - stepX) / 2.0) / rayDirX) * rayDirY;
             wallX -= Math.Floor(wallX);
             return wallX;
         }
@@ -782,7 +764,7 @@ namespace Twengine.Managers
 
         public double HorizontalToDist(int y)
         {
-            return ScreenHeight/(2.0 * y - ScreenHeight);
+            return ScreenHeight / (2.0 * y - ScreenHeight);
         }
 
         public void ChangeMap(Tilemap tilemap)

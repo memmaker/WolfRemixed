@@ -1,7 +1,7 @@
-﻿using System;
-using System.Globalization;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Globalization;
 
 namespace XNAHelper
 {
@@ -13,7 +13,7 @@ namespace XNAHelper
         /// <summary>
         /// Draws a int or long without generating garbage ( = w/o using .ToString() )
         /// </summary>
-        
+
         private static string[] digits = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
         private static string[] intCharBuffer = new string[10];

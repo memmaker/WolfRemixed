@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -69,7 +68,7 @@ namespace XNAHelper
 
         public float GetFloat(string key)
         {
-            return (float) mConfig[key];
+            return (float)mConfig[key];
         }
     }
 }

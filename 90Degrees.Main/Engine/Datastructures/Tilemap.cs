@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Artemis;
+﻿using Artemis;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using raycaster;
+using System;
+using System.Collections.Generic;
 using Twengine.Components;
-using Twengine.Helper;
-using Twengine.Managers;
 using XNAHelper;
 
 namespace Twengine.Datastructures
@@ -34,7 +29,7 @@ namespace Twengine.Datastructures
         public Vector2 PlayerViewDirection { get; set; }
 
         private HashSet<Point> mPlayerPositionHistory;
-        
+
         public bool PseudoShading
         {
             get { return mPseudoShading; }
@@ -100,19 +95,22 @@ namespace Twengine.Datastructures
         {
             return mMapData;
         }
+
         private bool PositionIsOutOfMapBounds(int mapX, int mapY)
         {
             return mapX < 0 || mapX >= mMapWidth || mapY < 0 || mapY >= mMapHeight;
         }
+
         public int GetCellDataByPosition(Point cell)
         {
-            return (PositionIsOutOfMapBounds(cell.X,cell.Y)) ? 0 : mMapData[cell.Y, cell.X];
+            return (PositionIsOutOfMapBounds(cell.X, cell.Y)) ? 0 : mMapData[cell.Y, cell.X];
         }
 
         public int GetCellDataByPosition(Vector2 spawnPos)
         {
             return mMapData[(int) spawnPos.Y, (int) spawnPos.X];
         }
+
         public char GetCellMetaDataByPosition(Vector2 position)
         {
             return GetCellMetaDataByPosition((int) position.X, (int) position.Y);
@@ -126,7 +124,7 @@ namespace Twengine.Datastructures
 
         public char GetCellMetaDataByPosition(int mapX, int mapY)
         {
-            if (PositionIsOutOfMapBounds(mapX,mapY))
+            if (PositionIsOutOfMapBounds(mapX, mapY))
                 return ' ';
             return mMapMetaData[mapY, mapX];
         }
@@ -147,13 +145,14 @@ namespace Twengine.Datastructures
                     foreach (Entity entity in Entities[y, x])
                     {
                         Transform transform = entity.GetComponent<Transform>();
-                        if (Vector2.Distance(sourcePosition,transform.Position) <= range)
+                        if (Vector2.Distance(sourcePosition, transform.Position) <= range)
                         {
                             inRange.Add(entity);
                         }
                     }
                 }
             }
+
             return inRange;
         }
 
@@ -161,7 +160,7 @@ namespace Twengine.Datastructures
         {
             if (dist > mShadingCutOff) dist = mShadingCutOff;
 
-            float lerpFact = (float)(dist / mShadingDivisor);
+            float lerpFact = (float) (dist / mShadingDivisor);
             return Color.Lerp(source, Color.Black, lerpFact);
         }
 
@@ -174,18 +173,31 @@ namespace Twengine.Datastructures
         public static Tilemap FromScratch(int mapWidth, int mapHeight)
         {
             int[,] mapdataArray = new int[mapHeight, mapWidth];
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
+                {
+                    mapdataArray[y, x] = -1;
+                }
+            }
+
             char[,] mapMetaData = new char[mapHeight, mapWidth];
-            Tilemap newMap = new Tilemap(mapdataArray, mapMetaData, true, 8, 18) { CeilingColor = new Color(2, 19, 48), FloorColor = new Color(128, 128, 128), PlayerSpawn = Vector2.Zero, PlayerViewDirection = Vector2.UnitY };
+            Tilemap newMap = new Tilemap(mapdataArray, mapMetaData, true, 8, 18)
+            {
+                CeilingColor = new Color(2, 19, 48), FloorColor = new Color(128, 128, 128), PlayerSpawn = Vector2.Zero,
+                PlayerViewDirection = Vector2.UnitY
+            };
             return newMap;
         }
 
-        
+
         public bool HasLineOfSight(Vector2 sourcePos, Vector2 lookAtPosition, Vector2 lookDir, int fovInDegrees)
         {
             bool looksInDirectionOf = TwenMath.IsInViewCone(sourcePos, lookAtPosition, lookDir, fovInDegrees);
             if (!looksInDirectionOf) return false;
             mCurrentLine.Clear();
-            bool hasLineOfSight = TwenMath.GridRayTrace(sourcePos.X, sourcePos.Y, lookAtPosition.X, lookAtPosition.Y, IsTransparent);
+            bool hasLineOfSight = TwenMath.GridRayTrace(sourcePos.X, sourcePos.Y, lookAtPosition.X, lookAtPosition.Y,
+                IsTransparent);
             mLineOfSightList.Add(mCurrentLine);
             return hasLineOfSight;
         }
@@ -205,7 +217,8 @@ namespace Twengine.Datastructures
                     }
                 }
             }
-            return mMapData[y, x] == 0;
+
+            return mMapData[y, x] == -1;
         }
 
         public List<List<Point>> GetLastLineOfSightLines()
@@ -214,18 +227,19 @@ namespace Twengine.Datastructures
             mLineOfSightList.Clear();
             return lastLineOfSightLines;
         }
+
         private void UpdateEntityPosition(Entity entity)
         {
             Transform transform = entity.GetComponent<Transform>();
 
             Entities[transform.LastCellPosition.Y, transform.LastCellPosition.X].Remove(entity);
-            
 
-            int y = (int)transform.Position.Y;
-            int x = (int)transform.Position.X;
+
+            int y = (int) transform.Position.Y;
+            int x = (int) transform.Position.X;
 
             Entities[y, x].Add(entity);
-            
+
 
             transform.LastCellPosition = new Point(x, y);
         }
@@ -234,7 +248,7 @@ namespace Twengine.Datastructures
         {
             foreach (Point point in mPlayerPositionHistory)
             {
-                string entityString = "at " + point + ": " + ComponentTwengine.GetEntityString(Entities[point.Y, point.X]);
+                string entityString = "at " + point + ": " + RaycastGame.GetEntityString(Entities[point.Y, point.X]);
                 DebugDrawer.DrawString(entityString);
             }
         }
@@ -242,15 +256,15 @@ namespace Twengine.Datastructures
         public void AddEntity(Entity entity)
         {
             Transform transform = entity.GetComponent<Transform>();
-            Entities[(int)transform.Position.Y, (int)transform.Position.X].Add(entity);
-            transform.LastCellPosition = new Point((int)transform.Position.X, (int)transform.Position.Y);
+            Entities[(int) transform.Position.Y, (int) transform.Position.X].Add(entity);
+            transform.LastCellPosition = new Point((int) transform.Position.X, (int) transform.Position.Y);
             AllEntities.Add(entity);
         }
 
         public void RemoveEntity(Entity entity)
         {
             if (entity.HasComponent<Transform>())
-            { 
+            {
                 Transform transform = entity.GetComponent<Transform>();
                 Entities[transform.LastCellPosition.Y, transform.LastCellPosition.X].Remove(entity);
                 AllEntities.Remove(entity);
@@ -277,7 +291,7 @@ namespace Twengine.Datastructures
 
         public void CreateWall(Point point, int wallIndex)
         {
-            mMapData[point.Y, point.X] = wallIndex + 1;
+            mMapData[point.Y, point.X] = wallIndex;
         }
 
         public void CreateDoor(Point position, int wallIndex)
@@ -295,7 +309,7 @@ namespace Twengine.Datastructures
         public void CreateSecretWall(Point point, int wallIndex)
         {
             mMapMetaData[point.Y, point.X] = 's';
-            
+
             //int neighborWallTex = mMapData[point.Y - 1, point.X] > 0 ? mMapData[point.Y - 1, point.X] : mMapData[point.Y, point.X - 1];
             mMapData[point.Y, point.X] = wallIndex;
         }
@@ -323,6 +337,24 @@ namespace Twengine.Datastructures
                     mMapMetaData[position.Y, position.X] = 'h';
                     break;
             }
+        }
+
+        internal Door GetDoorAt(Point cellPosition)
+        {
+            List<Entity> entities = Entities[cellPosition.Y, cellPosition.X];
+            if (entities.Count > 0)
+            {
+                foreach (Entity entityAtPosition in entities)
+                {
+                    if (entityAtPosition.Group == "Door")
+                    {
+                        Door door = entityAtPosition.GetComponent<Door>();
+                        return door;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

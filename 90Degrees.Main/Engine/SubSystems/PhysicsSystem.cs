@@ -1,7 +1,7 @@
-﻿using System;
-using Artemis;
+﻿using Artemis;
 using Artemis.System;
 using Microsoft.Xna.Framework;
+using System;
 using Twengine.Components;
 
 namespace Twengine.SubSystems
@@ -17,7 +17,7 @@ namespace Twengine.SubSystems
 
         public override void Process(Entity e, Physics physics, Transform transform)
         {
-        
+
             Vector2 pos = transform.Position;
 
             TranslateMovementToVelocity(physics);
@@ -64,8 +64,8 @@ namespace Twengine.SubSystems
         {
             // Verlet integration from here: http://www.gamedev.net/page/resources/_/technical/math-and-physics/a-verlet-based-approach-for-2d-game-physics-r2714
             float deltaTimeInSeconds = entityWorld.Delta / 10000000.0f;
-            transform.Position = ((2 - mWorldFriction)*transform.Position - (1 - mWorldFriction)*transform.OldPosition) +
-                                  physics.Acceleration*(deltaTimeInSeconds);
+            transform.Position = ((2 - mWorldFriction) * transform.Position - (1 - mWorldFriction) * transform.OldPosition) +
+                                  physics.Acceleration * (deltaTimeInSeconds);
         }
     }
 }

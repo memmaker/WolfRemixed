@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace XNAHelper
 {
@@ -22,7 +22,7 @@ namespace XNAHelper
     {
         private static SpriteBatch sSpriteBatch;
         private static List<Circle> mBufferedCircles;
-        private static Dictionary<Rectangle,Color> mBufferedRectangles;
+        private static Dictionary<Rectangle, Color> mBufferedRectangles;
         private static Dictionary<Line, Color> mBufferedLines;
         private static List<string> mBufferedText;
         private static SpriteFont sDebugFont;
@@ -36,7 +36,7 @@ namespace XNAHelper
             sDebugFont = font;
             sSpriteBatch = spriteBatch;
         }
-        
+
         public static void DrawString(string msg)
         {
             mBufferedText.Add(msg);
@@ -95,9 +95,9 @@ namespace XNAHelper
         private static void DeferredDrawString(string text, int index)
         {
             Vector2 measureString = sDebugFont.MeasureString(text);
-            Vector2 origin = new Vector2(sSpriteBatch.GraphicsDevice.Viewport.Width/2, 0);
+            Vector2 origin = new Vector2(sSpriteBatch.GraphicsDevice.Viewport.Width / 2, 0);
             Vector2 pos = origin + (Vector2.UnitY * index * sDebugFont.LineSpacing);
-            sSpriteBatch.DrawString(sDebugFont,text,pos,Color.White);
+            sSpriteBatch.DrawString(sDebugFont, text, pos, Color.White);
         }
 
         private static void DeferredDrawLine(Line line, Color color)

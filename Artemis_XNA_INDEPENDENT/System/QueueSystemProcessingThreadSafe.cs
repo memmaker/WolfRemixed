@@ -38,10 +38,9 @@ namespace Artemis.System
 {
     #region Using statements
 
+    using Artemis.Manager;
     using global::System;
     using global::System.Collections.Generic;
-
-    using Artemis.Manager;
 
     #endregion Using statements
 

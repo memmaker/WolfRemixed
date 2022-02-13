@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Artemis;
+﻿using Artemis;
 using Artemis.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using Twengine.Components;
 using Twengine.Components.Meta;
-using Twengine.Helper;
 using Twengine.Managers;
 
 namespace Twengine.SubSystems.Raycast
@@ -16,7 +15,7 @@ namespace Twengine.SubSystems.Raycast
     {
         public int WeaponIndex { get; set; }
     }
-    public class FPSControlSystem : EntityComponentProcessingSystem<FPSControl, Transform>
+    public class InputHandler : EntityComponentProcessingSystem<FPSControl, Transform>
     {
         public event EventHandler<EventArgs> PlayerPressedFire;
         public event EventHandler<EventArgs> NextWeapon;
@@ -37,7 +36,7 @@ namespace Twengine.SubSystems.Raycast
         private int mScreenHeight;
         private Raycaster mRaycaster;
         private List<Keys> mKeyBuffer;
-        public FPSControlSystem(Raycaster raycaster, int screenWidth, int screenHeight, float mouseSensitivity)
+        public InputHandler(Raycaster raycaster, int screenWidth, int screenHeight, float mouseSensitivity)
             : base()
         {
             mScreenWidth = screenWidth;
@@ -160,7 +159,7 @@ namespace Twengine.SubSystems.Raycast
                     mKeyBuffer.Add(pressedKey);
                 }
             }
-            
+
 
             string bufferString = BuildString(mKeyBuffer);
             //DebugDrawer.DrawString("KeyBuffer: " + bufferString);
@@ -190,7 +189,7 @@ namespace Twengine.SubSystems.Raycast
             StringBuilder sb = new StringBuilder();
             foreach (Keys key in keyBuffer)
             {
-                string s = Enum.GetName(typeof (Keys), key).ToLower();
+                string s = Enum.GetName(typeof(Keys), key).ToLower();
                 if (s.Length == 1)
                     sb.Append(s);
             }
@@ -219,7 +218,7 @@ namespace Twengine.SubSystems.Raycast
         private void OnPlayerChangeWeapon(int weaponIndex)
         {
             if (ChangeWeapon == null) return;
-            ChangeWeapon(this, new ChangeWeaponEventArgs() {WeaponIndex = weaponIndex});
+            ChangeWeapon(this, new ChangeWeaponEventArgs() { WeaponIndex = weaponIndex });
         }
 
         private void OnPlayerNextWeapon()
@@ -262,7 +261,7 @@ namespace Twengine.SubSystems.Raycast
             }
         }
 
-       
+
         private void Move(FPSControl fpsControl, Transform transform, float worldDelta)
         {
             Vector2 movementDir = Vector2.Zero;

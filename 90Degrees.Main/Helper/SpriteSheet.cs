@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace XNAHelper
 {
@@ -26,9 +26,9 @@ namespace XNAHelper
             Texture = texture;
             FrameWidth = frameWidth;
             FrameHeight = frameHeight;
-            mNumberOfFrames = (int) Math.Floor((Texture.Width / (float)FrameWidth) * (Texture.Height / (float)FrameHeight));
+            mNumberOfFrames = (int)Math.Floor((Texture.Width / (float)FrameWidth) * (Texture.Height / (float)FrameHeight));
             mTexData = new Color[Texture.Width * Texture.Height];
-            
+
             texture.GetData(mTexData);
             CreateOpaqueRectangles();
         }

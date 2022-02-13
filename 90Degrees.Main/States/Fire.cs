@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Artemis;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using raycaster.Scripts;
-using Twengine;
-using Twengine.Components;
-using Twengine.Datastructures;
-using Twengine.Helper;
+using System.Collections.Generic;
 using XNAHelper;
 using ActorState = raycaster.Scripts.ActorState;
 
@@ -39,7 +33,7 @@ namespace raycaster.States
             }
         }
 
-        
+
 
         public override string AnimationName
         {
@@ -54,12 +48,12 @@ namespace raycaster.States
         private void StartFire()
         {
             if (FireSoundCues != null)
-                ComponentTwengine.AudioManager.PlayRandomEffect(FireSoundCues.ConvertAll((cue) => { return (int)cue; }));
+                RaycastGame.AudioManager.PlayRandomEffect(FireSoundCues.ConvertAll((cue) => { return (int)cue; }));
             mIsShooting = true;
             OnResetAnimation();
         }
 
-       
+
         private void DealDamage()
         {
             float dist = Vector2.Distance(mTransform.Position, mPlayerTransform.Position);
@@ -92,7 +86,7 @@ namespace raycaster.States
             int rand1 = TwenMath.Random.Next(0, 255);
             int speed = 160;
             int look = 16;
-            return rand1 < (speed - (dist*look));
+            return rand1 < (speed - (dist * look));
         }
 
         private int CalculateDamage(float dist)

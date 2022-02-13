@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using raycaster.States;
 using Twengine.Components;
 using Twengine.Datastructures;
-using Twengine.Helper;
 using Twengine.Scripts;
 
 namespace raycaster.Scripts
@@ -40,7 +36,7 @@ namespace raycaster.Scripts
         {
             mSpriteAnimator = mSelf.GetComponent<SpriteAnimator>();
             mSpriteAnimator.FinishedPlaying += SpriteAnimatorFinishedPlaying;
-            
+
         }
 
         private void SpriteAnimatorFinishedPlaying(object sender, EventArgs e)
@@ -72,7 +68,7 @@ namespace raycaster.Scripts
             mCurrentState.Update();
 
             mCurrentState = mStates[mCurrentState.NextActorState];
-            
+
             if (mCurrentState != mLastState)
             {
                 BeginState();
@@ -87,7 +83,7 @@ namespace raycaster.Scripts
             mSpriteAnimator.ResetAndPlay();
         }
 
-        public string CurrentState { get { return Enum.GetName(typeof (ActorState), mCurrentState.ActorStateType); } }
+        public string CurrentState { get { return Enum.GetName(typeof(ActorState), mCurrentState.ActorStateType); } }
 
         public override string ToString()
         {
@@ -119,7 +115,7 @@ namespace raycaster.Scripts
                 mCurrentState = mStates[ActorState.Chase];
                 BeginState();
             }
-            
+
         }
     }
 }

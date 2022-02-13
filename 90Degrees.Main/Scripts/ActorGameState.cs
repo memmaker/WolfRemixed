@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using Artemis;
+﻿using Artemis;
 using Microsoft.Xna.Framework;
+using System;
 using Twengine.Components;
 using Twengine.Datastructures;
-using Twengine.Helper;
 using XNAHelper;
 
 namespace raycaster.Scripts
@@ -30,9 +25,9 @@ namespace raycaster.Scripts
         public abstract string AnimationName { get; }
         public ActorState NextActorState { get; set; }
         public abstract ActorState ActorStateType { get; }
-        
+
         public bool AttackOnSight { get; set; }
-        
+
         public ActorGameState()
         {
             mFirstTimeInitDone = false;
@@ -49,7 +44,7 @@ namespace raycaster.Scripts
             }
         }
 
-        public virtual void FinishedAnimating() {}
+        public virtual void FinishedAnimating() { }
 
         protected bool EnemyWasWounded()
         {
@@ -68,7 +63,9 @@ namespace raycaster.Scripts
 
         protected bool CanShootAtPlayer()
         {
-            return (mPlayerTransform.IsVisible && PlayerIsInRange(mTransform.Position, mEnemy.FiringRange) && mMap.HasLineOfSight(mTransform.Position, mPlayerTransform.Position, mTransform.Forward, mEnemy.FieldOfView));
+            bool inRange = PlayerIsInRange(mTransform.Position, mEnemy.FiringRange);
+            bool hasLineOfSight = mMap.HasLineOfSight(mTransform.Position, mPlayerTransform.Position, mTransform.Forward, mEnemy.FieldOfView);
+            return (mPlayerTransform.IsVisible && inRange && hasLineOfSight);
         }
         protected void AimAtPlayer()
         {
@@ -85,7 +82,7 @@ namespace raycaster.Scripts
 
         public void Begin(Entity self, Tilemap map)
         {
-            
+
             if (!mFirstTimeInitDone)
             {
                 mSelf = self;
@@ -112,7 +109,7 @@ namespace raycaster.Scripts
 
         public virtual void FirstTimeInit()
         {
-            
+
         }
     }
 

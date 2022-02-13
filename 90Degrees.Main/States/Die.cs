@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using raycaster.Scripts;
-using Twengine;
-using Twengine.Helper;
+using System.Collections.Generic;
 using XNAHelper;
 
 namespace raycaster.States
@@ -32,7 +29,7 @@ namespace raycaster.States
         }
         public override void BeginState()
         {
-            ComponentTwengine.AudioManager.PlayRandomEffect(DyingSoundCues.ConvertAll((cue) => { return (int) cue;}));
+            RaycastGame.AudioManager.PlayRandomEffect(DyingSoundCues.ConvertAll((cue) => { return (int)cue; }));
         }
 
         public List<SoundCue> DyingSoundCues { get; set; }

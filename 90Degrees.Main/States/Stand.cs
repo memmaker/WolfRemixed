@@ -1,12 +1,5 @@
-﻿using System;
+﻿using raycaster.Scripts;
 using System.Collections.Generic;
-using Artemis;
-using Microsoft.Xna.Framework;
-using raycaster.Scripts;
-using Twengine;
-using Twengine.Components;
-using Twengine.Datastructures;
-using Twengine.Helper;
 
 namespace raycaster.States
 {
@@ -28,9 +21,10 @@ namespace raycaster.States
             if ((AttackOnSight && CanDetectPlayer()) || EnemyWasWounded())
             {
                 if (DetectPlayerSoundCues != null)
-                    ComponentTwengine.AudioManager.PlayRandomEffect(DetectPlayerSoundCues.ConvertAll((cue) =>
+                    RaycastGame.AudioManager.PlayRandomEffect(DetectPlayerSoundCues.ConvertAll((cue) =>
                     {
-                        return (int) cue;}));
+                        return (int)cue;
+                    }));
 
                 if (PlayerIsInRange(mTransform.Position, mEnemy.FiringRange))
                 {

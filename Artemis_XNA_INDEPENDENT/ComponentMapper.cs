@@ -38,11 +38,10 @@ namespace Artemis
 {
     #region Using statements
 
-    using global::System;
-    using global::System.Diagnostics;
-
     using Artemis.Interface;
     using Artemis.Manager;
+    using global::System;
+    using global::System.Diagnostics;
 
     #endregion Using statements
 

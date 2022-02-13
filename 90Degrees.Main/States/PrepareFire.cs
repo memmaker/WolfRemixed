@@ -1,10 +1,4 @@
-﻿using System;
-using Artemis;
-using Microsoft.Xna.Framework;
-using raycaster.Scripts;
-using Twengine.Components;
-using Twengine.Datastructures;
-using Twengine.Helper;
+﻿using raycaster.Scripts;
 using ActorState = raycaster.Scripts.ActorState;
 
 namespace raycaster.States

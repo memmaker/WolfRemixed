@@ -1,13 +1,12 @@
-﻿using System;
+﻿using FMOD;
+using Microsoft.Xna.Framework.Audio;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using FMOD;
-using Microsoft.Xna.Framework.Audio;
 
 namespace MP3Player
 {
-    
+
     public class AudioPlayer : IDisposable
     {
         private FMOD.System mSystem = null;
@@ -54,7 +53,7 @@ namespace MP3Player
             ERRCHECK(result);
         }
 
-        
+
         public void UnloadSound(int cue)
         {
             StopAndUnloadSound(mLoadedSounds[cue]);
@@ -68,7 +67,7 @@ namespace MP3Player
         {
             MODE flags;
             if (isStream)
-                flags =(MODE._2D | MODE.HARDWARE | MODE.CREATESTREAM);
+                flags = (MODE._2D | MODE.HARDWARE | MODE.CREATESTREAM);
             else
                 flags = (MODE._2D | MODE.HARDWARE | MODE.CREATESAMPLE);
 
@@ -127,7 +126,7 @@ namespace MP3Player
                 mLoadedSounds[cue].setMode(looping ? MODE.LOOP_NORMAL : MODE.LOOP_OFF);
 
                 RESULT result = mSystem.playSound(CHANNELINDEX.FREE, mLoadedSounds[cue], false, ref channel);
-                
+
                 ERRCHECK(result);
 
                 if (mSoundsOnChannels.ContainsKey(cue))
@@ -150,7 +149,7 @@ namespace MP3Player
                 mCurrentMusicIndex = (mCurrentMusicIndex + 1) % mMusicPlayList.Count;
                 mMusicChannel = PlaySound(mMusicPlayList[mCurrentMusicIndex]);
             }
-            
+
             return RESULT.OK;
         }
 
@@ -165,7 +164,7 @@ namespace MP3Player
 
         public void StopAllSounds()
         {
-            for (int i = mMaxChannels - 1; i >= 0; i-- )
+            for (int i = mMaxChannels - 1; i >= 0; i--)
             {
                 Channel channel = null;
                 mSystem.getChannel(i, ref channel);

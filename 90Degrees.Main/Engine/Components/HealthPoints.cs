@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Artemis;
+﻿using Artemis;
 using Artemis.Interface;
+using System;
 
 namespace Twengine.Components
 {
@@ -27,7 +24,7 @@ namespace Twengine.Components
         public int MaxHealth
         {
             get { return mMaxHealth; }
-            set {  mMaxHealth = value; mHealth = mHealth > mMaxHealth ? mMaxHealth : mHealth; }
+            set { mMaxHealth = value; mHealth = mHealth > mMaxHealth ? mMaxHealth : mHealth; }
         }
 
         private int mHealth;
@@ -81,13 +78,13 @@ namespace Twengine.Components
 
         public void DealDamage(int damage)
         {
-            DealDamage(damage,null);
+            DealDamage(damage, null);
         }
 
         private void OnReceivedDamage(int damage, Entity source)
         {
             if (ReceivedDamage == null) return;
-            ReceivedDamage(this, new DamageEventArgs() {Damage = damage, DamageSource = source});
+            ReceivedDamage(this, new DamageEventArgs() { Damage = damage, DamageSource = source });
         }
 
         private void OnDying(Entity killer)

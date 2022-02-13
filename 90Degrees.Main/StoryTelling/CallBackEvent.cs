@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using XNAGameGui.Gui.Widgets;
+﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace raycaster.StoryTelling
 {
@@ -23,7 +19,7 @@ namespace raycaster.StoryTelling
 
         public override void Update(GameTime gameTime)
         {
-            
+
         }
 
         public override void Begin()
@@ -38,7 +34,7 @@ namespace raycaster.StoryTelling
 
         public override void Reset()
         {
-            
+
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace XNAGameGui.Gui.Widgets
 {
@@ -31,7 +31,7 @@ namespace XNAGameGui.Gui.Widgets
         {
             SpriteFont font = GameGui.Fonts[Font];
             int lineHeight = font.LineSpacing;
-            Bounds = new UniRectangle(0, 0, new UniScalar(1.0f,0), new UniScalar(1.0f,0));
+            Bounds = new UniRectangle(0, 0, new UniScalar(1.0f, 0), new UniScalar(1.0f, 0));
             int i = 0;
             int lastX = 0;
             foreach (string item in mItems)
@@ -58,7 +58,7 @@ namespace XNAGameGui.Gui.Widgets
             if (Buttons.Count > 0)
                 SelectionLeft();
         }
-       
+
         public string GetMouseSelectedItem()
         {
             foreach (KeyValuePair<string, ButtonWidget> buttonWidget in Buttons)
@@ -108,5 +108,5 @@ namespace XNAGameGui.Gui.Widgets
         }
     }
 
-   
+
 }

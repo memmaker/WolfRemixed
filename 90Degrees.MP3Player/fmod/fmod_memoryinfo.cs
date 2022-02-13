@@ -110,32 +110,32 @@ namespace FMOD
         EventSystem::getMemoryInfo
     ]
     */
-    public enum MEMBITS :uint
+    public enum MEMBITS : uint
     {
-        OTHER                     = 0x00000001,               /* Memory not accounted for by other types */
-        STRING                    = 0x00000002,              /* String data */
+        OTHER = 0x00000001,               /* Memory not accounted for by other types */
+        STRING = 0x00000002,              /* String data */
 
-        SYSTEM                    = 0x00000004,              /* System object and various internals */
-        PLUGINS                   = 0x00000008,             /* Plugin objects and internals */
-        OUTPUT                    = 0x00000010,              /* Output module object and internals */
-        CHANNEL                   = 0x00000020,             /* Channel related memory */
-        CHANNELGROUP              = 0x00000040,        /* ChannelGroup objects and internals */
-        CODEC                     = 0x00000080,               /* Codecs allocated for streaming */
-        FILE                      = 0x00000100,                /* Codecs allocated for streaming */
-        SOUND                     = 0x00000200,               /* Sound objects and internals */
-        SOUND_SECONDARYRAM        = 0x00000400,  /* Sound data stored in secondary RAM */
-        SOUNDGROUP                = 0x00000800,          /* SoundGroup objects and internals */
-        STREAMBUFFER              = 0x00001000,        /* Stream buffer memory */
-        DSPCONNECTION             = 0x00002000,       /* DSPConnection objects and internals */
-        DSP                       = 0x00004000,                 /* DSP implementation objects */
-        DSPCODEC                  = 0x00008000,            /* Realtime file format decoding DSP objects */
-        PROFILE                   = 0x00010000,             /* Profiler memory footprint. */
-        RECORDBUFFER              = 0x00020000,        /* Buffer used to store recorded data from microphone */
-        REVERB                    = 0x00040000,              /* Reverb implementation objects */
-        REVERBCHANNELPROPS        = 0x00080000,  /* Reverb channel properties structs */
-        GEOMETRY                  = 0x00100000,            /* Geometry objects and internals */
-        SYNCPOINT                 = 0x00200000,           /* Sync point memory. */
-        ALL                       = 0xffffffff                          /* All memory used by FMOD Ex */
+        SYSTEM = 0x00000004,              /* System object and various internals */
+        PLUGINS = 0x00000008,             /* Plugin objects and internals */
+        OUTPUT = 0x00000010,              /* Output module object and internals */
+        CHANNEL = 0x00000020,             /* Channel related memory */
+        CHANNELGROUP = 0x00000040,        /* ChannelGroup objects and internals */
+        CODEC = 0x00000080,               /* Codecs allocated for streaming */
+        FILE = 0x00000100,                /* Codecs allocated for streaming */
+        SOUND = 0x00000200,               /* Sound objects and internals */
+        SOUND_SECONDARYRAM = 0x00000400,  /* Sound data stored in secondary RAM */
+        SOUNDGROUP = 0x00000800,          /* SoundGroup objects and internals */
+        STREAMBUFFER = 0x00001000,        /* Stream buffer memory */
+        DSPCONNECTION = 0x00002000,       /* DSPConnection objects and internals */
+        DSP = 0x00004000,                 /* DSP implementation objects */
+        DSPCODEC = 0x00008000,            /* Realtime file format decoding DSP objects */
+        PROFILE = 0x00010000,             /* Profiler memory footprint. */
+        RECORDBUFFER = 0x00020000,        /* Buffer used to store recorded data from microphone */
+        REVERB = 0x00040000,              /* Reverb implementation objects */
+        REVERBCHANNELPROPS = 0x00080000,  /* Reverb channel properties structs */
+        GEOMETRY = 0x00100000,            /* Geometry objects and internals */
+        SYNCPOINT = 0x00200000,           /* Sync point memory. */
+        ALL = 0xffffffff                          /* All memory used by FMOD Ex */
     }
 
     /*
@@ -160,40 +160,40 @@ namespace FMOD
         System::getMemoryInfo
     ]
     */
-    public enum EVENT_MEMBITS :uint
+    public enum EVENT_MEMBITS : uint
     {
-        EVENTSYSTEM           = 0x00000001, /* EventSystem and various internals */
-        MUSICSYSTEM           = 0x00000002, /* MusicSystem and various internals */
-        FEV                   = 0x00000004, /* Definition of objects contained in all loaded projects e.g. events, groups, categories */
-        MEMORYFSB             = 0x00000008, /* Data loaded with registerMemoryFSB */
-        EVENTPROJECT          = 0x00000010, /* EventProject objects and internals */
-        EVENTGROUPI           = 0x00000020, /* EventGroup objects and internals */
-        SOUNDBANKCLASS        = 0x00000040, /* Objects used to manage wave banks */
-        SOUNDBANKLIST         = 0x00000080, /* Data used to manage lists of wave bank usage */
-        STREAMINSTANCE        = 0x00000100, /* Stream objects and internals */
-        SOUNDDEFCLASS         = 0x00000200, /* Sound definition objects */
-        SOUNDDEFDEFCLASS      = 0x00000400, /* Sound definition static data objects */
-        SOUNDDEFPOOL          = 0x00000800, /* Sound definition pool data */
-        REVERBDEF             = 0x00001000, /* Reverb definition objects */
-        EVENTREVERB           = 0x00002000, /* Reverb objects */
-        USERPROPERTY          = 0x00004000, /* User property objects */
-        EVENTINSTANCE         = 0x00008000, /* Event instance base objects */
+        EVENTSYSTEM = 0x00000001, /* EventSystem and various internals */
+        MUSICSYSTEM = 0x00000002, /* MusicSystem and various internals */
+        FEV = 0x00000004, /* Definition of objects contained in all loaded projects e.g. events, groups, categories */
+        MEMORYFSB = 0x00000008, /* Data loaded with registerMemoryFSB */
+        EVENTPROJECT = 0x00000010, /* EventProject objects and internals */
+        EVENTGROUPI = 0x00000020, /* EventGroup objects and internals */
+        SOUNDBANKCLASS = 0x00000040, /* Objects used to manage wave banks */
+        SOUNDBANKLIST = 0x00000080, /* Data used to manage lists of wave bank usage */
+        STREAMINSTANCE = 0x00000100, /* Stream objects and internals */
+        SOUNDDEFCLASS = 0x00000200, /* Sound definition objects */
+        SOUNDDEFDEFCLASS = 0x00000400, /* Sound definition static data objects */
+        SOUNDDEFPOOL = 0x00000800, /* Sound definition pool data */
+        REVERBDEF = 0x00001000, /* Reverb definition objects */
+        EVENTREVERB = 0x00002000, /* Reverb objects */
+        USERPROPERTY = 0x00004000, /* User property objects */
+        EVENTINSTANCE = 0x00008000, /* Event instance base objects */
         EVENTINSTANCE_COMPLEX = 0x00010000, /* Complex event instance objects */
-        EVENTINSTANCE_SIMPLE  = 0x00020000, /* Simple event instance objects */
-        EVENTINSTANCE_LAYER   = 0x00040000, /* Event layer instance objects */
-        EVENTINSTANCE_SOUND   = 0x00080000, /* Event sound instance objects */
-        EVENTENVELOPE         = 0x00100000, /* Event envelope objects */
-        EVENTENVELOPEDEF      = 0x00200000, /* Event envelope definition objects */
-        EVENTPARAMETER        = 0x00400000, /* Event parameter objects */
-        EVENTCATEGORY         = 0x00800000, /* Event category objects */
-        EVENTENVELOPEPOINT    = 0x01000000, /* Event envelope point objects */
-        EVENTINSTANCEPOOL     = 0x02000000, /* Event instance pool data */
-        ALL                   = 0xffffffff, /* All memory used by FMOD Event System */
+        EVENTINSTANCE_SIMPLE = 0x00020000, /* Simple event instance objects */
+        EVENTINSTANCE_LAYER = 0x00040000, /* Event layer instance objects */
+        EVENTINSTANCE_SOUND = 0x00080000, /* Event sound instance objects */
+        EVENTENVELOPE = 0x00100000, /* Event envelope objects */
+        EVENTENVELOPEDEF = 0x00200000, /* Event envelope definition objects */
+        EVENTPARAMETER = 0x00400000, /* Event parameter objects */
+        EVENTCATEGORY = 0x00800000, /* Event category objects */
+        EVENTENVELOPEPOINT = 0x01000000, /* Event envelope point objects */
+        EVENTINSTANCEPOOL = 0x02000000, /* Event instance pool data */
+        ALL = 0xffffffff, /* All memory used by FMOD Event System */
 
         /* All event instance memory */
-        EVENTINSTANCE_GROUP   = (EVENTINSTANCE | EVENTINSTANCE_COMPLEX | EVENTINSTANCE_SIMPLE | EVENTINSTANCE_LAYER | EVENTINSTANCE_SOUND),
+        EVENTINSTANCE_GROUP = (EVENTINSTANCE | EVENTINSTANCE_COMPLEX | EVENTINSTANCE_SIMPLE | EVENTINSTANCE_LAYER | EVENTINSTANCE_SOUND),
 
         /* All sound definition memory */
-        SOUNDDEF_GROUP        = (SOUNDDEFCLASS | SOUNDDEFDEFCLASS | SOUNDDEFPOOL)
+        SOUNDDEF_GROUP = (SOUNDDEFCLASS | SOUNDDEFDEFCLASS | SOUNDDEFPOOL)
     }
 }

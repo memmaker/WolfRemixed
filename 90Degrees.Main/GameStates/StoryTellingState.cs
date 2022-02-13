@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Engine.GameStates;
+﻿using Engine.GameStates;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using raycaster.StoryTelling;
-using Twengine.Helper;
-using XNAGameGui.Gui.Widgets;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace raycaster.GameStates
 {
@@ -32,7 +28,7 @@ namespace raycaster.GameStates
             mSourceEvents = events;
             mEventQueue = new Queue<StoryTellingEvent>();
             mDeferredEndEvents = new List<StoryTellingEvent>();
-            
+
         }
 
         protected override void OnEntered()
@@ -42,7 +38,7 @@ namespace raycaster.GameStates
                 storyTellingEvent.Reset();
                 mEventQueue.Enqueue(storyTellingEvent);
             }
-            
+
             Debug.Assert(mEventQueue.Count > 0);
             mCurrentEvent = mEventQueue.Dequeue();
             mCurrentEvent.Begin();
@@ -61,7 +57,7 @@ namespace raycaster.GameStates
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
-            
+
             if (keyboardState.IsKeyDown(Keys.Escape) && mLastKeyboardState.IsKeyUp(Keys.Escape))
                 mStateManager.Push(new EscapeMenuState(mStateManager));
 
@@ -106,9 +102,9 @@ namespace raycaster.GameStates
                 mCurrentEvent.End();
             else
                 mDeferredEndEvents.Add(mCurrentEvent);
-            
+
             Debug.Assert(mEventQueue.Count != 0);
-            
+
             mCurrentEvent = mEventQueue.Dequeue();
             mCurrentEvent.Begin();
         }

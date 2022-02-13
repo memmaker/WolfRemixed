@@ -1,5 +1,11 @@
 ﻿namespace raycaster
 {
+    public static class Const
+    {
+        public const int InternalRenderResolutionWidth = 640;
+        public const int InternalRenderResolutionHeight = 360;
+    }
+
     public enum AnimationCue
     {
     }

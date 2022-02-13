@@ -1,17 +1,12 @@
-﻿using System;
-using Artemis;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using raycaster.Scripts;
-using Twengine.Components;
-using Twengine.Datastructures;
-using Twengine.Helper;
 using XNAHelper;
 
 namespace raycaster.States
 {
     public class Path : ActorGameState
     {
-        
+
 
         public override string AnimationName
         {

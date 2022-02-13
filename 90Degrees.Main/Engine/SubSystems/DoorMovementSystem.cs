@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Artemis;
+﻿using Artemis;
 using Artemis.System;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Twengine.Components;
 using Twengine.Datastructures;
-using Twengine.Helper;
 using XNAHelper;
 
 namespace Twengine.SubSystems
@@ -25,7 +22,7 @@ namespace Twengine.SubSystems
         public override void Process(Entity e, Door door, Transform transform)
         {
             float doorSpeed = 1f;
-            
+
             if (door.StartAnimating)   // we need to start animating..
             {
                 door.StartAnimating = false;
@@ -34,13 +31,13 @@ namespace Twengine.SubSystems
                 else
                     door.IsOpening = true;
             }
-            
+
             if ((door.IsOpening && TwenMath.IsAtPosition(transform.Position, door.OpenPosition, 0.01f)) || (door.IsClosing && TwenMath.IsAtPosition(transform.Position, door.SpawnPos, 0.01f))) // we have a target and are not there..
             {
                 StopAnimating(door);
                 return;
             }
-            
+
             if (door.IsOpening)
             {
                 MoveDoorTowardsPosition(transform, door.OpenPosition, doorSpeed);
@@ -49,7 +46,7 @@ namespace Twengine.SubSystems
             {
                 MoveDoorTowardsPosition(transform, door.SpawnPos, doorSpeed);
             }
-            
+
             if (door.CloseTimer > 0)
             {
                 CheckForAutomatedClose(door, transform);
@@ -65,7 +62,7 @@ namespace Twengine.SubSystems
             int x = (int)transform.OldPosition.X;
 
             List<Entity> entitiesOnCell = mTilemap.Entities[y, x];
-         
+
             if (entitiesOnCell.Count > 0)
                 door.ResetCloseTimer();
             else if (door.CloseTimer < 0)
@@ -74,7 +71,7 @@ namespace Twengine.SubSystems
             }
         }
 
-        
+
 
         private void StopAnimating(Door door)
         {

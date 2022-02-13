@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace XNAHelper
 {
@@ -29,7 +29,7 @@ namespace XNAHelper
 
         public static Point Add(Point myPoint, Point otherPoint)
         {
-            return new Point(myPoint.X+otherPoint.X,myPoint.Y+otherPoint.Y);
+            return new Point(myPoint.X + otherPoint.X, myPoint.Y + otherPoint.Y);
         }
     }
 

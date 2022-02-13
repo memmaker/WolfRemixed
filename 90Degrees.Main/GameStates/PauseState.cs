@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Artemis;
-using Engine.GameStates;
+﻿using Engine.GameStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Twengine.Helper;
 using XNAGameGui.Gui.Widgets;
 
 namespace raycaster.GameStates

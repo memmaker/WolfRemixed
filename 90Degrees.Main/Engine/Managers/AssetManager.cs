@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.IO;
 using Twengine.Components;
-using Twengine.Helper;
 using XNAHelper;
 
 
@@ -88,7 +86,7 @@ namespace Twengine.Managers
 
         public SpriteSheet LoadSpriteSheet(string assetname, int frameWidth, int frameHeight)
         {
-            
+
             if (!mSpriteSheetCache.ContainsKey(assetname))
             {
                 mSpriteSheetCache.Add(assetname, new SpriteSheet(LoadTexture(assetname), frameWidth, frameHeight));

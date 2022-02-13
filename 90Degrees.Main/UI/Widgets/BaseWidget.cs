@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace XNAGameGui.Gui.Widgets
 {
@@ -10,7 +9,7 @@ namespace XNAGameGui.Gui.Widgets
         protected List<BaseWidget> mChildren;
         public virtual UniRectangle Bounds { get; set; }
         public BaseWidget Parent { get; set; }
-        
+
 
         public BaseWidget()
         {
@@ -40,7 +39,7 @@ namespace XNAGameGui.Gui.Widgets
         {
             if (Parent == null)
                 return new Vector2(Bounds.Size.X.Offset, Bounds.Size.Y.Offset);
-            
+
             Vector2 parentAbsolutSize = Parent.GetAbsoluteSize();
             return new Vector2((Bounds.Size.X.Fraction * parentAbsolutSize.X) + Bounds.Size.X.Offset, (Bounds.Size.Y.Fraction * parentAbsolutSize.Y) + Bounds.Size.Y.Offset);
         }
@@ -76,14 +75,14 @@ namespace XNAGameGui.Gui.Widgets
         {
             Parent.RemoveChild(this);
             Parent = null;
-            for (int i = mChildren.Count - 1; i >= 0; i--)   
+            for (int i = mChildren.Count - 1; i >= 0; i--)
             {
                 mChildren[i].Destroy();
             }
             mChildren.Clear();
         }
 
-        
+
     }
-    
+
 }

@@ -1,14 +1,11 @@
-﻿using System;
+﻿using raycaster.Scripts;
 using System.Collections.Generic;
-using raycaster.Scripts;
-using Twengine;
-using Twengine.Helper;
 
 namespace raycaster.States
 {
     public class Pain : ActorGameState
     {
-        
+
         public override string AnimationName
         {
             get { return "Hit"; }
@@ -29,7 +26,7 @@ namespace raycaster.States
         public override void BeginState()
         {
             NextActorState = ActorState.Pain;
-            ComponentTwengine.AudioManager.PlayRandomEffect(PainSoundCues.ConvertAll<int>((cue) => { return (int)cue; }));
+            RaycastGame.AudioManager.PlayRandomEffect(PainSoundCues.ConvertAll<int>((cue) => { return (int)cue; }));
         }
 
         public List<SoundCue> PainSoundCues { get; set; }

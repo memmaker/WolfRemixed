@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Artemis;
-using Artemis.Manager;
-using Engine.GameStates;
+﻿using Engine.GameStates;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using TurnBasedCombat.GameStates;
-using Twengine;
 using Twengine.Managers;
-using Twengine.SubSystems.Raycast;
 using XNAGameGui.Gui;
 using XNAGameGui.Gui.Widgets;
 
@@ -16,23 +10,11 @@ namespace raycaster.GameStates
 {
     public class OptionsMenuState : MenuGameState
     {
-        private readonly EntityWorld mWorld;
-        private readonly SystemManager mSystemManager;
-        private readonly GameStateManager mStateManager;
-        private readonly FPSControlSystem mFPSControl;
-        private readonly SpriteBatch mSpriteBatch;
         private Point[] mResolutions;
-        private ButtonWidget mResolutionButton;
-        private ButtonWidget mFullscreenButton;
 
-        public OptionsMenuState(EntityWorld world, SystemManager systemManager, GameStateManager stateManager, FPSControlSystem fpsControl, SpriteBatch spriteBatch)
+        public OptionsMenuState(GameStateManager stateManager)
             : base(stateManager)
         {
-            mWorld = world;
-            mSystemManager = systemManager;
-            mStateManager = stateManager;
-            mFPSControl = fpsControl;
-            mSpriteBatch = spriteBatch;
 
             mResolutions = new Point[5];
             mResolutions[0] = new Point(320, 180);
@@ -59,7 +41,7 @@ namespace raycaster.GameStates
                 case "Fullscreen":
                     break;
                 case "Apply":
-                    RaycastGame.ChangeResolution(mResolutions[mResolutionButton.Counter].X, mResolutions[mResolutionButton.Counter].Y, IntToBool(mFullscreenButton.Counter));
+                    //RaycastGame.ChangeResolution(mResolutions[mResolutionButton.Counter].X, mResolutions[mResolutionButton.Counter].Y, IntToBool(mFullscreenButton.Counter));
                     break;
                 case "Back":
                     mGameStateManager.Pop();
@@ -78,21 +60,12 @@ namespace raycaster.GameStates
                 Background = AssetManager.Default.LoadTexture("Menu/options_widescreen.png"),
                 DrawLabelBackground = true
             };
-            foreach (ButtonWidget button in mMenu.Buttons.Values)
+            foreach (ButtonWidget button in mMenu.Buttons)
             {
                 button.LabelColor = new Color(55, 55, 55);
                 button.SelectionColor = new Color(103, 84, 15);
             }
 
-            mResolutionButton = mMenu.Buttons["Resolution"];
-            mResolutionButton.AppendCounter = true;
-            mResolutionButton.SetCounterBounds(0,4);
-            mResolutionButton.CounterToStringFunction = ResolutionChoices;
-
-            mFullscreenButton = mMenu.Buttons["Fullscreen"];
-            mFullscreenButton.AppendCounter = true;
-            mFullscreenButton.SetCounterBounds(0, 1);
-            mFullscreenButton.CounterToStringFunction = FullscreenChoices;
 
             ReadConfigSettings();
             GameGui.RootWidget.AddChild(mMenu);
@@ -107,8 +80,7 @@ namespace raycaster.GameStates
             int height = int.Parse(RaycastGame.Config.AppSettings.Settings["ScreenHeight"].Value);
             bool secretWallsVisible = bool.Parse(RaycastGame.Config.AppSettings.Settings["SecretWallsVisible"].Value);
 
-            mFullscreenButton.Counter = fullscreen ? 1 : 0;
-            mResolutionButton.Counter = FindResolutionIndex(width, height);
+
         }
 
         private int FindResolutionIndex(int width, int height)
@@ -143,7 +115,7 @@ namespace raycaster.GameStates
         protected override void OnLeaving()
         {
             base.OnLeaving();
-            
+
             //mMainScreen.Desktop.Children.Remove(mMenu);
             //mGui.RootWidget.RemoveChild(mMenu);
             mMenu.Destroy();

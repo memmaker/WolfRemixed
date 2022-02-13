@@ -1,7 +1,4 @@
-﻿using Artemis.Utils;
-using System;
-
-namespace Twengine.Helper
+﻿namespace Twengine.Helper
 {
     public class CallbackTimer
     {

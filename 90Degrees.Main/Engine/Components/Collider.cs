@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Artemis;
+﻿using Artemis;
 using Artemis.Interface;
-using Twengine.SubSystems;
+using System;
 
 namespace Twengine.Components
 {
@@ -37,7 +35,7 @@ namespace Twengine.Components
         public void OnCollisionWithEntity(Entity collidingEntity)
         {
             if (CollidedWithEntity == null) return;
-            CollisionEventArgs collisionArgs = new CollisionEventArgs {CollidingEntity = collidingEntity};
+            CollisionEventArgs collisionArgs = new CollisionEventArgs { CollidingEntity = collidingEntity };
             CollidedWithEntity(this, collisionArgs);
         }
 
