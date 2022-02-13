@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using Degrees.Main.UI;
 using Twengine.Components;
@@ -677,14 +678,16 @@ namespace raycaster
                 }
 
             }
-
-            /*
             if (mTilemap.MessageTriggers.ContainsKey(mPlayerTransform.LastCellPosition))
             {
+                var entitiesOnTile = mTilemap.Entities[mPlayerTransform.LastCellPosition.Y,
+                    mPlayerTransform.LastCellPosition.X];
+                var nonActorsOnTile = entitiesOnTile.SkipWhile(e => e.Group == "Player" || e.Group == "Enemy");
+                if (nonActorsOnTile.Any()) return;
+                
                 ShowMessageStory(mTilemap.MessageTriggers[mPlayerTransform.LastCellPosition]);
                 mTilemap.MessageTriggers.Remove(mPlayerTransform.LastCellPosition);
             }
-             */
         }
 
 
