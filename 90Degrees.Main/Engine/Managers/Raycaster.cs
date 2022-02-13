@@ -7,6 +7,9 @@ using Twengine.Components.Meta;
 using Twengine.Datastructures;
 using XNAHelper;
 
+// TODO: Add Push Walls and more from here:
+// https://lodev.org/cgtutor/raycasting4.html#Secrets
+
 namespace Twengine.Managers
 {
     public enum WallSide
@@ -530,6 +533,7 @@ namespace Twengine.Managers
 
 
                     //Check if ray has hit a wall
+                    // TODO: Idea - Decide on a wall depending on the part we hit
                     if (mMap[mapY, mapX] > -1)
                     {
                         wallHit = true;
@@ -569,6 +573,7 @@ namespace Twengine.Managers
 
                 //Calculate distance projected on camera direction (oblique distance will give fisheye effect!)
 
+                // TODO: Idea - What happens when we change this?
                 perpObstacleDist = GetPerpWallDist(rayDirX, rayDirY, mapX, mapY, side);
 
                 mZBuffer[x] = perpObstacleDist;
