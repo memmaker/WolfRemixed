@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Microsoft.Xna.Framework.Graphics;
+using raycaster;
 using Twengine.Components;
 using Twengine.Components.Meta;
 using Twengine.Datastructures;
@@ -52,6 +55,8 @@ namespace Twengine.Managers
         private int mMapHeight;
         private double[] mZBuffer;
         private List<Entity> mVisibleEntities;
+        private Color[] mFrameBuffer = new Color[Const.InternalRenderResolutionHeight * Const.InternalRenderResolutionWidth];
+
         public BasicRaycastHitInfo[] LastHits { get; set; }
         public Point TargetedWall { get; set; }
 
@@ -110,6 +115,8 @@ namespace Twengine.Managers
             Camera = new Camera(startPos, fov, viewDir);
 
             Resolution = 1;
+
+            
 
         }
         
@@ -538,7 +545,7 @@ namespace Twengine.Managers
                     {
                         wallHit = true;
                     }
-
+                   
 
                     if (!obstructing)
                     {
@@ -562,7 +569,7 @@ namespace Twengine.Managers
                     break;
                 }
                 
-                if (x == ScreenWidth / 2)
+                if (x == ScreenWidth / 2) // For Game use, targeting ray
                 {
                     if (!doorHit)
                     {
@@ -585,9 +592,9 @@ namespace Twengine.Managers
 
                 //calculate lowest and highest pixel to fill in current stripe
 
-                int drawStart = (int)(-lineHeight / 2 + ((ScreenHeight / 2) + (Camera.EyeHeight / perpObstacleDist)));
+                int drawStart = (int)(-lineHeight / 2.0f + ((ScreenHeight / 2.0f) + (Camera.EyeHeight / perpObstacleDist)));
                 int realDrawStart = drawStart;
-                int drawEnd = (int)(lineHeight / 2 + ((ScreenHeight / 2) + (Camera.EyeHeight / perpObstacleDist)));
+                int drawEnd = (int)(lineHeight / 2.0f + ((ScreenHeight / 2.0f) + (Camera.EyeHeight / perpObstacleDist)));
                 int realHeight = drawEnd - drawStart;
                 if (drawStart < 0 && drawEnd >= ScreenHeight)
                 {
@@ -670,6 +677,7 @@ namespace Twengine.Managers
             {
                 perpWallDist = Math.Abs((mapY - Camera.Position.Y + (1 - stepY) / 2.0) / rayDirY);
             }
+            
             return perpWallDist;
         }
 
@@ -781,6 +789,78 @@ namespace Twengine.Managers
 
             InitMapArrays();
             InitLastHitsAndTargetedEntities();
+        }
+
+        public Color[] FloorCasting()
+        {
+            Color[] texDataFloor = mTilemap.WallTextures.GetFrameData(36);
+            Color[] texDataCeil = mTilemap.WallTextures.GetFrameData(12);
+
+            int screenHeight = Const.InternalRenderResolutionHeight;
+            int screenWidth = Const.InternalRenderResolutionWidth;
+            int texWidth = 64;
+            int texHeight = 64;
+            int h = screenHeight;
+
+            //FLOOR CASTING
+            for (int y = 0; y < h; y++)
+            {
+                
+                // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
+                float rayDirX0 = Camera.Direction.X - Camera.ProjectionPlane.X;
+                float rayDirY0 = Camera.Direction.Y - Camera.ProjectionPlane.Y;
+                float rayDirX1 = Camera.Direction.X + Camera.ProjectionPlane.X;
+                float rayDirY1 = Camera.Direction.Y + Camera.ProjectionPlane.Y;
+                
+                // Current y position compared to the center of the screen (the horizon)
+                int p = y - screenHeight / 2;
+
+                // Vertical position of the camera.
+                float posZ = 0.5f * screenHeight;
+
+                // Horizontal distance from the camera to the floor for the current row.
+                // 0.5 is the z position exactly in the middle between floor and ceiling.
+                float rowDistance = posZ / p;
+                
+                // calculate the real world step vector we have to add for each x (parallel to camera plane)
+                // adding step by step avoids multiplications with a weight in the inner loop
+                float du = rowDistance * (rayDirX1 - rayDirX0) / screenWidth;
+                float dv = rowDistance * (rayDirY1 - rayDirY0) / screenWidth;
+
+                // real world coordinates of the leftmost column. This will be updated as we step to the right.
+                float gu = Camera.Position.X + rowDistance * rayDirX0;
+                float gv = Camera.Position.Y + rowDistance * rayDirY0;
+                
+                for (int x = 0; x < screenWidth; ++x)
+                {
+                    // the cell coord is simply got from the integer parts of floorX and floorY
+                    int cellX = (int)(gu);
+                    int cellY = (int)(gv);
+
+                    // get the texture coordinate from the fractional part
+                    float uFraction = (gu - cellX);
+                    float vFraction = (gv - cellY);
+                    int u = (int)(texWidth * uFraction) & (texWidth - 1);
+                    int v = (int)(texHeight * vFraction) & (texHeight - 1);
+                    
+
+                    gu += du; // gu += du
+                    gv += dv;
+
+                    int colorTexIndex = texWidth * v + u;
+                    Color pixelColorFloor = texDataFloor[colorTexIndex];
+                    Color pixelColorCeiling = texDataCeil[colorTexIndex];
+
+                    var floorBufferIndex = y * Const.InternalRenderResolutionWidth + x;
+                    var ceilingBufferIndex = (screenHeight - y - 1) * Const.InternalRenderResolutionWidth + x;
+
+                    mFrameBuffer[floorBufferIndex] = pixelColorFloor;
+                    mFrameBuffer[ceilingBufferIndex] = pixelColorCeiling;
+                    
+                }
+            }
+
+            return mFrameBuffer;
         }
 
     }

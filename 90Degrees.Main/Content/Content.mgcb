@@ -159,6 +159,11 @@
 /processor:TiledMapProcessor
 /build:Maps/map1.tmx
 
+#begin Maps/testmap.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Maps/testmap.tmx
+
 #begin Maps/wolfenemies_sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -209,7 +209,7 @@ namespace raycaster
             mHiddenMonsters = new HashSet<Entity>();
             mTimers = new List<CallbackTimer>();
 
-            mMapList = new[] { "map1" };//,"map02.txt"};
+            mMapList = new[] { "map1", "testmap", "map1" };//,"map02.txt"};
             mCurrentMapIndex = 0;
 
             PlayerAmmo = 0;

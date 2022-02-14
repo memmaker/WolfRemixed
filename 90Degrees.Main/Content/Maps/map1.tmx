@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" infinite="0" nextlayerid="10" nextobjectid="37">
- <tileset firstgid="1" name="Enemies" tilewidth="64" tileheight="64" tilecount="42" columns="7">
-  <image source="wolfenemies_sheet.png" width="448" height="384"/>
- </tileset>
- <tileset firstgid="43" name="MetaSheet" tilewidth="64" tileheight="64" tilecount="9" columns="3">
-  <image source="../Icons/meta_sheet.png" width="192" height="192"/>
- </tileset>
- <tileset firstgid="52" name="WallTextures" tilewidth="64" tileheight="64" tilecount="90" columns="10">
-  <image source="wolfwalls_sheet.png" width="640" height="576"/>
- </tileset>
- <tileset firstgid="142" name="WolfItems" tilewidth="64" tileheight="64" tilecount="120" columns="12">
-  <image source="wolfitems_sheet_ext.png" width="768" height="640"/>
- </tileset>
+ <tileset firstgid="1" source="TileSets/Enemies.tsx"/>
+ <tileset firstgid="43" source="TileSets/MetaSheet.tsx"/>
+ <tileset firstgid="52" source="TileSets/WallTextures.tsx"/>
+ <tileset firstgid="142" source="TileSets/WolfItems.tsx"/>
  <layer id="1" name="Walls" width="64" height="64">
   <data encoding="base64" compression="zlib">
    eJztmVtv1DAQRv2jtmKFUFcUxFMrFSi3LbxQCdFyEfCA1D7yy6nVjDQMM+NvbCebhRxptIntJjmZ2HHclBYWFhYWFhbG5mFFTM2hET2I+uzKHynjdWjU+E/9PFj+1j2IPBut+d+Vf025xjp4LbK95n9diC8sPoh9jTH9x8j/deEYX41yz1/GxihP6W//qfv/GP4Inr9Fjf/VsH1ltOH+uc130XZMf21c9N6Z1jt+7dSRy4VxHdz/Qvxmxs5/bX2m1L8v2Taa/x9pmvyXxvIe/h/ZNuKvsc/5z3DvTyJ+pjb/lrkuMt8rEfWvgd71n9Of737y50T9jwKhMYW/5IZto+/utVFueUlyO+T7TivP/vK5jzz/kpJ/aR/Jq4T8iW+F9pF5Qqu/zG8S9XIfdeZI/0j+S0T9f7HtjajbKCHrHwHnkPdI808J6/8lWvKv+Xn7SP6PxC9t74O/JOqv5Z1CG/d6+N9UBFGbf4qzIV7fxuNh+81tvBjavxrKLHaxvsFB+r/3/nsJnKPkL79/WjkAI6P5R+Y/z4B2z1Nsfti6/npQbtLN38stcRY4pnculCn9tyzO090YcC7Kt4FjeudaDYE+2x6Wv1VmXdMWaPcutftnVmC7Vn90jTY7vQXbovfUA70upN2S/zt69/8nafz+r92HXv0/+v1/LCIpZceBY3rnIqSjtl+ip38J8u/5/vd8e/ij6x+ovxWUuzXbfg9Eyb92/hddD0H8Lcifk/s2OWog/iV4e83f+/7v6X+abH+Psf1ToP4keG7O09TPPxpEzfc/Zy75517erzxfa/7H6v8e0j8p+xaIf7T/U5wMv6fgfk9/dG6M+FNY/rWBXM+u81+LN2fKdQ+MuhZ/a1xr6f+1eM8f1d1X6nr7R9cG9jX/LcGx1jtrwvtbC60fI9fN70WEaHtOziF34dsbo5zjPZO5j3jrWy3Xzak9DvVd3s+1e+Hl2/puR9rMMf8c5HnX3OS4qY2jc/HPeH29RGv+I+OCRY9+ZI0BJTQ3WabNY+aU/0ytP/I+ttrMzb/X/6WQeezc/GvR3JDxz1v33nf//y3//0L/91g5EV2nI/bJ/55Th/7/SjK397+H59iSf4s5+nvPf49vdk7r9+9vXsEdvA==

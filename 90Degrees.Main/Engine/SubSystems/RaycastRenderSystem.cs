@@ -24,7 +24,7 @@ namespace Twengine.SubSystems.Raycast
 
         private int mRaycasterResolutionX = Const.InternalRenderResolutionWidth;
         private int mRaycasterResolutionY = Const.InternalRenderResolutionHeight;
-
+        private Color[] mBackgroundData;
         private BasicRaycastHitInfo[] mWallInfos;
         private List<Entity> mVisibleEntities;
 
@@ -169,41 +169,35 @@ namespace Twengine.SubSystems.Raycast
 
         protected void Draw()
         {
+            mBackgroundData = Raycaster.FloorCasting();
+
             mWallInfos = Raycaster.Raycasting();
 
             mVisibleEntities = Raycaster.SpriteRaycasting();
 
-            DrawScreenView(mWallInfos, mVisibleEntities);
-
-
+            DrawScreenView(mBackgroundData, mWallInfos, mVisibleEntities);
         }
 
         public int PlayerAmmo { get; set; }
 
         public int PlayerHealth { get; set; }
 
-        private void DrawScreenView(BasicRaycastHitInfo[] raycastHitInfos, List<Entity> sprites)
+        private void DrawScreenView(Color[] backgroundData, BasicRaycastHitInfo[] raycastHitInfos, List<Entity> sprites)
         {
+
             mGraphicsDevice.SetRenderTarget(mThreeDeeView);
+
+            mThreeDeeView.SetData(backgroundData);
+
             mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
-            //mSpriteBatch.Begin();
-
-            mSpriteBatch.Draw(mFloorTexture, mFloor, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);  // draw floor
-            mSpriteBatch.Draw(mCeilingTexture, mCeiling, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);  // draw floor
-
+ 
             DrawWalls(raycastHitInfos);
 
             DrawSprites(sprites);
-
-            // draw weapon
-            //mSpriteBatch.Draw(mWeaponTextures[0], new Vector2((mRaycasterResolutionX / 2) + 100, mRaycasterResolutionY + 20), null, Color.White, 0f, new Vector2(mWeaponTextures[0].Width, mWeaponTextures[0].Height), 1f, SpriteEffects.None, 0.2f);
-
+            
             DrawFlashScreen();
 
             mSpriteBatch.End();
-
-
-
         }
 
         private void DrawFlashScreen()

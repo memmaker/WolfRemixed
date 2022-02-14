@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="1">
+ <tileset firstgid="1" source="TileSets/WallTextures.tsx"/>
+ <tileset firstgid="91" source="TileSets/MetaSheet.tsx"/>
+ <tileset firstgid="100" source="TileSets/Enemies.tsx"/>
+ <tileset firstgid="142" source="TileSets/WolfItems.tsx"/>
+ <layer id="1" name="Walls" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt0jEKACEMBECtLe7/v7UVCw8i3MEyAynCNm6wNQAAAAAAAAAAAAAAAG6MZZ5tHz++6yu9mKXQv5al0L+WpdD/nKXf4K2f/tn8/1qWQv/zcGcCN5IAfw==
+  </data>
+ </layer>
+ <layer id="2" name="MetaInfo" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztz7EJACAMBMBM4ITuP4d9CosgiPEOAoFv/iMAAAAAAAAAAAAAAM4Y6c/X3W7rL/srWRf21zKgl3m7AAAAPG4BBxwBPQ==
+  </data>
+ </layer>
+ <layer id="3" name="Enemies" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztzgEJAAAIA7CnN7cpjghbgiUAAAAAAAAAAAAAANAx1wEAAACARxZOTwCH
+  </data>
+ </layer>
+ <layer id="4" name="Items" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztzgEJAAAIA7D372BXSxxE2BIsAQAAAAAAAAAAAAAAAACgZa4DALy1F/AAng==
+  </data>
+ </layer>
+ <objectgroup id="5" name="Objects"/>
+</map>

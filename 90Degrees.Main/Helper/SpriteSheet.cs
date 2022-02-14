@@ -137,7 +137,7 @@ namespace XNAHelper
             return new Rectangle(x, y, FrameWidth, FrameHeight);
         }
 
-        public Color[] GetFramaData(int index)
+        public Color[] GetFrameData(int index)
         {
             int framesX = Texture.Width / FrameWidth;
             int x = (index % framesX) * FrameWidth;
