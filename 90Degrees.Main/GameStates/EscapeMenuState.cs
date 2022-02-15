@@ -30,7 +30,7 @@ namespace raycaster.GameStates
                     mGameStateManager.Pop();
                     break;
                 case "Options":
-
+                    mGameStateManager.Push(new OptionsMenuState(mStateManager));
                     break;
                 case "Quit to mainmenu":
                     mGameStateManager.Pop();

@@ -1,0 +1,1 @@
+ffmpeg -i %~n1.mp3 -ar 44100 -b:a 128k -c:a libvorbis -q:a 10 %~n1.ogg

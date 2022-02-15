@@ -5,8 +5,6 @@ namespace XNAGameGui.Gui.Widgets
 {
     public delegate string CounterToString(int counter);
 
-
-
     public class ButtonWidget : LabelWidget
     {
         private int mCounterMax;
@@ -54,7 +52,6 @@ namespace XNAGameGui.Gui.Widgets
         public CounterToString CounterToStringFunction { get; set; }
 
         public string Suffix { get; set; }
-
 
         public ButtonWidget() : base()
         {

@@ -230,20 +230,35 @@
 #begin Menu/titlescreen_widescreen.png
 /copy:Menu/titlescreen_widescreen.png
 
-#begin Music/Wolfenstein/wolfintro.mp3
-/copy:Music/Wolfenstein/wolfintro.mp3
+#begin Music/Wolfenstein/wolfintro.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfintro.ogg
 
-#begin Music/Wolfenstein/wolfmenu.mp3
-/copy:Music/Wolfenstein/wolfmenu.mp3
+#begin Music/Wolfenstein/wolfmenu.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfmenu.ogg
 
-#begin Music/Wolfenstein/wolfplay01.mp3
-/copy:Music/Wolfenstein/wolfplay01.mp3
+#begin Music/Wolfenstein/wolfplay01.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfplay01.ogg
 
-#begin Music/Wolfenstein/wolfplay02.mp3
-/copy:Music/Wolfenstein/wolfplay02.mp3
+#begin Music/Wolfenstein/wolfplay02.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfplay02.ogg
 
-#begin Music/Wolfenstein/wolfplay03.mp3
-/copy:Music/Wolfenstein/wolfplay03.mp3
+#begin Music/Wolfenstein/wolfplay03.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfplay03.ogg
 
 #begin SoundEffects/Narrator/doublekill.wav
 /copy:SoundEffects/Narrator/doublekill.wav

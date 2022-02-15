@@ -15,9 +15,12 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using Degrees.Main.Engine.Managers;
 using Degrees.Main.UI;
+using Microsoft.Xna.Framework.Media;
 using Twengine.Components;
 using Twengine.Components.Meta;
 using Twengine.Datastructures;
@@ -76,9 +79,7 @@ namespace raycaster
         private static InputHandler mInputHandler;
         
         private SpriteFont mLongTextFont;
-
-        private bool mFullscreen;
-        private float mMouseSensitivity;
+        
         private static HashSet<Entity> mEnergyBarriers;
         private static HashSet<Entity> mEnergyReactorsAlive;
         private static HashSet<Entity> mRedLights;
@@ -104,27 +105,8 @@ namespace raycaster
             mGameStateManager = new GameStateManager(Services);
             AudioManager = new AudioPlayer();
             Components.Add(mGameStateManager);
-            // XNA
-            Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            int width, height;
-            if (Config.AppSettings.Settings.Count == 0)
-            {
-                mMouseSensitivity = 0.50f;
-                mFullscreen = false;
-                mLowResRaytracing = false;
-                width = Const.InternalRenderResolutionWidth;
-                height = Const.InternalRenderResolutionHeight;
-                mSecretWallsVisible = false;
-            }
-            else
-            {
-                mMouseSensitivity = float.Parse(Config.AppSettings.Settings["MouseSensitivity"].Value);
-                mFullscreen = bool.Parse(Config.AppSettings.Settings["Fullscreen"].Value);
-                mLowResRaytracing = bool.Parse(Config.AppSettings.Settings["LowResRaycasting"].Value);
-                width = int.Parse(Config.AppSettings.Settings["ScreenWidth"].Value);
-                height = int.Parse(Config.AppSettings.Settings["ScreenHeight"].Value);
-                mSecretWallsVisible = bool.Parse(Config.AppSettings.Settings["SecretWallsVisible"].Value);
-            }
+            
+            Settings.Load();
 
             FinishedLoading = false;
             IsMouseVisible = false;
@@ -209,7 +191,7 @@ namespace raycaster
             mHiddenMonsters = new HashSet<Entity>();
             mTimers = new List<CallbackTimer>();
 
-            mMapList = new[] { "map1", "testmap", "map1" };//,"map02.txt"};
+            mMapList = new[] { "testmap", "map1" };//,"map02.txt"};
             mCurrentMapIndex = 0;
 
             PlayerAmmo = 0;
@@ -221,35 +203,7 @@ namespace raycaster
 
             
         }
-
-        private static void CreateConfiguration()
-        {
-            Config.AppSettings.Settings.Add("Fullscreen", Graphics.IsFullScreen.ToString());
-            Config.AppSettings.Settings.Add("ScreenWidth", sScreenWidth.ToString());
-            Config.AppSettings.Settings.Add("ScreenHeight", sScreenHeight.ToString());
-            Config.AppSettings.Settings.Add("LowResRaycasting", mLowResRaytracing.ToString());
-            Config.AppSettings.Settings.Add("MouseSensitivity", mInputHandler.MouseSensitivity.ToString());
-            Config.AppSettings.Settings.Add("SecretWallsVisible", sRaycastRenderSystem.SecretWallsVisible.ToString());
-            Config.Save(ConfigurationSaveMode.Full);
-        }
-
-        public static void SaveConfiguration()
-        {
-            if (Config.AppSettings.Settings.Count == 0)
-            {
-                CreateConfiguration();
-                return;
-            }
-            Config.AppSettings.Settings["Fullscreen"].Value = Graphics.IsFullScreen.ToString();
-            Config.AppSettings.Settings["ScreenWidth"].Value = sScreenWidth.ToString();
-            Config.AppSettings.Settings["ScreenHeight"].Value = sScreenHeight.ToString();
-            Config.AppSettings.Settings["LowResRaycasting"].Value = mLowResRaytracing.ToString();
-            Config.AppSettings.Settings["MouseSensitivity"].Value = mInputHandler.MouseSensitivity.ToString();
-            Config.AppSettings.Settings["SecretWallsVisible"].Value = sRaycastRenderSystem.SecretWallsVisible.ToString();
-            Config.Save(ConfigurationSaveMode.Full);
-        }
-
-        public static Configuration Config { get; set; }
+        
 
         #region initialization
 
@@ -271,7 +225,7 @@ namespace raycaster
 
             mSystemManager.SetSystem(new DoorMovementSystem(mTilemap), GameLoopType.Update);
 
-            mInputHandler = new InputHandler(mRaycaster, sScreenWidth, sScreenHeight, mMouseSensitivity);
+            mInputHandler = new InputHandler(mRaycaster, sScreenWidth, sScreenHeight);
             mInputHandler.PlayerPressedFire += PlayerPressedFire;
             mInputHandler.PlayerUsed += PlayerUsed;
             mInputHandler.ToggleMap += (o, args) => mMapRenderer.DrawMap = !mMapRenderer.DrawMap;
@@ -297,8 +251,7 @@ namespace raycaster
             mWeaponSystem.PlayerUsedAmmo += args => PlayerAmmo--;
             mWeaponSystem.PlayerWeaponFired += args =>
                                                      {
-                                                         if (CurrentWeapon.FireSoundCue != null)
-                                                             AudioManager.PlayEffect((int)CurrentWeapon.FireSoundCue);
+                                                         AudioManager.PlayEffect((int)CurrentWeapon.FireSoundCue);
                                                          if (!CurrentWeapon.IsSilent)
                                                              AlertNonHiddenEnemiesNearPosition(mPlayerTransform.Position);
                                                      };
@@ -801,13 +754,13 @@ namespace raycaster
 
             sGui.LoadContent(Content, GraphicsDevice, mHudFont, mLongTextFont);
             GameGui.Viewport = GraphicsDevice.Viewport;
+            
+            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfmenu"), (int)SoundCue.MenuMusic);
+            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfintro"), (int)SoundCue.IntroMusic);
 
-            AudioManager.LoadSound("Music/Wolfenstein/wolfmenu.mp3", (int)SoundCue.MenuMusic, true);
-            AudioManager.LoadSound("Music/Wolfenstein/wolfintro.mp3", (int)SoundCue.IntroMusic, true);
-
-            AudioManager.LoadSound("Music/Wolfenstein/wolfplay01.mp3", (int)SoundCue.GamePlayMusic01, true);
-            AudioManager.LoadSound("Music/Wolfenstein/wolfplay02.mp3", (int)SoundCue.GamePlayMusic02, true);
-            AudioManager.LoadSound("Music/Wolfenstein/wolfplay03.mp3", (int)SoundCue.GamePlayMusic03, true);
+            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfplay01"), (int)SoundCue.GamePlayMusic01);
+            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfplay02"), (int)SoundCue.GamePlayMusic02);
+            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfplay03"), (int)SoundCue.GamePlayMusic03);
 
             AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot1.wav"), (int)SoundCue.Gunshot01);
             AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot2.wav"), (int)SoundCue.Gunshot02);
@@ -1365,8 +1318,7 @@ namespace raycaster
         protected void Shutdown()
         {
             //throw new NotImplementedException();
-            SaveConfiguration();
-            AudioManager.Dispose();
+            Settings.SaveConfiguration();
         }
 
         
@@ -1391,8 +1343,6 @@ namespace raycaster
             MouseState mouseState = Mouse.GetState();
 
             mLastmouseState = mouseState;
-
-            AudioManager.Update();
 
             if (mGameStateManager.ActiveState == null)
                 this.Exit();
@@ -1423,7 +1373,7 @@ namespace raycaster
             {
                 sWorld.Draw();
 
-                DrawStatusbar();
+                DrawStatusbar(gameTime);
 
                 GraphicsDevice.SetRenderTarget(null);
 
@@ -1452,13 +1402,16 @@ namespace raycaster
 
             base.Draw(gameTime);
         }
-        private void DrawStatusbar()
+        private void DrawStatusbar(GameTime gameTime)
         {
             if (PlayerHealthPoints != null)
             {
                 mSpriteBatch.GraphicsDevice.SetRenderTarget(mStatusBarRenderTarget);
                 mSpriteBatch.GraphicsDevice.Clear(Color.Transparent);
                 mSpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Resolution.getTransformationMatrix());
+                string fpsCount = (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("N1");
+                mSpriteBatch.DrawString(mHudFont, fpsCount, new Vector2(10, 10), Color.White, 0f,
+                    Vector2.Zero, 1f, SpriteEffects.None, 0.5f);
 
                 string hpString = PlayerHealthPoints.Health.ToString();
                 int offsetLeft = 75;
@@ -1500,7 +1453,5 @@ namespace raycaster
             }
             return sb.ToString();
         }
-
-
     }
 }

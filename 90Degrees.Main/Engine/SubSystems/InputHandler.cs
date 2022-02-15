@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Degrees.Main.Engine.Managers;
 using Twengine.Components;
 using Twengine.Components.Meta;
 using Twengine.Managers;
@@ -28,22 +29,19 @@ namespace Twengine.SubSystems.Raycast
         public event EventHandler<EventArgs> ActivatedWeaponCheat;
         private KeyboardState mKeyboardState;
         private KeyboardState mLastKeyboardState;
-
-        private bool mKeyboardOnly = true;
-        public float MouseSensitivity { get; private set; }
+        
         private MouseState mMouseState;
         private int mScreenWidth;
         private int mScreenHeight;
         private Raycaster mRaycaster;
         private List<Keys> mKeyBuffer;
-        public InputHandler(Raycaster raycaster, int screenWidth, int screenHeight, float mouseSensitivity)
+        public InputHandler(Raycaster raycaster, int screenWidth, int screenHeight)
             : base()
         {
             mScreenWidth = screenWidth;
             mScreenHeight = screenHeight;
             mRaycaster = raycaster;
             // constants..
-            MouseSensitivity = mouseSensitivity;
             mLastKeyboardState = Keyboard.GetState();
             mKeyBuffer = new List<Keys>();
         }
@@ -274,7 +272,7 @@ namespace Twengine.SubSystems.Raycast
                 movementDir -= transform.Forward;
             }
 
-            if (!mKeyboardOnly)
+            if (!Settings.KeyboardOnly)
             {
                 if (mKeyboardState.IsKeyDown(fpsControl.MoveRight))
                 {
@@ -301,7 +299,7 @@ namespace Twengine.SubSystems.Raycast
         private void Rotate(FPSControl fpsControl, Transform transform, float worldDelta)
         {
             float amount = 0.0f;
-            if (mKeyboardOnly)
+            if (Settings.KeyboardOnly)
             {
                 if (mKeyboardState.IsKeyDown(fpsControl.MoveRight))
                 {
@@ -318,9 +316,9 @@ namespace Twengine.SubSystems.Raycast
             }
             else
             {
-                amount = mScreenWidth / 2 - mMouseState.X;
+                amount = (mScreenWidth / 2 - mMouseState.X) * Settings.MouseSensitivity;
             }
-            float rotateSpeed = -(worldDelta * (amount * MouseSensitivity));
+            float rotateSpeed = -(worldDelta * amount);
             transform.Rotation += rotateSpeed;
         }
 

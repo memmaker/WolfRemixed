@@ -1,6 +1,7 @@
 ﻿using Engine.GameStates;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Degrees.Main.Engine.Managers;
 using TurnBasedCombat.GameStates;
 using Twengine.Managers;
 using XNAGameGui.Gui;
@@ -10,6 +11,14 @@ namespace raycaster.GameStates
 {
     public class OptionsMenuState : MenuGameState
     {
+        private const string KeyboardOnlyLabel = "Keyboard Only";
+        private const string KeyboardMouseLabel = "Keyboard + Mouse";
+        private const string FullscreenLabel = "Fullscreen";
+        private const string WindowedLabel = "Windowed";
+        private const string MouseSensitivityLabel = "Mouse Sensitivity";
+        private const string MusicVolLabel = "Music Volume";
+        private const string SfxVolLabel = "SFX Volume";
+
         private Point[] mResolutions;
 
         public OptionsMenuState(GameStateManager stateManager)
@@ -23,7 +32,7 @@ namespace raycaster.GameStates
             mResolutions[3] = new Point(1280, 720);
             mResolutions[4] = new Point(1920, 1080);
 
-            ButtonPressed += new ButtonEventHandler(MainMenuState_ButtonPressed);
+            ButtonPressed += OnMenuButtonPressed;
 
         }
 
@@ -32,18 +41,20 @@ namespace raycaster.GameStates
             if (number == 0) return false;
             return true;
         }
-        void MainMenuState_ButtonPressed(ButtonWidget instance)
+        void OnMenuButtonPressed(ButtonWidget instance)
         {
             switch (instance.Text)
             {
-                case "Resolution":
+                case KeyboardOnlyLabel: // switch to keyboard & mouse
+                    Settings.KeyboardOnly = false;
+                    instance.Text = KeyboardMouseLabel;
                     break;
-                case "Fullscreen":
-                    break;
-                case "Apply":
-                    //RaycastGame.ChangeResolution(mResolutions[mResolutionButton.Counter].X, mResolutions[mResolutionButton.Counter].Y, IntToBool(mFullscreenButton.Counter));
+                case KeyboardMouseLabel:
+                    Settings.KeyboardOnly = true;
+                    instance.Text = KeyboardOnlyLabel;
                     break;
                 case "Back":
+                    Settings.SaveConfiguration();
                     mGameStateManager.Pop();
                     break;
             }
@@ -53,8 +64,10 @@ namespace raycaster.GameStates
         protected override void OnEntered()
         {
             base.OnEntered();
-            float menuWidth = GameGui.Viewport.Width * 0.4f;
-            mMenu = new MenuWindowWidget(new List<string>() { "Resolution", "Fullscreen", "Apply", "Back" }, (int)menuWidth, (int)(menuWidth - (2 * 20)))
+            float menuWidth = GameGui.Viewport.Width * 0.6f;
+            string controls = Settings.KeyboardOnly ? KeyboardOnlyLabel : KeyboardMouseLabel;
+            
+            mMenu = new MenuWindowWidget(new List<string>() { controls, "Back" }, (int)menuWidth, (int)(menuWidth - (2 * 20)))
             {
                 Bounds = new UniRectangle(0, 0, new UniScalar(1, 0), new UniScalar(1, 0)),
                 Background = AssetManager.Default.LoadTexture("Menu/options_widescreen.png"),
@@ -62,27 +75,14 @@ namespace raycaster.GameStates
             };
             foreach (ButtonWidget button in mMenu.Buttons)
             {
-                button.LabelColor = new Color(55, 55, 55);
+                button.LabelColor = Color.Transparent;
                 button.SelectionColor = new Color(103, 84, 15);
             }
 
 
-            ReadConfigSettings();
             GameGui.RootWidget.AddChild(mMenu);
         }
-
-        private void ReadConfigSettings()
-        {
-            float mouseSensitivity = float.Parse(RaycastGame.Config.AppSettings.Settings["MouseSensitivity"].Value);
-            bool fullscreen = bool.Parse(RaycastGame.Config.AppSettings.Settings["Fullscreen"].Value);
-            bool lowResRaytracing = bool.Parse(RaycastGame.Config.AppSettings.Settings["LowResRaycasting"].Value);
-            int width = int.Parse(RaycastGame.Config.AppSettings.Settings["ScreenWidth"].Value);
-            int height = int.Parse(RaycastGame.Config.AppSettings.Settings["ScreenHeight"].Value);
-            bool secretWallsVisible = bool.Parse(RaycastGame.Config.AppSettings.Settings["SecretWallsVisible"].Value);
-
-
-        }
-
+        
         private int FindResolutionIndex(int width, int height)
         {
             for (int i = 0; i < 5; i++)
@@ -120,7 +120,7 @@ namespace raycaster.GameStates
             //mGui.RootWidget.RemoveChild(mMenu);
             mMenu.Destroy();
 
-            RaycastGame.SaveConfiguration();
+            Settings.SaveConfiguration();
         }
 
     }

@@ -46,18 +46,6 @@ namespace Twengine.Components.Meta
             float camwidth = (float)Math.Tan(MathHelper.ToRadians(fov) / 2);
             ProjectionPlane = Vector2.Normalize(new Vector2(-Direction.Y, Direction.X)) * camwidth;
         }
-
-        public void Rotate(float angle)
-        {
-            Matrix rotationMatrix = Matrix.CreateRotationZ(angle);
-            Direction = Vector2.Transform(Direction, rotationMatrix);
-            ProjectionPlane = Vector2.Transform(ProjectionPlane, rotationMatrix);
-        }
-
-        public void ChangeFov(float fovInDegree)
-        {
-            FoV = fovInDegree;
-            SetProjectionPlaneFromFov(fovInDegree);
-        }
+        
     }
 }

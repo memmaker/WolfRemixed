@@ -20,8 +20,7 @@ namespace Twengine.Managers
         North,
         East,
         South,
-        West,
-        Undefined
+        West
     }
 
     public struct BasicRaycastHitInfo
@@ -82,19 +81,13 @@ namespace Twengine.Managers
 
         public Vector2 Position
         {
-            get { return Camera.Position; }
-            set { Camera.Position = value; }
+            get => Camera.Position;
+            set => Camera.Position = value;
         }
 
-        public Vector2 Direction
-        {
-            get { return Camera.Direction; }
-        }
+        public Vector2 Direction => Camera.Direction;
 
-        public Vector2 ProjectionPlane
-        {
-            get { return Camera.ProjectionPlane; }
-        }
+        public Vector2 ProjectionPlane => Camera.ProjectionPlane;
 
         public int Resolution { get; set; }
 
@@ -115,9 +108,6 @@ namespace Twengine.Managers
             Camera = new Camera(startPos, fov, viewDir);
 
             Resolution = 1;
-
-            
-
         }
         
         public void ViewportChanged(int screenWidth, int screenHeight)
@@ -543,7 +533,9 @@ namespace Twengine.Managers
                     // TODO: Idea - Decide on a wall depending on the part we hit
                     if (mMap[mapY, mapX] > -1)
                     {
+                        // && (!(mapX == 43 && mapY == 49))
                         wallHit = true;
+
                     }
                    
 
@@ -602,10 +594,10 @@ namespace Twengine.Managers
                     drawEnd = ScreenHeight;
                 }
 
-
-
-                //calculate value of wallX
-                double wallX = GetWallX(rayDirX, rayDirY, mapX, mapY, side);
+                double wallX; //where exactly the wall was hit
+                if (side == 0) wallX = Camera.Position.Y + perpObstacleDist * rayDirY;
+                else wallX = Camera.Position.X + perpObstacleDist * rayDirX;
+                wallX -= Math.Floor(wallX);
 
                 #region fill return info object
 
@@ -746,16 +738,7 @@ namespace Twengine.Managers
             Position = transform.Position;
             Camera.Direction = transform.Forward;
         }
-
-        private double GetWallX(double rayDirX, double rayDirY, int mapX, int mapY, int side)
-        {
-            double wallX; //where exactly the wall was hit
-            if (side == 1) wallX = Camera.Position.X + ((mapY - Camera.Position.Y + (1 - stepY) / 2.0) / rayDirY) * rayDirX;
-            else wallX = Camera.Position.Y + ((mapX - Camera.Position.X + (1 - stepX) / 2.0) / rayDirX) * rayDirY;
-            wallX -= Math.Floor(wallX);
-            return wallX;
-        }
-
+        
         private bool IsSpriteObstructing(int mapX, int mapY)
         {
             List<Entity> visibleSprites = mTilemap.Entities[mapY, mapX];

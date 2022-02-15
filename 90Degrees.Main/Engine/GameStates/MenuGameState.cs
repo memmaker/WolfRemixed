@@ -43,7 +43,7 @@ namespace TurnBasedCombat.GameStates
             if (key == Keys.Enter)
             {
                 var button = mMenu.GetSelectedButton();
-                ButtonPressed(button);
+                ButtonPressed?.Invoke(button);
             }
             else if (key == Keys.Up)
             {
@@ -53,27 +53,32 @@ namespace TurnBasedCombat.GameStates
             {
                 mMenu.SelectNext();
             }
+            else if (key == Keys.Left)
+            {
+                var button = mMenu.GetSelectedButton();
+                DecreaseCounter(button);
+            }
+            else if (key == Keys.Right)
+            {
+                var button = mMenu.GetSelectedButton();
+                IncreaseCounter(button);
+            }
 
         }
 
         private void OnPressed(ButtonWidget button)
         {
-            if (ButtonPressed == null) return;
-            ButtonPressed(button);
+            ButtonPressed?.Invoke(button);
         }
 
         private void OnMarked(ButtonWidget button)
         {
-
-            if (ButtonMarked == null) return;
-            ButtonMarked(button);
+            ButtonMarked?.Invoke(button);
         }
 
         private void OnUnmarked(ButtonWidget button)
         {
-
-            if (ButtonUnmarked == null) return;
-            ButtonUnmarked(button);
+            ButtonUnmarked?.Invoke(button);
         }
 
         private void OnCounterChange(ButtonWidget button, bool increased)
@@ -112,28 +117,9 @@ namespace TurnBasedCombat.GameStates
 
                 if (selectedButton != null)
                 {
-                    if (selectedButton.IsMarkable)
+                    if (selectedButton.AppendCounter)
                     {
-                        if (selectedButton.IsMarked)    // switching off
-                        {
-                            mMarkedButtons--;
-                            selectedButton.IsMarked = !selectedButton.IsMarked;
-                            OnUnmarked(selectedButton);
-                        }
-                        else if (mMarkedButtons < MarkerLimit)  // switching on
-                        {
-                            mMarkedButtons++;
-                            selectedButton.IsMarked = !selectedButton.IsMarked;
-                            OnMarked(selectedButton);
-                        }
-                    }
-                    else if (selectedButton.AppendCounter)
-                    {
-                        int oldValue = selectedButton.Counter;
-                        selectedButton.Increase();
-                        if (selectedButton.Counter > oldValue)
-                            OnCounterChange(selectedButton, true);
-
+                        IncreaseCounter(selectedButton);
                     }
 
                     else
@@ -147,11 +133,7 @@ namespace TurnBasedCombat.GameStates
                 {
                     if (selectedButton.AppendCounter)
                     {
-                        int oldValue = selectedButton.Counter;
-                        selectedButton.Decrease();
-                        if (selectedButton.Counter < oldValue)
-                            OnCounterChange(selectedButton, false);
-
+                        DecreaseCounter(selectedButton);
                     }
                     else
                         OnPressed(selectedButton);
@@ -168,6 +150,22 @@ namespace TurnBasedCombat.GameStates
 
             mLastKeyboardState = keyboardState;
             mLastMouseState = mouseState;
+        }
+
+        private void IncreaseCounter(ButtonWidget selectedButton)
+        {
+            int oldValue = selectedButton.Counter;
+            selectedButton.Increase();
+            if (selectedButton.Counter > oldValue)
+                OnCounterChange(selectedButton, true);
+        }
+
+        private void DecreaseCounter(ButtonWidget selectedButton)
+        {
+            int oldValue = selectedButton.Counter;
+            selectedButton.Decrease();
+            if (selectedButton.Counter < oldValue)
+                OnCounterChange(selectedButton, false);
         }
     }
 }

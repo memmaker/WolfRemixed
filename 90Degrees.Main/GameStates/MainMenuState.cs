@@ -59,23 +59,23 @@ namespace raycaster.GameStates
             mMenu.DrawLabelBackground = true;
             foreach (ButtonWidget button in mMenu.Buttons)
             {
-                button.LabelColor = new Color(55, 55, 55);
+                button.LabelColor = Color.Transparent;
                 button.SelectionColor = new Color(103, 84, 15);
             }
             GameGui.RootWidget.AddChild(mMenu);
-            RaycastGame.AudioManager.PlaySound((int)SoundCue.MenuMusic, true);
+            RaycastGame.AudioManager.PlaySong((int)SoundCue.MenuMusic, true);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            RaycastGame.AudioManager.PlaySound((int)SoundCue.MenuMusic, true);
+            RaycastGame.AudioManager.PlaySong((int)SoundCue.MenuMusic, true);
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            RaycastGame.AudioManager.StopSound((int)SoundCue.MenuMusic);
+            RaycastGame.AudioManager.StopSong();
         }
         protected override void OnLeaving()
         {
@@ -84,7 +84,7 @@ namespace raycaster.GameStates
             //mMainScreen.Desktop.Children.Remove(mMenu);
             //mGui.RootWidget.RemoveChild(mMenu);
             mMenu.Destroy();
-            RaycastGame.AudioManager.StopSound((int)SoundCue.MenuMusic);
+            RaycastGame.AudioManager.StopSong();
         }
 
         protected override void KeyPressed(Keys key)
