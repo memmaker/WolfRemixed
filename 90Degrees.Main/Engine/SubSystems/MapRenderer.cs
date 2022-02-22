@@ -104,7 +104,7 @@ namespace Twengine.SubSystems.Raycast
         private void DrawBackground()
         {
             Rectangle destRect = new Rectangle(0, 0, mTilemap.MapWidth * GridSizeInPixels, mTilemap.MapHeight * GridSizeInPixels);
-            mSpriteBatch.Draw(mPixel, destRect, Color.CornflowerBlue);
+            mSpriteBatch.Draw(mPixel, destRect, Color.Gray);
         }
 
         private void DrawLoS()

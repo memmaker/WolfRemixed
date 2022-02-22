@@ -868,7 +868,7 @@ namespace raycaster
         protected void PostInit()
         {
             if (mTilemap == null) return;
-            mGameStateManager.Push(new MainMenuState(sWorld, mSystemManager, mGameStateManager, mInputHandler, mSpriteBatch));
+            mGameStateManager.Push(new MainMenuState(sWorld, mGameStateManager, mInputHandler));
         }
 
         #endregion

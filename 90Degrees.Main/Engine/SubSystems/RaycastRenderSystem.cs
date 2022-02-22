@@ -61,7 +61,7 @@ namespace Twengine.SubSystems.Raycast
 
             mSpriteBatch = spriteBatch;
             mGraphicsDevice = spriteBatch.GraphicsDevice;
-            mFlashColor = Color.CornflowerBlue;
+            mFlashColor = Color.Red;
             mFlashIntensity = 0;
 
             // raycaster

@@ -221,6 +221,9 @@
 #begin Menu/loading_wolf_widescreen.png
 /copy:Menu/loading_wolf_widescreen.png
 
+#begin Menu/mainmenu.png
+/copy:Menu/mainmenu.png
+
 #begin Menu/options_widescreen.png
 /copy:Menu/options_widescreen.png
 

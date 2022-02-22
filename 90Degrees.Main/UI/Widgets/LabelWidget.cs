@@ -94,7 +94,6 @@ namespace XNAGameGui.Gui.Widgets
                 HudIcon hudIcon = keyValuePair.Value;
                 spriteBatch.Draw(hudIcon.SourceSheet.Texture, hudIcon.ScreenPosition,
                                  hudIcon.SourceSheet.GetSourceRectByIndex(hudIcon.FrameIndex), Color.White, 0f, Vector2.Zero, hudIcon.Scale, SpriteEffects.None, 0f);
-
             }
 
             if (Text != "")

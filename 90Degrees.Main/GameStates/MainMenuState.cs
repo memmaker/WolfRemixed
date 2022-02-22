@@ -17,20 +17,17 @@ namespace raycaster.GameStates
     public class MainMenuState : MenuGameState
     {
         private readonly EntityWorld mWorld;
-        private readonly SystemManager mSystemManager;
         private readonly GameStateManager mStateManager;
         private readonly InputHandler mFPSControl;
-        private readonly SpriteBatch mSpriteBatch;
 
-        public MainMenuState(EntityWorld world, SystemManager systemManager, GameStateManager stateManager, InputHandler fpsControl, SpriteBatch spriteBatch)
+        public MainMenuState(EntityWorld world, GameStateManager stateManager, InputHandler fpsControl)
             : base(stateManager)
         {
             mWorld = world;
-            mSystemManager = systemManager;
             mStateManager = stateManager;
             mFPSControl = fpsControl;
-            mSpriteBatch = spriteBatch;
-            ButtonPressed += new ButtonEventHandler(MainMenuState_ButtonPressed);
+
+            ButtonPressed += MainMenuState_ButtonPressed;
 
         }
 
@@ -57,7 +54,7 @@ namespace raycaster.GameStates
             float menuWidth = GameGui.Viewport.Width * 0.4f;
             mMenu = new MenuWindowWidget( (int)menuWidth, (int)(menuWidth - (2 * 20)));
             mMenu.AddSimpleButtons(new List<string>() { "Play", "Options", "Quit" });
-            mMenu.Background = AssetManager.Default.LoadTexture("Menu/titlescreen_widescreen.png");
+            mMenu.Background = AssetManager.Default.LoadTexture("Menu/mainmenu.png");
             mMenu.Bounds = new UniRectangle(0, 0, new UniScalar(1, 0), new UniScalar(1, 0));
             mMenu.DrawLabelBackground = true;
             foreach (ButtonWidget button in mMenu.Buttons)

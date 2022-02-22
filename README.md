@@ -16,7 +16,6 @@ raycasting engine.
  * Do something about large text on lower resolutions
  * A better weapon selection, esp. Rocket Launcher
  * More variety in the SFX department
- * Doom & Duke Soundtracks
  * Shadow Warrior & Blood References
  * Real Push Walls
  * Lighting Effects
