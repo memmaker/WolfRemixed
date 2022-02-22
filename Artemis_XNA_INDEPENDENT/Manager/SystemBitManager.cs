@@ -34,6 +34,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 #endregion File description
 
+using System.Numerics;
+
 namespace Artemis.Manager
 {
     #region Using statements

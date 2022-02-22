@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Text;
+using IndependentResolutionRendering;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using MP3Player;
@@ -13,6 +14,7 @@ namespace Degrees.Main.Engine.Managers
     internal class Settings
     {
         private static readonly Configuration mConfig;
+
         static Settings()
         {
             mConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -32,7 +34,7 @@ namespace Degrees.Main.Engine.Managers
             {
                 Fullscreen = bool.Parse(mConfig.AppSettings.Settings["Fullscreen"].Value);
                 KeyboardOnly = bool.Parse(mConfig.AppSettings.Settings["KeyboardOnly"].Value);
-                MouseSensitivity = float.Parse(mConfig.AppSettings.Settings["MouseSensitivity"].Value);
+                MouseSensitivity = float.Parse(mConfig.AppSettings.Settings["MouseSensitivity"].Value, CultureInfo.InvariantCulture);
                 MusicVolume = int.Parse(mConfig.AppSettings.Settings["MusicVolume"].Value);
                 SfxVolume = int.Parse(mConfig.AppSettings.Settings["SfxVolume"].Value);
             }
@@ -78,6 +80,7 @@ namespace Degrees.Main.Engine.Managers
         }
 
         public static bool Fullscreen { get; set; }
+
         public static float MouseSensitivity { get; set; }
         public static bool KeyboardOnly { get; set; }
     }

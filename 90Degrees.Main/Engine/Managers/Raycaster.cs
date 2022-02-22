@@ -78,6 +78,8 @@ namespace Twengine.Managers
         private double sideDistY;
 
         private Tilemap mTilemap;
+        private readonly Color[] mTexDataCeil;
+        private readonly Color[] mTexDataFloor;
 
         public Vector2 Position
         {
@@ -108,6 +110,9 @@ namespace Twengine.Managers
             Camera = new Camera(startPos, fov, viewDir);
 
             Resolution = 1;
+
+            mTexDataFloor = mTilemap.WallTextures.GetFrameData(36);
+            mTexDataCeil = mTilemap.WallTextures.GetFrameData(12);
         }
         
         public void ViewportChanged(int screenWidth, int screenHeight)
@@ -776,15 +781,14 @@ namespace Twengine.Managers
 
         public Color[] FloorCasting()
         {
-            Color[] texDataFloor = mTilemap.WallTextures.GetFrameData(36);
-            Color[] texDataCeil = mTilemap.WallTextures.GetFrameData(12);
+            
 
             int screenHeight = Const.InternalRenderResolutionHeight;
             int screenWidth = Const.InternalRenderResolutionWidth;
             int texWidth = 64;
             int texHeight = 64;
             int h = screenHeight;
-
+            
             //FLOOR CASTING
             for (int y = 0; y < h; y++)
             {
@@ -804,6 +808,7 @@ namespace Twengine.Managers
                 // Horizontal distance from the camera to the floor for the current row.
                 // 0.5 is the z position exactly in the middle between floor and ceiling.
                 float rowDistance = posZ / p;
+                
                 
                 // calculate the real world step vector we have to add for each x (parallel to camera plane)
                 // adding step by step avoids multiplications with a weight in the inner loop
@@ -831,9 +836,37 @@ namespace Twengine.Managers
                     gv += dv;
 
                     int colorTexIndex = texWidth * v + u;
-                    Color pixelColorFloor = texDataFloor[colorTexIndex];
-                    Color pixelColorCeiling = texDataCeil[colorTexIndex];
+                    Color pixelColorFloor = mTexDataFloor[colorTexIndex];
+                    Color pixelColorCeiling = mTexDataCeil[colorTexIndex];
+                    /*
+                    float factor = 1.0f;
+                    float absoluteDist = rowDistance < 0 ? -rowDistance : rowDistance;
+                    if (absoluteDist > 10f)
+                    {
+                        factor = 0.0f;
+                    }
+                    else if (absoluteDist > 5f)
+                    {
+                        factor = 0.2f;
+                    }
+                    else if (absoluteDist > 3f)
+                    {
+                        factor = 0.3f;
+                    }
+                    else if (absoluteDist > 2f)
+                    {
+                        factor = 0.4f;
+                    }
+                    pixelColorFloor.R = (byte)(pixelColorFloor.R * factor);
+                    pixelColorFloor.G = (byte)(pixelColorFloor.G * factor);
+                    pixelColorFloor.B = (byte)(pixelColorFloor.B * factor);
 
+                    pixelColorCeiling.R = (byte)(pixelColorCeiling.R * factor);
+                    pixelColorCeiling.G = (byte)(pixelColorCeiling.G * factor);
+                    pixelColorCeiling.B = (byte)(pixelColorCeiling.B * factor);
+                    //Color floorShade = mTilemap.GetShadingColor(pixelColorFloor, rowDistance);
+                    //Color ceilingShade = mTilemap.GetShadingColor(pixelColorCeiling, rowDistance);
+                    */
                     var floorBufferIndex = y * Const.InternalRenderResolutionWidth + x;
                     var ceilingBufferIndex = (screenHeight - y - 1) * Const.InternalRenderResolutionWidth + x;
 

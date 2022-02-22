@@ -30,6 +30,7 @@ namespace raycaster.GameStates
             mFPSControl = fpsControl;
             mSpriteBatch = spriteBatch;
             ButtonPressed += new ButtonEventHandler(MainMenuState_ButtonPressed);
+
         }
 
         void MainMenuState_ButtonPressed(ButtonWidget instance)
@@ -53,7 +54,8 @@ namespace raycaster.GameStates
         {
             base.OnEntered();
             float menuWidth = GameGui.Viewport.Width * 0.4f;
-            mMenu = new MenuWindowWidget(new List<string>() { "Play", "Options", "Quit" }, (int)menuWidth, (int)(menuWidth - (2 * 20)));
+            mMenu = new MenuWindowWidget( (int)menuWidth, (int)(menuWidth - (2 * 20)));
+            mMenu.AddSimpleButtons(new List<string>() { "Play", "Options", "Quit" });
             mMenu.Background = AssetManager.Default.LoadTexture("Menu/titlescreen_widescreen.png");
             mMenu.Bounds = new UniRectangle(0, 0, new UniScalar(1, 0), new UniScalar(1, 0));
             mMenu.DrawLabelBackground = true;
@@ -83,7 +85,6 @@ namespace raycaster.GameStates
 
             //mMainScreen.Desktop.Children.Remove(mMenu);
             //mGui.RootWidget.RemoveChild(mMenu);
-            mMenu.Destroy();
             RaycastGame.AudioManager.StopSong();
         }
 

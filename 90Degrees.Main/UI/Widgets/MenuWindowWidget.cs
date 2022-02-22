@@ -8,37 +8,53 @@ namespace XNAGameGui.Gui.Widgets
     {
         public List<ButtonWidget> Buttons { get; private set; }
         int mCurrentSelection = 0;
-        public MenuWindowWidget(IEnumerable<string> items, int windowWidth, int buttonWidth)
+        private readonly int mButtonWidth;
+        public float MenuButtonBeginFraction { get; set; }
+
+        public MenuWindowWidget(int windowWidth, int buttonWidth)
         {
+            mButtonWidth = buttonWidth;
             Buttons = new List<ButtonWidget>();
-            InitializeComponent(items, windowWidth, buttonWidth);
+            InitializeComponent(windowWidth, buttonWidth);
+            MenuButtonBeginFraction = 0.5f;
+        }
+
+        public void AddButton(ButtonWidget button)
+        {
+            int i = Buttons.Count;
+            SpriteFont font = GameGui.Fonts[Font];
+            Vector2 stringSize = font.MeasureString(button.Text);
+            button.Bounds = new UniRectangle(new UniScalar(0.5f, -(mButtonWidth / 2)),
+                new UniScalar(MenuButtonBeginFraction, 10.0f + (i * (stringSize.Y + 5))), mButtonWidth, stringSize.Y);
+            Buttons.Add(button);
+            AddChild(button);
+            if (Buttons.Count == 1 && mCurrentSelection == 0)
+            {
+                Buttons[mCurrentSelection].IsSelected = true;
+            }
+        }
+
+        public void AddSimpleButtons(IEnumerable<string> items)
+        {
+            SpriteFont font = GameGui.Fonts[Font];
+            foreach (string item in items)
+            {
+                ButtonWidget button = new ButtonWidget()
+                {
+                    Text = item
+                };
+                AddButton(button);
+            }
+
             Buttons[mCurrentSelection].IsSelected = true;
         }
 
-        public ButtonWidget AddButton(string label, UniRectangle bounds)
+        private void InitializeComponent(int windowWidth, int buttonWidth)
         {
-            ButtonWidget buttonWidget = new ButtonWidget { Text = label, Bounds = bounds };
-            Buttons.Add(buttonWidget);
-            AddChild(buttonWidget);
-            return buttonWidget;
-        }
-
-        private void InitializeComponent(IEnumerable<string> items, int windowWidth, int buttonWidth)
-        {
-            SpriteFont font = GameGui.Fonts[Font];
-
             Bounds = new UniRectangle(new UniScalar(0.5f, -(windowWidth / 2)),
-                                      new UniScalar(0.5f, -142),
-                                      windowWidth,
-                                      284.0f);
-            int i = 0;
-            foreach (string item in items)
-            {
-                Vector2 stringSize = font.MeasureString(item);
-                AddButton(item, new UniRectangle(new UniScalar(0.5f, -(buttonWidth / 2)), new UniScalar(0.5f, 10.0f + (i * (stringSize.Y + 5))), buttonWidth, stringSize.Y));
-                i++;
-            }
-
+                new UniScalar(0.5f, -142),
+                windowWidth,
+                284.0f);
         }
 
 

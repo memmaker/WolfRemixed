@@ -5,6 +5,9 @@
         public const int InternalRenderResolutionWidth = 640;
         public const int InternalRenderResolutionHeight = 360;
         public const int SpriteRenderResolutionHeight = 480;
+        public const int DisplayResolutionWidth = 1024;
+        public const int DisplayResolutionHeight = 768;
+        
     }
 
     public enum AnimationCue

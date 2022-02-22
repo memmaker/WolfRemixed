@@ -63,7 +63,7 @@ namespace IndependentResolutionRendering
 
         static private void ApplyResolutionSettings()
         {
-
+            if (_Device == null) return;
 #if XBOX360
            _FullScreen = true;
 #endif

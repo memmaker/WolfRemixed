@@ -30,10 +30,7 @@ namespace Twengine.Datastructures
 
         private HashSet<Point> mPlayerPositionHistory;
 
-        public bool PseudoShading
-        {
-            get { return mPseudoShading; }
-        }
+        public bool PseudoShading { get; }
 
         public Color FloorColor { get; set; }
         public Color CeilingColor { get; set; }
@@ -55,7 +52,6 @@ namespace Twengine.Datastructures
         public Dictionary<Vector2, int> EnemySpawnPoints { get; set; }
         public Dictionary<Point, MessageTriggerInfo> MessageTriggers { get; set; }
 
-        private bool mPseudoShading;
         private int mShadingCutOff;
         private float mShadingDivisor;
         private List<Point> mCurrentLine;
@@ -65,7 +61,7 @@ namespace Twengine.Datastructures
         {
             mShadingCutOff = shadingCutOff;
             mShadingDivisor = shadingDivisor;
-            mPseudoShading = pseudoShading;
+            PseudoShading = pseudoShading;
             mCurrentLine = new List<Point>();
             mLineOfSightList = new List<List<Point>>();
             mMapData = mapData;
@@ -158,9 +154,9 @@ namespace Twengine.Datastructures
 
         public Color GetShadingColor(Color source, double dist)
         {
-            if (dist > mShadingCutOff) dist = mShadingCutOff;
-
-            float lerpFact = (float) (dist / mShadingDivisor);
+            dist *= 4;
+            dist += 96;
+            float lerpFact = (float) (dist / 128);
             return Color.Lerp(source, Color.Black, lerpFact);
         }
 

@@ -1,11 +1,13 @@
 ﻿using Engine.GameStates;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Drawing;
 using Degrees.Main.Engine.Managers;
 using TurnBasedCombat.GameStates;
 using Twengine.Managers;
 using XNAGameGui.Gui;
 using XNAGameGui.Gui.Widgets;
+using Color = Microsoft.Xna.Framework.Color;
+using Point = Microsoft.Xna.Framework.Point;
 
 namespace raycaster.GameStates
 {
@@ -15,9 +17,9 @@ namespace raycaster.GameStates
         private const string KeyboardMouseLabel = "Keyboard + Mouse";
         private const string FullscreenLabel = "Fullscreen";
         private const string WindowedLabel = "Windowed";
-        private const string MouseSensitivityLabel = "Mouse Sensitivity";
-        private const string MusicVolLabel = "Music Volume";
-        private const string SfxVolLabel = "SFX Volume";
+        private const string MouseSensitivityLabel = "Mouse Sensitivity: ";
+        private const string MusicVolLabel = "Music Volume: ";
+        private const string SfxVolLabel = "SFX Volume: ";
 
         private Point[] mResolutions;
 
@@ -33,7 +35,25 @@ namespace raycaster.GameStates
             mResolutions[4] = new Point(1920, 1080);
 
             ButtonPressed += OnMenuButtonPressed;
+            CounterIncreased += UpdateCounter;
+            CounterDecreased += UpdateCounter;
 
+        }
+        
+        private void UpdateCounter(ButtonWidget instance)
+        {
+            switch (instance.Text)
+            {
+                case MusicVolLabel:
+                    Settings.MusicVolume = instance.Counter * 10;
+                    break;
+                case SfxVolLabel:
+                    Settings.SfxVolume = instance.Counter * 10;
+                    break;
+                case MouseSensitivityLabel:
+                    Settings.MouseSensitivity = instance.Counter / 10.0f;
+                    break;
+            }
         }
 
         private bool IntToBool(int number)
@@ -53,6 +73,14 @@ namespace raycaster.GameStates
                     Settings.KeyboardOnly = true;
                     instance.Text = KeyboardOnlyLabel;
                     break;
+                case FullscreenLabel: // switch to windows
+                    Settings.Fullscreen = false;
+                    instance.Text = WindowedLabel;
+                    break;
+                case WindowedLabel: // switch to fullscreen
+                    instance.Text = FullscreenLabel;
+                    Settings.Fullscreen = true;
+                    break;
                 case "Back":
                     Settings.SaveConfiguration();
                     mGameStateManager.Pop();
@@ -66,13 +94,44 @@ namespace raycaster.GameStates
             base.OnEntered();
             float menuWidth = GameGui.Viewport.Width * 0.6f;
             string controls = Settings.KeyboardOnly ? KeyboardOnlyLabel : KeyboardMouseLabel;
+            string fullscreen = Settings.Fullscreen ? FullscreenLabel : WindowedLabel;
             
-            mMenu = new MenuWindowWidget(new List<string>() { controls, "Back" }, (int)menuWidth, (int)(menuWidth - (2 * 20)))
+            mMenu = new MenuWindowWidget((int)menuWidth, (int)(menuWidth - (2 * 20)))
             {
                 Bounds = new UniRectangle(0, 0, new UniScalar(1, 0), new UniScalar(1, 0)),
                 Background = AssetManager.Default.LoadTexture("Menu/options_widescreen.png"),
-                DrawLabelBackground = true
+                DrawLabelBackground = true,
+                MenuButtonBeginFraction = 0.3f
             };
+            mMenu.AddButton(new ButtonWidget() { Text = controls });
+            mMenu.AddButton(new ButtonWidget() { Text = fullscreen });
+            mMenu.AddButton(new ButtonWidget()
+            {
+                Text = MusicVolLabel, 
+                AppendCounter = true,
+                CounterMin = 0, 
+                CounterMax = 10,
+                Counter = Settings.MusicVolume / 10
+            });
+            mMenu.AddButton(new ButtonWidget()
+            {
+                Text = SfxVolLabel,
+                AppendCounter = true,
+                CounterMin = 0,
+                CounterMax = 10,
+                Counter = Settings.SfxVolume / 10
+            });
+            mMenu.AddButton(new ButtonWidget()
+            {
+                Text = MouseSensitivityLabel,
+                AppendCounter = true,
+                CounterMin = 1,
+                CounterMax = 20,
+                Counter = (int) (Settings.MouseSensitivity * 10.0f)
+            });
+            mMenu.AddButton(new ButtonWidget() { Text = "Back" });
+
+            //new List<string>() { controls, "Back" }
             foreach (ButtonWidget button in mMenu.Buttons)
             {
                 button.LabelColor = Color.Transparent;

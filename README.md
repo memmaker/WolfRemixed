@@ -2,19 +2,17 @@ Latest version of my XNA/MonoGame implementation of a Wolfenstein 3D style
 raycasting engine.
 
 # Todo
- * Allow for these options
- ** Fullscreen on / off
- ** Keyboard only / Keyboard & Mouse
- ** Mouse Sensitivity
- ** Music Vol. & SFX Vol.
-
  * Add missing sound effects
  ** Shotguns
  ** Blake Pistol
  ** Magic Hand
  
+ * Get Fullscreen working
+
  * Replace Start Screen Image
  * Put a nice end screen with link to youtube
+ 
+ * Exploding Barrels
 
 # Nice to have
  * Do something about large text on lower resolutions
@@ -23,6 +21,9 @@ raycasting engine.
  * Doom & Duke Soundtracks
  * Shadow Warrior & Blood References
  * Real Push Walls
+ * Lighting Effects
+ * Skyboxes for outside areas
+ * Destroyable Walls & Items
 
 
 # Version History

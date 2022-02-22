@@ -67,7 +67,9 @@ namespace Artemis.System
         public override void OnChange(Entity entity)
         {
         }
-
+        /// <summary>
+        /// Implement this
+        /// </summary>
         public override void ProcessSystem()
         {
             Entity entity = this.EntityWorld.TagManager.GetEntity(this.Tag);

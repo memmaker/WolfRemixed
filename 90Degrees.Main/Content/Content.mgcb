@@ -230,6 +230,18 @@
 #begin Menu/titlescreen_widescreen.png
 /copy:Menu/titlescreen_widescreen.png
 
+#begin Music/At.Dooms.Gate.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/At.Dooms.Gate.ogg
+
+#begin Music/Grabbag.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Grabbag.ogg
+
 #begin Music/Wolfenstein/wolfintro.ogg
 /importer:OggImporter
 /processor:SongProcessor
@@ -260,6 +272,96 @@
 /processorParam:Quality=Best
 /build:Music/Wolfenstein/wolfplay03.ogg
 
+#begin SoundEffects/BlakeStone/ChargedPistol.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/BlakeStone/ChargedPistol.wav
+
+#begin SoundEffects/Doom/BULITHIT.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Doom/BULITHIT.WAV
+
+#begin SoundEffects/Doom/DSSHOTGN.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Doom/DSSHOTGN.wav
+
+#begin SoundEffects/Duke/SHOTGNCK.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Duke/SHOTGNCK.WAV
+
+#begin SoundEffects/Duke/SHOTGNFR.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Duke/SHOTGNFR.WAV
+
+#begin SoundEffects/Kill/1001.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/1001.WAV
+
+#begin SoundEffects/Kill/1011.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/1011.WAV
+
+#begin SoundEffects/Kill/1039.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/1039.WAV
+
+#begin SoundEffects/Kill/1040.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/1040.WAV
+
+#begin SoundEffects/Kill/1057.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/1057.WAV
+
+#begin SoundEffects/Kill/GETSOM.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/GETSOM.WAV
+
+#begin SoundEffects/Kill/HAIL.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/HAIL.WAV
+
+#begin SoundEffects/Kill/IMGOOD.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/IMGOOD.WAV
+
+#begin SoundEffects/Kill/INHELL.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/INHELL.WAV
+
+#begin SoundEffects/Kill/LETGOD.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Kill/LETGOD.WAV
+
 #begin SoundEffects/Narrator/doublekill.wav
 /copy:SoundEffects/Narrator/doublekill.wav
 
@@ -274,6 +376,60 @@
 
 #begin SoundEffects/Narrator/ultrakill.wav
 /copy:SoundEffects/Narrator/ultrakill.wav
+
+#begin SoundEffects/PickUp/1015.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PickUp/1015.WAV
+
+#begin SoundEffects/PickUp/1024.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PickUp/1024.WAV
+
+#begin SoundEffects/PickUp/CHEW.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PickUp/CHEW.WAV
+
+#begin SoundEffects/PickUp/COOL.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PickUp/COOL.WAV
+
+#begin SoundEffects/PickUp/GROOVY.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PickUp/GROOVY.WAV
+
+#begin SoundEffects/PickUp/READYFA.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PickUp/READYFA.WAV
+
+#begin SoundEffects/PickUp/T1002.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PickUp/T1002.WAV
+
+#begin SoundEffects/PickUp/T1003.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PickUp/T1003.WAV
+
+#begin SoundEffects/PickUp/WANSOM.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PickUp/WANSOM.WAV
 
 #begin SoundEffects/Rott/bulletRicochet1.wav
 /copy:SoundEffects/Rott/bulletRicochet1.wav

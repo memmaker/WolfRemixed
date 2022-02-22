@@ -167,14 +167,12 @@ namespace raycaster
             // 800x600
             // 640x480
             // 320x240
-            var xRes = 1024;
-            var yRes = 768;
 
             sScreenWidth = Const.InternalRenderResolutionWidth;
             sScreenHeight = Const.InternalRenderResolutionHeight;
             Resolution.Init(ref Graphics);
             Resolution.SetVirtualResolution(sScreenWidth, sScreenHeight);
-            Resolution.SetResolution(xRes, yRes, false);
+            Resolution.SetResolution(Const.DisplayResolutionWidth, Const.DisplayResolutionHeight, Settings.Fullscreen);
 
             if (Graphics.GraphicsDevice != null) GameGui.Viewport = Graphics.GraphicsDevice.Viewport;
 
@@ -216,7 +214,7 @@ namespace raycaster
 
             LoadMap(mMapList[mCurrentMapIndex]);
 
-            sRaycastRenderSystem = new RaycastRenderSystem(mSpriteBatch, AssetManager.Default, mTilemap, sScreenWidth, sScreenHeight, mLowResRaytracing) { SecretWallsVisible = mSecretWallsVisible };
+            sRaycastRenderSystem = new RaycastRenderSystem(mSpriteBatch, AssetManager.Default, mTilemap) { SecretWallsVisible = mSecretWallsVisible };
             mRaycaster = sRaycastRenderSystem.Raycaster;
 
             mSystemManager.SetSystem(sRaycastRenderSystem, GameLoopType.Draw);
@@ -824,8 +822,7 @@ namespace raycaster
             if (inventory.Items[inventorySlotIndex] == null)
             {
                 Debug.Print("Created HUD Weapon Entity..");
-                inventory.Items[inventorySlotIndex] = creationFunction(new Point(Const.InternalRenderResolutionWidth, Const.SpriteRenderResolutionHeight),
-                                                                       sRaycastRenderSystem.StatusbarHeight);
+                inventory.Items[inventorySlotIndex] = creationFunction(new Point(Const.InternalRenderResolutionWidth, Const.SpriteRenderResolutionHeight), 0);
                 inventory.Items[inventorySlotIndex].IsEnabled = false;
             }
             PlayerAmmo += inventory.Items[inventorySlotIndex].GetComponent<Weapon>().CurrentAmmo;
