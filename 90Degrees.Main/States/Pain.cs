@@ -1,5 +1,6 @@
 ﻿using raycaster.Scripts;
 using System.Collections.Generic;
+using MP3Player;
 
 namespace raycaster.States
 {
@@ -26,7 +27,7 @@ namespace raycaster.States
         public override void BeginState()
         {
             NextActorState = ActorState.Pain;
-            RaycastGame.AudioManager.PlayRandomEffect(PainSoundCues.ConvertAll<int>((cue) => { return (int)cue; }));
+            AudioPlayer.PlayRandomEffect(PainSoundCues.ConvertAll<int>((cue) => { return (int)cue; }));
         }
 
         public List<SoundCue> PainSoundCues { get; set; }

@@ -4,6 +4,7 @@ using raycaster.Scripts;
 using raycaster.States;
 using System;
 using System.Collections.Generic;
+using MP3Player;
 using Twengine.Components;
 using Twengine.Components.Meta;
 using Twengine.Datastructures;
@@ -64,11 +65,11 @@ namespace raycaster
             Door doorComponent = new Door(spawnPos, orientation, 5);
             doorComponent.BeginOpen += delegate
                                            {
-                                               RaycastGame.AudioManager.PlayEffect((int)SoundCue.OpenDoor);
+                                               AudioPlayer.PlayEffect((int)SoundCue.OpenDoor);
                                            };
             doorComponent.BeginClose += delegate
                                             {
-                                                RaycastGame.AudioManager.PlayEffect((int)SoundCue.CloseDoor);
+                                                AudioPlayer.PlayEffect((int)SoundCue.CloseDoor);
                                             };
             e.AddComponent(doorComponent);
 
@@ -774,7 +775,7 @@ namespace raycaster
             int ypos = (int)(screenDimension.Y - ((frameHeight / 2f) * scale) - statusbarHeight);
             e.AddComponent(new Transform(xpos, ypos, 0f));
             e.AddComponent(new Sprite(shotgun, 0) { Scale = scale, Origin = new Vector2(64, 64) });
-            e.AddComponent(new Weapon("Shotgun of the Duke", 5, 15, 8, 20) { PenetrationCount = 3, Range = 10, Accuracy = 45, ShotCount = 7 });
+            e.AddComponent(new Weapon("Shotgun of the Duke", 5, 15, 8, 20) { FireSoundCue = SoundCue.DukeShotgunFire,  PenetrationCount = 3, Range = 10, Accuracy = 45, ShotCount = 7 });
             SpriteAnimator spriteAnimator = new SpriteAnimator();
             Animation animation = spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             animation.Loop = true;
@@ -799,7 +800,7 @@ namespace raycaster
             int ypos = (int)(screenDimension.Y - ((frameHeight / 2f) * scale) - statusbarHeight);
             e.AddComponent(new Transform(xpos, ypos, 0f));
             e.AddComponent(new Sprite(shotgun, 0) { Scale = scale, Origin = new Vector2(64, 64) });
-            e.AddComponent(new Weapon("Shotgun of Doom", 5, 15, 8, 20) { PenetrationCount = 4, Range = 10, Accuracy = 50, ShotCount = 7 });
+            e.AddComponent(new Weapon("Shotgun of Doom", 5, 15, 8, 20) { FireSoundCue = SoundCue.DoomShotgunFire, PenetrationCount = 4, Range = 10, Accuracy = 50, ShotCount = 7 });
             SpriteAnimator spriteAnimator = new SpriteAnimator();
             Animation animation = spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             animation.Loop = true;
@@ -875,7 +876,7 @@ namespace raycaster
             int ypos = (int)(screenDimension.Y - ((frameHeight / 2f) * scale) - statusbarHeight);
             e.AddComponent(new Transform(xpos, ypos, 0f));
             e.AddComponent(new Sprite(pistol, 0) { Scale = scale, Origin = new Vector2(32, 32) });
-            e.AddComponent(new Weapon("Blakes Auto Charge Pistol", 3, 12, 10, 20) { PenetrationCount = 1, Range = 40, NeedsAmmo = false, Accuracy = 4, IsSilent = true, IsAutomatic = false });
+            e.AddComponent(new Weapon("Blakes Auto Charge Pistol", 3, 12, 10, 20) { FireSoundCue = SoundCue.BlakePistolShot, PenetrationCount = 1, Range = 40, NeedsAmmo = false, Accuracy = 4, IsSilent = true, IsAutomatic = false });
             SpriteAnimator spriteAnimator = new SpriteAnimator();
             spriteAnimator.AddAnimation("Idle", new List<int>() { 0 }, 1, true);
             spriteAnimator.AddAnimation("Fire", new List<int>() { 1, 2, 3, 4, 0 }, 9, false);
@@ -970,6 +971,18 @@ namespace raycaster
             return e;
         }
 
+        private static List<int> pickupSfx = new List<SoundCue>()
+        {
+            SoundCue.PickupVoiceSample01,
+            SoundCue.PickupVoiceSample02,
+            SoundCue.PickupVoiceSample03,
+            SoundCue.PickupVoiceSample04,
+            SoundCue.PickupVoiceSample05,
+            SoundCue.PickupVoiceSample06,
+            SoundCue.PickupVoiceSample07,
+            SoundCue.PickupVoiceSample08,
+            SoundCue.PickupVoiceSample09,
+        }.ConvertAll(cue => (int) cue);
         public static Entity CreateWeaponPickup(SpriteSheet spriteTextures, Vector2 spawnPos, int tileIndex, string pickupMessage, int inventorySlotIndex, Func<Point, int, Entity> creationFunction)
         {
             Entity e = sWorld.CreateEntity();
@@ -988,6 +1001,15 @@ namespace raycaster
             {
                 metaBehavior.OnCollision(o, args);
                 CreateMessage(pickupMessage);
+                AudioPlayer.PlayRandomEffect(pickupSfx);
+                if (inventorySlotIndex == 6)
+                {
+                    AudioPlayer.PlaySong((int)SoundCue.AtDoomsGate);
+                }
+                else if (inventorySlotIndex == 7)
+                {
+                    AudioPlayer.PlaySong((int)SoundCue.GrabBag);
+                }
                 RaycastGame.GiveWeaponToPlayer(inventorySlotIndex, creationFunction);
             };
             sTilemap.AddEntity(e);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using raycaster.Scripts;
 using System.Collections.Generic;
+using MP3Player;
 using XNAHelper;
 
 namespace raycaster.States
@@ -29,7 +30,7 @@ namespace raycaster.States
         }
         public override void BeginState()
         {
-            RaycastGame.AudioManager.PlayRandomEffect(DyingSoundCues.ConvertAll((cue) => { return (int)cue; }));
+            AudioPlayer.PlayRandomEffect(DyingSoundCues.ConvertAll((cue) => { return (int)cue; }));
         }
 
         public List<SoundCue> DyingSoundCues { get; set; }

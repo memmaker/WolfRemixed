@@ -1,5 +1,6 @@
 ﻿using raycaster.Scripts;
 using System.Collections.Generic;
+using MP3Player;
 
 namespace raycaster.States
 {
@@ -21,7 +22,7 @@ namespace raycaster.States
             if ((AttackOnSight && CanDetectPlayer()) || EnemyWasWounded())
             {
                 if (DetectPlayerSoundCues != null)
-                    RaycastGame.AudioManager.PlayRandomEffect(DetectPlayerSoundCues.ConvertAll((cue) =>
+                    AudioPlayer.PlayRandomEffect(DetectPlayerSoundCues.ConvertAll((cue) =>
                     {
                         return (int)cue;
                     }));

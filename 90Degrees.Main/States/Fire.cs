@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using raycaster.Scripts;
 using System.Collections.Generic;
+using MP3Player;
 using XNAHelper;
 using ActorState = raycaster.Scripts.ActorState;
 
@@ -48,7 +49,7 @@ namespace raycaster.States
         private void StartFire()
         {
             if (FireSoundCues != null)
-                RaycastGame.AudioManager.PlayRandomEffect(FireSoundCues.ConvertAll((cue) => { return (int)cue; }));
+                AudioPlayer.PlayRandomEffect(FireSoundCues.ConvertAll((cue) => { return (int)cue; }));
             mIsShooting = true;
             OnResetAnimation();
         }
@@ -63,7 +64,7 @@ namespace raycaster.States
             }
             else
             {
-                RaycastGame.AudioManager.PlayRandomEffect(FireSoundCues.ConvertAll((cue) => { return (int)cue; }));
+                AudioPlayer.PlayRandomEffect(FireSoundCues.ConvertAll((cue) => { return (int)cue; }));
             }
         }
 

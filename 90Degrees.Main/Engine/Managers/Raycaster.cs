@@ -838,35 +838,16 @@ namespace Twengine.Managers
                     int colorTexIndex = texWidth * v + u;
                     Color pixelColorFloor = mTexDataFloor[colorTexIndex];
                     Color pixelColorCeiling = mTexDataCeil[colorTexIndex];
-                    /*
-                    float factor = 1.0f;
-                    float absoluteDist = rowDistance < 0 ? -rowDistance : rowDistance;
-                    if (absoluteDist > 10f)
-                    {
-                        factor = 0.0f;
-                    }
-                    else if (absoluteDist > 5f)
-                    {
-                        factor = 0.2f;
-                    }
-                    else if (absoluteDist > 3f)
-                    {
-                        factor = 0.3f;
-                    }
-                    else if (absoluteDist > 2f)
-                    {
-                        factor = 0.4f;
-                    }
-                    pixelColorFloor.R = (byte)(pixelColorFloor.R * factor);
-                    pixelColorFloor.G = (byte)(pixelColorFloor.G * factor);
-                    pixelColorFloor.B = (byte)(pixelColorFloor.B * factor);
+
+                    /* TODO: Make this work and not slow down everything
+                    double dist = HorizontalToDist(screenHeight - y);
+                    float factor = mTilemap.GetShadingFactor(dist);
 
                     pixelColorCeiling.R = (byte)(pixelColorCeiling.R * factor);
                     pixelColorCeiling.G = (byte)(pixelColorCeiling.G * factor);
                     pixelColorCeiling.B = (byte)(pixelColorCeiling.B * factor);
-                    //Color floorShade = mTilemap.GetShadingColor(pixelColorFloor, rowDistance);
-                    //Color ceilingShade = mTilemap.GetShadingColor(pixelColorCeiling, rowDistance);
                     */
+
                     var floorBufferIndex = y * Const.InternalRenderResolutionWidth + x;
                     var ceilingBufferIndex = (screenHeight - y - 1) * Const.InternalRenderResolutionWidth + x;
 

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using MP3Player;
 using Twengine.SubSystems.Raycast;
 using XNAGameGui.Gui.Widgets;
 using IUpdateable = Engine.GameStates.IUpdateable;
@@ -67,7 +68,7 @@ namespace raycaster.GameStates
             Debug.Print("Entering GamePlayState");
             RaycastGame.ShowLoadingScreen();
 
-            RaycastGame.AudioManager.StartPlaylist(new List<int>
+            AudioPlayer.StartPlaylist(new List<int>
                 {(int) SoundCue.GamePlayMusic01, (int) SoundCue.GamePlayMusic02, (int) SoundCue.GamePlayMusic03});
 
             Spawn();
@@ -98,7 +99,7 @@ namespace raycaster.GameStates
             mSpawnFinished = false;
             RaycastGame.Reset();
             //RaycastGame.ResetTilemap(); FIX THIS, we mean to dispose of this, not load it again
-            RaycastGame.AudioManager.StopPlaylist();
+            AudioPlayer.StopPlaylist();
         }
     }
 }

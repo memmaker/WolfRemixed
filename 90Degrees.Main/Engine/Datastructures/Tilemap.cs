@@ -154,10 +154,15 @@ namespace Twengine.Datastructures
 
         public Color GetShadingColor(Color source, double dist)
         {
-            dist *= 4;
-            dist += 96;
-            float lerpFact = (float) (dist / 128);
+            float lerpFact = GetShadingFactor(dist);
             return Color.Lerp(source, Color.Black, lerpFact);
+        }
+        public float GetShadingFactor(double dist)
+        {
+            dist *= 4;
+            dist += 48;
+            float lerpFact = (float)(dist / 128);
+            return lerpFact;
         }
 
         public Color GetShadingColor(double dist)

@@ -49,7 +49,6 @@ namespace raycaster
         public static event EventHandler<EventArgs> TicEvent;
         private int mTics;
         protected static GameStateManager mGameStateManager;
-        public static AudioPlayer AudioManager { get; set; }
         protected static GameGui sGui;
         private MouseState mLastmouseState;
 
@@ -103,7 +102,6 @@ namespace raycaster
             sGui = new GameGui();
             mLastmouseState = Mouse.GetState();
             mGameStateManager = new GameStateManager(Services);
-            AudioManager = new AudioPlayer();
             Components.Add(mGameStateManager);
             
             Settings.Load();
@@ -189,7 +187,7 @@ namespace raycaster
             mHiddenMonsters = new HashSet<Entity>();
             mTimers = new List<CallbackTimer>();
 
-            mMapList = new[] { "testmap", "map1" };//,"map02.txt"};
+            mMapList = new[] { "map1", "testmap" };//,"map02.txt"};
             mCurrentMapIndex = 0;
 
             PlayerAmmo = 0;
@@ -249,7 +247,7 @@ namespace raycaster
             mWeaponSystem.PlayerUsedAmmo += args => PlayerAmmo--;
             mWeaponSystem.PlayerWeaponFired += args =>
                                                      {
-                                                         AudioManager.PlayEffect((int)CurrentWeapon.FireSoundCue);
+                                                         AudioPlayer.PlayEffect((int)CurrentWeapon.FireSoundCue);
                                                          if (!CurrentWeapon.IsSilent)
                                                              AlertNonHiddenEnemiesNearPosition(mPlayerTransform.Position);
                                                      };
@@ -469,7 +467,7 @@ namespace raycaster
         {
             if (mEnergyReactorsAlive.Count == 0)
             {
-                AudioManager.PlayEffect((int)SoundCue.AlarmSound);
+                AudioPlayer.PlayEffect((int)SoundCue.AlarmSound);
                 foreach (Entity energyBarrier in mEnergyBarriers)
                 {
                     energyBarrier.Group = "Deco";
@@ -753,52 +751,84 @@ namespace raycaster
             sGui.LoadContent(Content, GraphicsDevice, mHudFont, mLongTextFont);
             GameGui.Viewport = GraphicsDevice.Viewport;
             
-            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfmenu"), (int)SoundCue.MenuMusic);
-            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfintro"), (int)SoundCue.IntroMusic);
+            AudioPlayer.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfmenu"), (int)SoundCue.MenuMusic);
+            AudioPlayer.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfintro"), (int)SoundCue.IntroMusic);
 
-            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfplay01"), (int)SoundCue.GamePlayMusic01);
-            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfplay02"), (int)SoundCue.GamePlayMusic02);
-            AudioManager.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfplay03"), (int)SoundCue.GamePlayMusic03);
+            AudioPlayer.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfplay01"), (int)SoundCue.GamePlayMusic01);
+            AudioPlayer.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfplay02"), (int)SoundCue.GamePlayMusic02);
+            AudioPlayer.LoadSong(Content.Load<Song>("Music/Wolfenstein/wolfplay03"), (int)SoundCue.GamePlayMusic03);
 
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot1.wav"), (int)SoundCue.Gunshot01);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot2.wav"), (int)SoundCue.Gunshot02);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot3.wav"), (int)SoundCue.Gunshot03);
+            AudioPlayer.LoadSong(Content.Load<Song>("Music/Grabbag"), (int)SoundCue.GrabBag);
+            AudioPlayer.LoadSong(Content.Load<Song>("Music/At.Dooms.Gate"), (int)SoundCue.AtDoomsGate);
 
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol1.wav"), (int)SoundCue.Pistol1);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol2.wav"), (int)SoundCue.Pistol2);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/BlakeStone/ChargedPistol.wav"), (int)SoundCue.BlakePistolShot);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Doom/DSSHOTGN.wav"), (int)SoundCue.DoomShotgunFire);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Duke/SHOTGNCK.wav"), (int)SoundCue.DukeShotgunCock);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Duke/SHOTGNFR.wav"), (int)SoundCue.DukeShotgunFire);
 
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet1.wav"), (int)SoundCue.Ricochet1);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet2.wav"), (int)SoundCue.Ricochet2);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet3.wav"), (int)SoundCue.Ricochet3);
+            // Voice Samples for kills
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/1001.WAV"), (int)SoundCue.KillVoiceSample01);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/1011.WAV"), (int)SoundCue.KillVoiceSample02);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/1039.WAV"), (int)SoundCue.KillVoiceSample03);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/1040.WAV"), (int)SoundCue.KillVoiceSample04);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/1057.WAV"), (int)SoundCue.KillVoiceSample05);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/GETSOM.WAV"), (int)SoundCue.KillVoiceSample06);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/HAIL.WAV"), (int)SoundCue.KillVoiceSample07);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/IMGOOD.WAV"), (int)SoundCue.KillVoiceSample08);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/INHELL.WAV"), (int)SoundCue.KillVoiceSample09);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Kill/LETGOD.WAV"), (int)SoundCue.KillVoiceSample10);
 
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/achtung.wav"), (int)SoundCue.Achtung);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarm.wav"), (int)SoundCue.Alarm);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/werda.wav"), (int)SoundCue.WerDa);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/opendoor.wav"), (int)SoundCue.CloseDoor);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/closedoor.wav"), (int)SoundCue.OpenDoor);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/meinLeben.wav"), (int)SoundCue.MeinLeben);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarmSound.wav"), (int)SoundCue.AlarmSound);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound2.wav"), (int)SoundCue.Rifle1);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound3.wav"), (int)SoundCue.Rifle2);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Machine Gun.wav"), (int)SoundCue.MachineGun);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Gatling Gun.wav"), (int)SoundCue.GatlingGun);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Knife.wav"), (int)SoundCue.Knife);
-
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Enemy Pain.wav"), (int)SoundCue.EnemyPain);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Dies.wav"), (int)SoundCue.PlayerDies);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 1.wav"), (int)SoundCue.PlayerPain1);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 2.wav"), (int)SoundCue.PlayerPain2);
+            // Voice Samples for Pickups
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/PickUp/1015.WAV"), (int)SoundCue.PickupVoiceSample01);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/PickUp/1024.WAV"), (int)SoundCue.PickupVoiceSample02);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/PickUp/T1002.WAV"), (int)SoundCue.PickupVoiceSample03);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/PickUp/T1003.WAV"), (int)SoundCue.PickupVoiceSample04);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/PickUp/CHEW.WAV"), (int)SoundCue.PickupVoiceSample05);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/PickUp/COOL.WAV"), (int)SoundCue.PickupVoiceSample06);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/PickUp/GROOVY.WAV"), (int)SoundCue.PickupVoiceSample07);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/PickUp/READYFA.WAV"), (int)SoundCue.PickupVoiceSample08);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/PickUp/WANSOM.WAV"), (int)SoundCue.PickupVoiceSample09);
 
 
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/doublekill.wav"), (int)SoundCue.DoubleKill);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/triplekill.wav"), (int)SoundCue.TripleKill);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/multikill.wav"), (int)SoundCue.MultiKill);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/ultrakill.wav"), (int)SoundCue.UltraKill);
-            AudioManager.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/monsterkill.wav"), (int)SoundCue.MonsterKill);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot1.wav"), (int)SoundCue.Gunshot01);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot2.wav"), (int)SoundCue.Gunshot02);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/gunshot3.wav"), (int)SoundCue.Gunshot03);
+
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol1.wav"), (int)SoundCue.Pistol1);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/pistol2.wav"), (int)SoundCue.Pistol2);
+
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet1.wav"), (int)SoundCue.Ricochet1);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet2.wav"), (int)SoundCue.Ricochet2);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Rott/bulletRicochet3.wav"), (int)SoundCue.Ricochet3);
+
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/achtung.wav"), (int)SoundCue.Achtung);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarm.wav"), (int)SoundCue.Alarm);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/werda.wav"), (int)SoundCue.WerDa);
+
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/opendoor.wav"), (int)SoundCue.CloseDoor);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/closedoor.wav"), (int)SoundCue.OpenDoor);
+
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/meinLeben.wav"), (int)SoundCue.MeinLeben);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/alarmSound.wav"), (int)SoundCue.AlarmSound);
+
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound2.wav"), (int)SoundCue.Rifle1);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/rifleSound3.wav"), (int)SoundCue.Rifle2);
+
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Machine Gun.wav"), (int)SoundCue.MachineGun);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Gatling Gun.wav"), (int)SoundCue.GatlingGun);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Knife.wav"), (int)SoundCue.Knife);
+
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Enemy Pain.wav"), (int)SoundCue.EnemyPain);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Dies.wav"), (int)SoundCue.PlayerDies);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 1.wav"), (int)SoundCue.PlayerPain1);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Wolfenstein/Player Pain 2.wav"), (int)SoundCue.PlayerPain2);
+
+
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/doublekill.wav"), (int)SoundCue.DoubleKill);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/triplekill.wav"), (int)SoundCue.TripleKill);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/multikill.wav"), (int)SoundCue.MultiKill);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/ultrakill.wav"), (int)SoundCue.UltraKill);
+            AudioPlayer.AddEffect(SoundEffect.FromFile("Content/SoundEffects/Narrator/monsterkill.wav"), (int)SoundCue.MonsterKill);
 
 
         }
@@ -829,7 +859,6 @@ namespace raycaster
             sHudFace.AnimateEvilGrinOnHudFace();
             ChangePlayerWeapon(inventorySlotIndex);
         }
-
 
         public static void GiveAmmoToPlayer(int amount)
         {
@@ -986,14 +1015,14 @@ namespace raycaster
             {
                 sHudFace.AnimatePainOnHudFace(e.Damage);
             }
-            AudioManager.PlayRandomEffect(new List<int>() { (int)SoundCue.PlayerPain1, (int)SoundCue.PlayerPain2 });
+            AudioPlayer.PlayRandomEffect(new List<int>() { (int)SoundCue.PlayerPain1, (int)SoundCue.PlayerPain2 });
             //mHudFaceAnimator.FinishedPlaying += new EventHandler<EventArgs>(mHudFaceAnimator_FinishedPlaying);
 
         }
 
         private static void PlayerDied(object sender, EventArgs e)
         {
-            AudioManager.PlayEffect((int)SoundCue.PlayerDies);
+            AudioPlayer.PlayEffect((int)SoundCue.PlayerDies);
             ShowYouDiedStory(Respawn);
         }
 
@@ -1104,23 +1133,23 @@ namespace raycaster
         {
             if (MultiKillCounter >= 6)
             {
-                AudioManager.PlayEffect((int)SoundCue.MonsterKill);
+                AudioPlayer.PlayEffect((int)SoundCue.MonsterKill);
             }
             else if (MultiKillCounter == 5)
             {
-                AudioManager.PlayEffect((int)SoundCue.UltraKill);
+                AudioPlayer.PlayEffect((int)SoundCue.UltraKill);
             }
             else if (MultiKillCounter == 4)
             {
-                AudioManager.PlayEffect((int)SoundCue.MultiKill);
+                AudioPlayer.PlayEffect((int)SoundCue.MultiKill);
             }
             else if (MultiKillCounter == 3)
             {
-                AudioManager.PlayEffect((int)SoundCue.TripleKill);
+                AudioPlayer.PlayEffect((int)SoundCue.TripleKill);
             }
             else if (MultiKillCounter == 2)
             {
-                AudioManager.PlayEffect((int)SoundCue.DoubleKill);
+                AudioPlayer.PlayEffect((int)SoundCue.DoubleKill);
             }
             MultiKillCounter = 0;
         }

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using MP3Player;
 using TurnBasedCombat.GameStates;
 using Twengine.Managers;
 using Twengine.SubSystems.Raycast;
@@ -65,19 +66,19 @@ namespace raycaster.GameStates
                 button.SelectionColor = new Color(103, 84, 15);
             }
             GameGui.RootWidget.AddChild(mMenu);
-            RaycastGame.AudioManager.PlaySong((int)SoundCue.MenuMusic, true);
+            AudioPlayer.PlaySong((int)SoundCue.MenuMusic, true);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            RaycastGame.AudioManager.PlaySong((int)SoundCue.MenuMusic, true);
+            AudioPlayer.PlaySong((int)SoundCue.MenuMusic, true);
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            RaycastGame.AudioManager.StopSong();
+            AudioPlayer.StopSong();
         }
         protected override void OnLeaving()
         {
@@ -85,7 +86,7 @@ namespace raycaster.GameStates
 
             //mMainScreen.Desktop.Children.Remove(mMenu);
             //mGui.RootWidget.RemoveChild(mMenu);
-            RaycastGame.AudioManager.StopSong();
+            AudioPlayer.StopSong();
         }
 
         protected override void KeyPressed(Keys key)

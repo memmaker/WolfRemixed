@@ -3,8 +3,7 @@ raycasting engine.
 
 # Todo
  * Add missing sound effects
- ** Shotguns
- ** Blake Pistol
+ ** Duke Shotgun
  ** Magic Hand
  
  * Get Fullscreen working
@@ -12,7 +11,6 @@ raycasting engine.
  * Replace Start Screen Image
  * Put a nice end screen with link to youtube
  
- * Exploding Barrels
 
 # Nice to have
  * Do something about large text on lower resolutions
@@ -23,6 +21,7 @@ raycasting engine.
  * Real Push Walls
  * Lighting Effects
  * Skyboxes for outside areas
+ * Exploding Barrels
  * Destroyable Walls & Items
 
 

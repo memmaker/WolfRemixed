@@ -52,6 +52,8 @@ namespace Twengine.SubSystems.Raycast
         private int mLowResResolutionWidth;
         private int fov;
         private AssetManager mContent;
+        private Rectangle mUpperScreen = new Rectangle(0,0,640,180);
+        private Rectangle mLowerScreen = new Rectangle(0, 180, 640, 180);
 
         public RaycastRenderSystem(SpriteBatch spriteBatch, AssetManager content, Tilemap map)
             : base(Aspect.Empty())
@@ -120,7 +122,8 @@ namespace Twengine.SubSystems.Raycast
             mCeilingTexture = new RenderTarget2D(graphicsDevice, mCeiling.Width, mCeiling.Height, false, SurfaceFormat.Color, DepthFormat.None);
             mThreeDeeView = new RenderTarget2D(graphicsDevice, mRaycasterResolutionX, mRaycasterResolutionY, false, SurfaceFormat.Color, DepthFormat.None);
 
-            
+            CreateCeiling();
+            CreateFloor();
         }
 
         public void ChangeMap(Tilemap tilemap)
@@ -156,7 +159,7 @@ namespace Twengine.SubSystems.Raycast
 
         protected void Draw()
         {
-            mBackgroundData = Raycaster.FloorCasting();
+            //mBackgroundData = Raycaster.FloorCasting(); // UNCOMMENT FOR TEXTURED FLOOR / CEILING
 
             mWallInfos = Raycaster.Raycasting();
 
@@ -164,20 +167,21 @@ namespace Twengine.SubSystems.Raycast
 
             DrawScreenView(mBackgroundData, mWallInfos, mVisibleEntities);
         }
-
-        public int PlayerAmmo { get; set; }
-
-        public int PlayerHealth { get; set; }
-
+        
         private void DrawScreenView(Color[] backgroundData, BasicRaycastHitInfo[] raycastHitInfos, List<Entity> sprites)
         {
 
             mGraphicsDevice.SetRenderTarget(mThreeDeeView);
 
-            mThreeDeeView.SetData(backgroundData);
+            //mThreeDeeView.SetData(backgroundData);  // UNCOMMENT FOR TEXTURED FLOOR / CEILING
+
 
             mSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
-            
+
+            // Comment for textured floor/ceiling
+            mSpriteBatch.Draw(mCeilingTexture, mUpperScreen, Color.White);
+            mSpriteBatch.Draw(mFloorTexture, mLowerScreen, Color.White);
+
             DrawWalls(raycastHitInfos);
 
             DrawSprites(sprites);
@@ -203,10 +207,7 @@ namespace Twengine.SubSystems.Raycast
                 }
             }
         }
-
-
-
-        public string WeaponName { get; set; }
+        
         public Texture2D ThreeDeeView
         {
             get { return mThreeDeeView; }
@@ -244,33 +245,31 @@ namespace Twengine.SubSystems.Raycast
         }
 
 
-        private void CreateCeiling(bool shaded, Color baseColor)
+        private void CreateCeiling()
         {
             mGraphicsDevice.SetRenderTarget(mCeilingTexture);
             mSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
             for (int y = 0; y <= mCeiling.Height; y++)
             {
                 double dist = Raycaster.HorizontalToDist(mRaycasterResolutionY - y);
-                Color drawColor = shaded ? Tilemap.GetShadingColor(baseColor, dist) : baseColor;
+                Color drawColor = Tilemap.GetShadingColor(Color.Gray, dist);
                 Rectangle destRect = new Rectangle(mCeiling.Left, y, mCeiling.Width, 1);
                 mSpriteBatch.Draw(mPixel, destRect, null, drawColor);
-
             }
             mSpriteBatch.End();
             mGraphicsDevice.SetRenderTarget(null);
         }
 
-        private void CreateFloor(bool shaded, Color baseColor)
+        private void CreateFloor()
         {
             mGraphicsDevice.SetRenderTarget(mFloorTexture);
             mSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Resolution.getTransformationMatrix());
             for (int y = 0; y <= mFloor.Height; y++)
             {
                 double dist = Raycaster.HorizontalToDist(y + mFloor.Top);
-                Color drawColor = shaded ? Tilemap.GetShadingColor(baseColor, dist) : baseColor;
+                Color drawColor = Tilemap.GetShadingColor(Color.DarkGray, dist);
                 Rectangle destRect = new Rectangle(mFloor.Left, y, mFloor.Width, 1);
                 mSpriteBatch.Draw(mPixel, destRect, null, drawColor);
-
             }
             mSpriteBatch.End();
             mGraphicsDevice.SetRenderTarget(null);
@@ -280,9 +279,8 @@ namespace Twengine.SubSystems.Raycast
 
         private void TexturedDraw(BasicRaycastHitInfo raycastHitInfo)
         {
-            int texIndex = 0;
             if (raycastHitInfo.WallType == -1) return;
-            texIndex = raycastHitInfo.WallType;
+            var texIndex = raycastHitInfo.WallType;
 
             Rectangle texRect = mWallTextures.GetSourceRectByIndex(texIndex);
 
@@ -317,7 +315,7 @@ namespace Twengine.SubSystems.Raycast
 
             Color drawColor;
             if (Tilemap.PseudoShading)
-                drawColor = Color.White; //Tilemap.GetShadingColor(raycastHitInfo.DistToWall);
+                drawColor = Tilemap.GetShadingColor(raycastHitInfo.DistToWall);
             else
                 drawColor = Color.White;
 
