@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>WolfRemixed_Web</RootNamespace>
+    <AssemblyName>WolfRemixed_Web</AssemblyName>
+    <DefineConstants>$(DefineConstants);BLAZORGL;FULLDOTNET</DefineConstants>
+    <KniPlatform>BlazorGL</KniPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
+    <!--<InvariantGlobalization>true</InvariantGlobalization>-->
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Pages\Index.razor.cs" />
+    <Compile Include="Program.cs" />
+    <!-- shared game code, linked from the desktop projects -->
+    <Compile Include="..\90Degrees.Main\**\*.cs" Exclude="..\90Degrees.Main\Program.cs;..\90Degrees.Main\bin\**;..\90Degrees.Main\obj\**" LinkBase="Game" />
+    <Compile Include="..\Artemis_XNA_INDEPENDENT\**\*.cs" Exclude="..\Artemis_XNA_INDEPENDENT\bin\**;..\Artemis_XNA_INDEPENDENT\obj\**" LinkBase="Artemis" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nkast.Xna.Framework" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Content" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Graphics" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Audio" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Media" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Input" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Game" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Devices" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Storage" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.XR" Version="4.3.9001" />
+    <PackageReference Include="nkast.Kni.Platform.Blazor.GL" Version="4.3.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Content.Pipeline.Builder" Version="4.3.9001" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.29" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.29" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.10" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <KniContentReference Include="..\90Degrees.Main\Content\Content.Web.mgcb" />
+  </ItemGroup>
+
+  <!-- Prebuilt DesktopGL .xnb (fonts, tile sheets) from the 1.0 release: KNI's texture/font importers
+       need Windows-only native libs (FreeImage, freetype), so they can't be built on macOS. -->
+  <Target Name="CopyPrebuiltContent" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <PrebuiltXnb Include="PrebuiltContent\**\*.xnb" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PrebuiltXnb)" DestinationFolder="wwwroot\Content\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

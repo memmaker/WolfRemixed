@@ -29,8 +29,30 @@ namespace XNAHelper
             mNumberOfFrames = (int)Math.Floor((Texture.Width / (float)FrameWidth) * (Texture.Height / (float)FrameHeight));
             mTexData = new Color[Texture.Width * Texture.Height];
 
-            texture.GetData(mTexData);
+            ReadPixels(texture, mTexData);
             CreateOpaqueRectangles();
+        }
+
+        private static void ReadPixels(Texture2D texture, Color[] data)
+        {
+#if BLAZORGL
+            // WebGL can't read textures back directly: draw into a render target and read that
+            GraphicsDevice device = texture.GraphicsDevice;
+            RenderTargetBinding[] previous = device.GetRenderTargets();
+            using RenderTarget2D target = new RenderTarget2D(device, texture.Width, texture.Height);
+            device.SetRenderTarget(target);
+            device.Clear(Color.Transparent);
+            using (SpriteBatch batch = new SpriteBatch(device))
+            {
+                batch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, SamplerState.PointClamp);
+                batch.Draw(texture, Vector2.Zero, Color.White);
+                batch.End();
+            }
+            device.SetRenderTargets(previous);
+            target.GetData(data);
+#else
+            texture.GetData(data);
+#endif
         }
 
         private void CreateOpaqueRectangles()
@@ -143,9 +165,9 @@ namespace XNAHelper
             int x = (index % framesX) * FrameWidth;
             int y = ((int)Math.Floor(index / (double)framesX)) * FrameHeight;
 
-            Rectangle sourcerect = new Rectangle(x, y, FrameWidth, FrameHeight);
             Color[] data = new Color[FrameWidth * FrameHeight];
-            Texture.GetData(0, sourcerect, data, 0, FrameWidth * FrameHeight);
+            for (int row = 0; row < FrameHeight; row++)
+                Array.Copy(mTexData, (y + row) * Texture.Width + x, data, row * FrameWidth, FrameWidth);
             return data;
         }
     }

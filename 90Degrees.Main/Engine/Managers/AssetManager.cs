@@ -77,12 +77,43 @@ namespace Twengine.Managers
         {
             if (!mTextureCache.ContainsKey(assetname))
             {
-                FileStream fs = new FileStream(mContentManager.RootDirectory + "/" + assetname, FileMode.Open);
+                Stream fs = TitleContainer.OpenStream(mContentManager.RootDirectory + "/" + assetname);
+#if BLAZORGL
+                // DesktopGL premultiplies alpha in FromStream, KNI doesn't (color-keyed sheets would bleed their key color)
+                mTextureCache[assetname] = Premultiply(Texture2D.FromStream(mGraphicsDevice, fs));
+#else
                 mTextureCache[assetname] = Texture2D.FromStream(mGraphicsDevice, fs);
+#endif
                 fs.Close();
             }
             return mTextureCache[assetname];
         }
+
+#if BLAZORGL
+        private static readonly BlendState sPremultiplyBlend = new BlendState
+        {
+            ColorSourceBlend = Blend.SourceAlpha, ColorDestinationBlend = Blend.Zero,
+            AlphaSourceBlend = Blend.One, AlphaDestinationBlend = Blend.Zero
+        };
+
+        // premultiply on the GPU (WebGL can't read textures back): draw into a render target with rgb*a
+        private Texture2D Premultiply(Texture2D texture)
+        {
+            RenderTargetBinding[] previous = mGraphicsDevice.GetRenderTargets();
+            RenderTarget2D target = new RenderTarget2D(mGraphicsDevice, texture.Width, texture.Height);
+            mGraphicsDevice.SetRenderTarget(target);
+            mGraphicsDevice.Clear(Color.Transparent);
+            using (SpriteBatch batch = new SpriteBatch(mGraphicsDevice))
+            {
+                batch.Begin(SpriteSortMode.Immediate, sPremultiplyBlend, SamplerState.PointClamp);
+                batch.Draw(texture, Vector2.Zero, Color.White);
+                batch.End();
+            }
+            mGraphicsDevice.SetRenderTargets(previous);
+            texture.Dispose();
+            return target;
+        }
+#endif
 
         public SpriteSheet LoadSpriteSheet(string assetname, int frameWidth, int frameHeight)
         {

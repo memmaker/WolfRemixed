@@ -1,7 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+#if BLAZORGL
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Xml.Linq;
+using TiledMapProperties = System.Collections.Generic.Dictionary<string, string>;
+#else
 using MonoGame.Extended.Tiled;
+#endif
 using System;
 using System.Collections.Generic;
 
@@ -20,7 +28,9 @@ namespace Twengine.Managers
         public event EventHandler<SpawnEntityEventArgs> CreateEnemies;
         public event EventHandler<SpawnEntityEventArgs> CreateMetaInfo;
 
+#if !BLAZORGL
         protected TiledMap mMap;
+#endif
         private ContentManager mContentManager;
         private Dictionary<string, Texture2D> mTextures;
 
@@ -36,6 +46,73 @@ namespace Twengine.Managers
             return mTextures[tileSheetId];
         }
 
+#if BLAZORGL
+        // MonoGame.Extended does not run on KNI, so the web build reads the .tmx directly.
+        // ponytail: handles only what our maps use (base64+zlib tile layers, object props, object templates)
+        private static readonly Dictionary<string, string> sTileSheetAssets = new Dictionary<string, string>() {
+            { "Enemies", "Maps/wolfenemies_sheet"},
+            { "MetaSheet", "Icons/meta_sheet"},
+            { "WallTextures", "Maps/wolfwalls_sheet"},
+            { "WolfItems", "Maps/wolfitems_sheet_ext"},
+        };
+
+        private XElement LoadXml(string path)
+        {
+            using Stream s = TitleContainer.OpenStream(mContentManager.RootDirectory + "/" + path);
+            return XDocument.Load(s).Root;
+        }
+
+        public void LoadMap(string map)
+        {
+            XElement root = LoadXml(map + ".tmx");
+            string mapDir = Path.GetDirectoryName(map).Replace('\\', '/');
+            int width = (int)root.Attribute("width");
+            var firstGids = new SortedList<int, string>();
+            foreach (XElement ts in root.Elements("tileset"))
+            {
+                string name = Path.GetFileNameWithoutExtension((string)ts.Attribute("source"));
+                firstGids.Add((int)ts.Attribute("firstgid"), name);
+                mTextures[name] = mContentManager.Load<Texture2D>(sTileSheetAssets[name]);
+            }
+
+            var objects = new List<(Point cell, TiledMapProperties props)>();
+            foreach (XElement obj in root.Elements("objectgroup").Take(1).SelectMany(g => g.Elements("object")))
+            {
+                XElement tpl = obj.Attribute("template") != null ? LoadXml(mapDir + "/" + (string)obj.Attribute("template")).Element("object") : null;
+                float Attr(string n) => (float?)obj.Attribute(n) ?? (float?)tpl?.Attribute(n) ?? 0f;
+                var props = new TiledMapProperties();
+                foreach (XElement src in new[] { tpl, obj })
+                    foreach (XElement p in src?.Element("properties")?.Elements("property") ?? Enumerable.Empty<XElement>())
+                        props[(string)p.Attribute("name")] = (string)p.Attribute("value");
+                objects.Add((new Point((int)(Attr("x") / Attr("width")), (int)(Attr("y") / Attr("height"))), props));
+            }
+
+            foreach (var (layerName, handler) in new[] { ("Walls", CreateWalls), ("Items", CreateItems), ("MetaInfo", CreateMetaInfo), ("Enemies", CreateEnemies) })
+            {
+                XElement layer = root.Elements("layer").FirstOrDefault(l => (string)l.Attribute("name") == layerName);
+                if (handler == null || layer == null) continue;
+                byte[] raw = Convert.FromBase64String(layer.Element("data").Value.Trim());
+                using var z = new ZLibStream(new MemoryStream(raw), CompressionMode.Decompress);
+                using var ms = new MemoryStream();
+                z.CopyTo(ms);
+                byte[] data = ms.ToArray();
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < data.Length / 4 / width; y++)
+                    {
+                        int gid = (int)(BitConverter.ToUInt32(data, (y * width + x) * 4) & 0x1FFFFFFF);
+                        if (gid == 0) continue;
+                        int tileIndex = gid;
+                        foreach (int start in firstGids.Keys)
+                            if (start <= gid) tileIndex = gid - start;
+                        Point pos = new Point(x, y);
+                        TiledMapProperties props = objects.LastOrDefault(o => o.cell == pos).props ?? new TiledMapProperties();
+                        handler(this, new SpawnEntityEventArgs() { Position = pos, TileIndex = tileIndex, Properties = props });
+                    }
+                }
+            }
+        }
+#else
         public void LoadMap(string map)
         {
             Dictionary<string, string> tileSetNames = new Dictionary<string, string>() {
@@ -125,5 +202,6 @@ namespace Twengine.Managers
             }
         }
 
+#endif
     }
 }

@@ -227,12 +227,6 @@
 #begin Menu/options_widescreen.png
 /copy:Menu/options_widescreen.png
 
-#begin Menu/titlescreen.png
-/copy:Menu/titlescreen.png
-
-#begin Menu/titlescreen_widescreen.png
-/copy:Menu/titlescreen_widescreen.png
-
 #begin Music/At.Dooms.Gate.ogg
 /importer:OggImporter
 /processor:SongProcessor
