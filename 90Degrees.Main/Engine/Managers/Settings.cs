@@ -13,6 +13,19 @@ namespace Degrees.Main.Engine.Managers
 {
     internal class Settings
     {
+#if BLAZORGL
+        // web build: no config file, settings live in memory for the session
+        public static void Load()
+        {
+            MouseSensitivity = 0.50f;
+            Fullscreen = false;
+            KeyboardOnly = false; // mouse-look via pointer lock
+            MusicVolume = 100;
+            SfxVolume = 100;
+        }
+
+        public static void SaveConfiguration() { }
+#else
         private static readonly Configuration mConfig;
 
         static Settings()
@@ -67,6 +80,7 @@ namespace Degrees.Main.Engine.Managers
             mConfig.Save(ConfigurationSaveMode.Full);
         }
 
+#endif
         public static int SfxVolume
         {
             get => (int)(SoundEffect.MasterVolume * 100);

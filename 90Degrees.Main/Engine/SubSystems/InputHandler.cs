@@ -35,6 +35,11 @@ namespace Twengine.SubSystems.Raycast
         private int mScreenHeight;
         private Raycaster mRaycaster;
         private List<Keys> mKeyBuffer;
+        private float mMouseDeltaX;
+#if BLAZORGL
+        // set by the web host: returns and resets the pointer-lock movementX accumulated since last frame
+        public static Func<float> ReadPointerDeltaX;
+#endif
         public InputHandler(Raycaster raycaster, int screenWidth, int screenHeight)
             : base()
         {
@@ -51,6 +56,11 @@ namespace Twengine.SubSystems.Raycast
             base.Begin();
             mKeyboardState = Keyboard.GetState();
             mMouseState = Mouse.GetState();
+#if BLAZORGL
+            mMouseDeltaX = -(ReadPointerDeltaX?.Invoke() ?? 0f);
+#else
+            mMouseDeltaX = mScreenWidth / 2 - mMouseState.X;
+#endif
         }
         protected override void End()
         {
@@ -77,7 +87,9 @@ namespace Twengine.SubSystems.Raycast
 
         public void CenterMouse()
         {
+#if !BLAZORGL // browsers can't warp the cursor; web build is keyboard-only
             Mouse.SetPosition(mScreenWidth / 2, mScreenHeight / 2);
+#endif
         }
         public override void Process(Entity e, FPSControl movementControl, Transform transform)
         {
@@ -316,7 +328,7 @@ namespace Twengine.SubSystems.Raycast
             }
             else
             {
-                amount = (mScreenWidth / 2 - mMouseState.X) * Settings.MouseSensitivity;
+                amount = mMouseDeltaX * Settings.MouseSensitivity;
             }
             float rotateSpeed = -(worldDelta * amount);
             transform.Rotation += rotateSpeed;

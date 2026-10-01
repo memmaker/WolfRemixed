@@ -1,0 +1,350 @@
+# Web (KNI BlazorGL) content. Textures/fonts the KNI pipeline cannot build on macOS come prebuilt
+# from WolfRemixed.Web/PrebuiltContent; Tiled maps are copied raw and parsed by MapManager.
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/$(Platform)
+/intermediateDir:obj/$(Platform)
+/platform:BlazorGL
+/config:
+/profile:Reach
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+
+#---------------------------------- Content ---------------------------------#
+
+#begin Enemies/BlakeStone/bs_guard_sheet.png
+/copy:Enemies/BlakeStone/bs_guard_sheet.png
+
+#begin Enemies/BlakeStone/cabinetguy_sheet.png
+/copy:Enemies/BlakeStone/cabinetguy_sheet.png
+
+#begin Enemies/BlakeStone/eggguy_sheet.png
+/copy:Enemies/BlakeStone/eggguy_sheet.png
+
+#begin Enemies/BlakeStone/glassguy_sheet.png
+/copy:Enemies/BlakeStone/glassguy_sheet.png
+
+#begin Enemies/BlakeStone/scientist_sheet.png
+/copy:Enemies/BlakeStone/scientist_sheet.png
+
+#begin Enemies/BlakeStone/statueguy_sheet.png
+/copy:Enemies/BlakeStone/statueguy_sheet.png
+
+#begin Enemies/BlakeStone/tableguy_sheet.png
+/copy:Enemies/BlakeStone/tableguy_sheet.png
+
+#begin Enemies/Catacomb/bat_sheet.png
+/copy:Enemies/Catacomb/bat_sheet.png
+
+#begin Enemies/Catacomb/bluemonster.png
+/copy:Enemies/Catacomb/bluemonster.png
+
+#begin Enemies/Catacomb/silvermonster.png
+/copy:Enemies/Catacomb/silvermonster.png
+
+#begin Enemies/Catacomb/zombie_sheet.png
+/copy:Enemies/Catacomb/zombie_sheet.png
+
+#begin Enemies/Doom/doommarine_sheet.png
+/copy:Enemies/Doom/doommarine_sheet.png
+
+#begin Enemies/Wolf/mguard_sheet.png
+/copy:Enemies/Wolf/mguard_sheet.png
+
+#begin Hud/Doom/marinerfaces.png
+/copy:Hud/Doom/marinerfaces.png
+
+#begin Icons/arrow.png
+/copy:Icons/arrow.png
+
+#begin Menu/loading_bs_widescreen.png
+/copy:Menu/loading_bs_widescreen.png
+
+#begin Menu/loading_id_widescreen.png
+/copy:Menu/loading_id_widescreen.png
+
+#begin Menu/loading_wolf_widescreen.png
+/copy:Menu/loading_wolf_widescreen.png
+
+#begin Menu/mainmenu.png
+/copy:Menu/mainmenu.png
+
+#begin Menu/options_widescreen.png
+/copy:Menu/options_widescreen.png
+
+#begin Music/At.Dooms.Gate.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/At.Dooms.Gate.ogg
+
+#begin Music/Grabbag.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Grabbag.ogg
+
+#begin Music/Wolfenstein/wolfintro.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfintro.ogg
+
+#begin Music/Wolfenstein/wolfmenu.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfmenu.ogg
+
+#begin Music/Wolfenstein/wolfplay01.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfplay01.ogg
+
+#begin Music/Wolfenstein/wolfplay02.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfplay02.ogg
+
+#begin Music/Wolfenstein/wolfplay03.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Wolfenstein/wolfplay03.ogg
+
+#begin SoundEffects/BlakeStone/ChargedPistol.wav
+/copy:SoundEffects/BlakeStone/ChargedPistol.wav
+
+#begin SoundEffects/Doom/DSSHOTGN.wav
+/copy:SoundEffects/Doom/DSSHOTGN.wav
+
+#begin SoundEffects/Duke/SHOTGNCK.WAV
+/copy:SoundEffects/Duke/SHOTGNCK.WAV
+
+#begin SoundEffects/Duke/SHOTGNFR.WAV
+/copy:SoundEffects/Duke/SHOTGNFR.WAV
+
+#begin SoundEffects/Kill/1001.WAV
+/copy:SoundEffects/Kill/1001.WAV
+
+#begin SoundEffects/Kill/1011.WAV
+/copy:SoundEffects/Kill/1011.WAV
+
+#begin SoundEffects/Kill/1039.WAV
+/copy:SoundEffects/Kill/1039.WAV
+
+#begin SoundEffects/Kill/1040.WAV
+/copy:SoundEffects/Kill/1040.WAV
+
+#begin SoundEffects/Kill/1057.WAV
+/copy:SoundEffects/Kill/1057.WAV
+
+#begin SoundEffects/Kill/GETSOM.WAV
+/copy:SoundEffects/Kill/GETSOM.WAV
+
+#begin SoundEffects/Kill/HAIL.WAV
+/copy:SoundEffects/Kill/HAIL.WAV
+
+#begin SoundEffects/Kill/IMGOOD.WAV
+/copy:SoundEffects/Kill/IMGOOD.WAV
+
+#begin SoundEffects/Kill/INHELL.WAV
+/copy:SoundEffects/Kill/INHELL.WAV
+
+#begin SoundEffects/Kill/LETGOD.WAV
+/copy:SoundEffects/Kill/LETGOD.WAV
+
+#begin SoundEffects/Narrator/doublekill.wav
+/copy:SoundEffects/Narrator/doublekill.wav
+
+#begin SoundEffects/Narrator/monsterkill.wav
+/copy:SoundEffects/Narrator/monsterkill.wav
+
+#begin SoundEffects/Narrator/multikill.wav
+/copy:SoundEffects/Narrator/multikill.wav
+
+#begin SoundEffects/Narrator/triplekill.wav
+/copy:SoundEffects/Narrator/triplekill.wav
+
+#begin SoundEffects/Narrator/ultrakill.wav
+/copy:SoundEffects/Narrator/ultrakill.wav
+
+#begin SoundEffects/PickUp/1015.WAV
+/copy:SoundEffects/PickUp/1015.WAV
+
+#begin SoundEffects/PickUp/1024.WAV
+/copy:SoundEffects/PickUp/1024.WAV
+
+#begin SoundEffects/PickUp/CHEW.WAV
+/copy:SoundEffects/PickUp/CHEW.WAV
+
+#begin SoundEffects/PickUp/COOL.WAV
+/copy:SoundEffects/PickUp/COOL.WAV
+
+#begin SoundEffects/PickUp/GROOVY.WAV
+/copy:SoundEffects/PickUp/GROOVY.WAV
+
+#begin SoundEffects/PickUp/READYFA.WAV
+/copy:SoundEffects/PickUp/READYFA.WAV
+
+#begin SoundEffects/PickUp/T1002.WAV
+/copy:SoundEffects/PickUp/T1002.WAV
+
+#begin SoundEffects/PickUp/T1003.WAV
+/copy:SoundEffects/PickUp/T1003.WAV
+
+#begin SoundEffects/PickUp/WANSOM.WAV
+/copy:SoundEffects/PickUp/WANSOM.WAV
+
+#begin SoundEffects/Rott/bulletRicochet1.wav
+/copy:SoundEffects/Rott/bulletRicochet1.wav
+
+#begin SoundEffects/Rott/bulletRicochet2.wav
+/copy:SoundEffects/Rott/bulletRicochet2.wav
+
+#begin SoundEffects/Rott/bulletRicochet3.wav
+/copy:SoundEffects/Rott/bulletRicochet3.wav
+
+#begin SoundEffects/Rott/pistol1.wav
+/copy:SoundEffects/Rott/pistol1.wav
+
+#begin SoundEffects/Rott/pistol2.wav
+/copy:SoundEffects/Rott/pistol2.wav
+
+#begin SoundEffects/Wolfenstein/achtung.wav
+/copy:SoundEffects/Wolfenstein/achtung.wav
+
+#begin SoundEffects/Wolfenstein/alarm.wav
+/copy:SoundEffects/Wolfenstein/alarm.wav
+
+#begin SoundEffects/Wolfenstein/alarmSound.wav
+/copy:SoundEffects/Wolfenstein/alarmSound.wav
+
+#begin SoundEffects/Wolfenstein/closedoor.wav
+/copy:SoundEffects/Wolfenstein/closedoor.wav
+
+#begin SoundEffects/Wolfenstein/Enemy Pain.wav
+/copy:SoundEffects/Wolfenstein/Enemy Pain.wav
+
+#begin SoundEffects/Wolfenstein/Gatling Gun.wav
+/copy:SoundEffects/Wolfenstein/Gatling Gun.wav
+
+#begin SoundEffects/Wolfenstein/gunshot1.wav
+/copy:SoundEffects/Wolfenstein/gunshot1.wav
+
+#begin SoundEffects/Wolfenstein/gunshot2.wav
+/copy:SoundEffects/Wolfenstein/gunshot2.wav
+
+#begin SoundEffects/Wolfenstein/gunshot3.wav
+/copy:SoundEffects/Wolfenstein/gunshot3.wav
+
+#begin SoundEffects/Wolfenstein/Knife.wav
+/copy:SoundEffects/Wolfenstein/Knife.wav
+
+#begin SoundEffects/Wolfenstein/Machine Gun.wav
+/copy:SoundEffects/Wolfenstein/Machine Gun.wav
+
+#begin SoundEffects/Wolfenstein/meinLeben.wav
+/copy:SoundEffects/Wolfenstein/meinLeben.wav
+
+#begin SoundEffects/Wolfenstein/opendoor.wav
+/copy:SoundEffects/Wolfenstein/opendoor.wav
+
+#begin SoundEffects/Wolfenstein/Player Dies.wav
+/copy:SoundEffects/Wolfenstein/Player Dies.wav
+
+#begin SoundEffects/Wolfenstein/Player Pain 1.wav
+/copy:SoundEffects/Wolfenstein/Player Pain 1.wav
+
+#begin SoundEffects/Wolfenstein/Player Pain 2.wav
+/copy:SoundEffects/Wolfenstein/Player Pain 2.wav
+
+#begin SoundEffects/Wolfenstein/rifleSound2.wav
+/copy:SoundEffects/Wolfenstein/rifleSound2.wav
+
+#begin SoundEffects/Wolfenstein/rifleSound3.wav
+/copy:SoundEffects/Wolfenstein/rifleSound3.wav
+
+#begin SoundEffects/Wolfenstein/werda.wav
+/copy:SoundEffects/Wolfenstein/werda.wav
+
+#begin Specials/Zelda/fire.png
+/copy:Specials/Zelda/fire.png
+
+#begin Specials/Zelda/hunt_killed.png
+/copy:Specials/Zelda/hunt_killed.png
+
+#begin Specials/Zelda/oldman.png
+/copy:Specials/Zelda/oldman.png
+
+#begin Specials/Zelda/stonewall.png
+/copy:Specials/Zelda/stonewall.png
+
+#begin Weapons/BlakeStone/smallgun_sheet.png
+/copy:Weapons/BlakeStone/smallgun_sheet.png
+
+#begin Weapons/Catacomb/hand.png
+/copy:Weapons/Catacomb/hand.png
+
+#begin Weapons/Catacomb/hand_ring.png
+/copy:Weapons/Catacomb/hand_ring.png
+
+#begin Weapons/crosshairwhite.png
+/copy:Weapons/crosshairwhite.png
+
+#begin Weapons/Doom/doomshotgun_sheet.png
+/copy:Weapons/Doom/doomshotgun_sheet.png
+
+#begin Weapons/Doom/punch_sheet.png
+/copy:Weapons/Doom/punch_sheet.png
+
+#begin Weapons/Duke/dukeshotgun.png
+/copy:Weapons/Duke/dukeshotgun.png
+
+#begin Weapons/Projectiles/blueball_sheet.png
+/copy:Weapons/Projectiles/blueball_sheet.png
+
+#begin Weapons/Projectiles/bubble_sheet.png
+/copy:Weapons/Projectiles/bubble_sheet.png
+
+#begin Weapons/Projectiles/bulletHits.png
+/copy:Weapons/Projectiles/bulletHits.png
+
+#begin Weapons/Projectiles/energyball_sheet.png
+/copy:Weapons/Projectiles/energyball_sheet.png
+
+#begin Weapons/Projectiles/fireball_sheet.png
+/copy:Weapons/Projectiles/fireball_sheet.png
+
+#begin Weapons/Projectiles/grenade_sheet.png
+/copy:Weapons/Projectiles/grenade_sheet.png
+
+#begin Weapons/Projectiles/spit_sheet.png
+/copy:Weapons/Projectiles/spit_sheet.png
+
+#begin Weapons/Rott/pistol_sheet.png
+/copy:Weapons/Rott/pistol_sheet.png
+
+#begin Weapons/Wolf/assault_sheet.png
+/copy:Weapons/Wolf/assault_sheet.png
+
+#begin Weapons/Wolf/gatling_sheet.png
+/copy:Weapons/Wolf/gatling_sheet.png
+
+#begin Weapons/Wolf/knife_sheet.png
+/copy:Weapons/Wolf/knife_sheet.png
+
+#begin Maps/Templates/SecretWall.tx
+/copy:Maps/Templates/SecretWall.tx
+
+#begin Maps/map1.tmx
+/copy:Maps/map1.tmx
+
+#begin Maps/testmap.tmx
+/copy:Maps/testmap.tmx
+
